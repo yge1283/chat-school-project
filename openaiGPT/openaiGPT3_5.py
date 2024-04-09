@@ -60,6 +60,9 @@ class gpt:
         self.historyLog.append(historyLog)
 
     def give_response(self):
+        '''
+        마지막 답변 불러오기
+        '''
         return str(self.response)
     
     
