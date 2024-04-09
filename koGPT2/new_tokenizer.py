@@ -1,7 +1,8 @@
 from tokenizers.implementations import SentencePieceBPETokenizer
 from tokenizers.processors import BertProcessing
 
-from transformers.tokenization_utils import PreTrainedTokenizer, PreTrainedTokenizerFast
+from transformers.tokenization_utils import PreTrainedTokenizer #, PreTrainedTokenizerFast
+from transformers import PreTrainedTokenizerFast
 
 import json
 

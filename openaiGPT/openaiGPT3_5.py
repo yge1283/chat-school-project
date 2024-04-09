@@ -33,10 +33,37 @@ class gpt:
         self.client = OpenAI(api_key=your_key)
     
     def applyHistoryLog(self,historyLog=[]):
+        '''
+        이전 대화기록을 불러와 붙임
+        형식은 다음과 같아야함.
+
+        [
+            {
+                "role":"system"
+                "role":"(ai 역할)"
+            },
+            {
+                "role":"user"
+                "content":"(유저입력)"
+            },
+            {
+                "role":"assistance"
+                "content":"(ai 답변)"
+            },
+            {
+                "role":"user"
+                "content":"(유저입력)"
+            },
+            ...
+        ]
+        '''
         self.historyLog.append(historyLog)
+
+    def give_response(self):
+        return str(self.response)
     
     
-    def get_response(self, input_message, rememberChat=True):
+    def get_response(self, input_message, rememberChat=False):
         '''
         gpt로부터 답변 받아오기
 
@@ -95,4 +122,4 @@ class gpt:
         
         self.totalUsed_tokens = response.usage.total_tokens # 토큰 누적사용량 기록
         self.response = response.choices[0].message.content
-        
+        return print(self.response)

@@ -19,7 +19,7 @@ config = GPT2Config(vocab_size=52011, resid_pdrop=0, embd_pdrop=0, attn_pdrop=0,
 model = GPT2LMHeadModel(config)
 
 # model_dir = '../KorGPT-2SampleModel/lyric_model.bin'
-model_dir = '../model/summary_model.bin'
+model_dir = '../models/summary_model.bin'
 
 model.load_state_dict(torch.load(model_dir), strict=False)
 model.to('cpu')

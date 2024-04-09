@@ -1,6 +1,6 @@
 import tokenizers as tk
 
-path = 'pretrain_data/book_sentences.txt'
+path = 'pretrain_data/public_doc_eng.txt'
 tokenizer = tk.SentencePieceBPETokenizer()
 tokenizer.train(files=path, vocab_size=52000, min_frequency=2, special_tokens=[
     "<s>",

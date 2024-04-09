@@ -12,7 +12,7 @@ tokenizer = MyTokenizer(vocab_file_path, merge_file_path)
 config = GPT2Config(vocab_size=52000)
 model = GPT2LMHeadModel(config)
 
-model_dir = '../model/pytorch_model.bin'
+model_dir = '../models/pytorch_model.bin'
 
 model.load_state_dict(torch.load(model_dir), strict=False)
 model.to('cuda')
