@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>이메일+비번찾기+구글+카카오 로그인 인증 </h1>
+    <div> ID / email : <input type ="eamil" id ="Email"/></div>
+    <div> password : <input type ="password" id ="Password"/>
+    <input type="button" value="로그인" id="login_email" /> </div>
+    <div>비번을 찾을 이메일주소 입력 : <input type ="eamil" id ="Email_pw"/></div>
+    <div>
+
+        <input type="button" value="비밀번호찾기" id="forgetpw" />
+        <input type="button" value="가입하기" id="join" />
+    </div>
+    <div>
+    <input type="button" value="google로 login" id="login_google" />
+    <input type="button" value="Kakaotalk으로 login" id="login_kakaotalk" />
+    </div>
+
+   <script>
+    const supabaseUrl = "복붙";
+    const supabaseKey = "복붙";
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 가입하기 버튼 눌렀을때 > 가입페이지으로 이동
+    window.onload = function() {
+        document.getElementById("join").onclick = function() {
+            window.location.href = "join.html";
+        };
+    };
+        // 아이디 / 이메일로 로그인 : abc@gmail.com / abc123
+    async function signInWithEmail() {
+        const emailElement = document.querySelector("#Email");
+        const passwordElement = document.querySelector("#Password");
+        const email = emailElement.value;
+        const password = passwordElement.value;
+
+        const { data, error } = await client.auth.signInWithPassword({
+        email: email,
+        password: password
+
+        // 로그인이 잘 되었을때, 메인 페이지로 이동
+
+        });
+    }
+    document
+    .querySelector("#login_email")
+    .addEventListener("click", signInWithEmail);
+
+
+
+    // google로 로그인
+
+       async function signInWithGoogle() {
+       const { data, error } = await client.auth.signInWithOAuth({
+         provider: "google",
+         options: {
+           redirectTo: "http://localhost:8000",
+         },
+       });
+     }
+     document
+       .querySelector("#login_google")
+       .addEventListener("click", signInWithGoogle);
+
+
+       // 카카오톡으로 로그인
+
+       async function signInWithKakao() {
+       const { data, error } = await client.auth.signInWithOAuth({
+         provider: "kakao",
+         options: {
+           redirectTo: "http://localhost:8000",
+         },
+       });
+     }
+     document
+       .querySelector("#login_kakaotalk")
+       .addEventListener("click", signInWithKakao);
+
+
+     // 비밀번호 찾기
+     async function forgetMyPw() {
+      const emailPWElement = document.querySelector("#Email_pw");
+      const emailPW = emailPWElement.value;
+      const { data, error } = await client.auth.resetPasswordForEmail(emailPW)
+     }
+     document
+       .querySelector("#forgetpw")
+       .addEventListener("click", forgetMyPw);
+     // reset 패스워드 링크.html 을 만들어야함
+
+   </script>
+    
+    <input type="button" value="logout" id="logout" />
+    <script>
+        // 로그인 확인하는 버튼 : 로그인되어있으면 logout 이라 표시
+      async function checkLogin() {
+        const authInfo = await client.auth.getSession();
+        const session = authInfo.data.session;
+        // 초기값 버튼 전부안보이는상태 
+        document.querySelector("#login_google").style.display = "none";
+        document.querySelector("#login_kakaotalk").style.display = "none";
+        document.querySelector("#logout").style.display = "none";
+        if (session === null) {
+            // 로그인 되어있지 않을때
+          document.querySelector("#login_google").style.display = "inline";
+          document.querySelector("#login_kakaotalk").style.display = "inline";
+        } else {
+            // 로그인되어있을때
+          document.querySelector("#logout").style.display = "inline";
+        }
+      }
+      checkLogin();
+    </script>
+  <script>
+    async function signOut() {
+      const { error } = await client.auth.signOut();
+      checkLogin();
+    }
+    document.querySelector("#logout").addEventListener("click", signOut);
+  </script>
+<div id="history"></div>
+
+<script>
+  async function refreshHistory() {
+    let { data: record, error } = await client.from("page").select("*");
+    let tag = "";
+    for (let i = 0; i < record.length; i++) {
+      tag += `<div style="margin:20px 0">
+          <h2>${record[i].title}</h2>${record[i].body} <p>
+            
+            <input type="button" value="Delete" onclick="
+            deleteRecord(${record[i].id})
+            " />
+      </p>
+    </div>
+         `;
+
+    }
+    document.querySelector("#history").innerHTML = tag;
+  }
+  refreshHistory();
+</script>
+
+
+<div> Title : <input type ="text" id ="Title"/></div>
+<div> content : <input type ="text" id ="Content"/></div>
+
+<input type= "button" value = "create" id ="create_btn" />
+
+<script>
+
+    // 데이터 삽입 핸들러 (공지사항 맛보기용으로 만들기)
+async function recordHandler() {
+      // input 필드에서 값 읽기
+    const titleElement = document.querySelector("#Title");
+    const bodyElement = document.querySelector("#Content");
+    const title = titleElement.value;
+    const body = bodyElement.value;
+
+  const { data, error } = await client.from('page').insert([{ title: title, body: body }]);
+
+  // 데이터 삽입에 성공한 경우, 입력 필드 초기화
+  if (!error) {
+    titleElement.value = ''; // 타이틀 입력 필드 초기화
+    bodyElement.value = ''; // 내용 입력 필드 초기화
+    // 데이터 삽입 후, 필요한 추가 작업 수행
+    refreshHistory();
+  } else {
+    // 에러 처리 로직 > 추가해야할 내용: 로그인 후 이용 가능하다.(관리자만 가능하다)
+    console.error('Data insertion error:', error);
+  }
+  
+}
+document
+  .querySelector("#create_btn")
+  .addEventListener("click", recordHandler);
+    
+</script>
+
+
+<script>
+  // 삭제하는 버튼 눌렀을때
+  async function deleteRecord(id) {
+    const { data, error } = await client.from("page").delete().eq("id", id);
+    refreshHistory();
+  }
+</script>
+
+</body>
+</html>
