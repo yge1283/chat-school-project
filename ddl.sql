@@ -111,6 +111,45 @@ INSERT INTO `댓글` VALUES ('댓글1','학생1','댓글 내용1','2024-04-03 09
 UNLOCK TABLES;
 
 --
+-- Table structure for table `문제`
+--
+
+DROP TABLE IF EXISTS `문제`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `문제` (
+  `문제번호` int NOT NULL AUTO_INCREMENT,
+  `대시보드` varchar(255) NOT NULL,
+  `유형` varchar(255) NOT NULL,
+  `문제질문` varchar(255) NOT NULL,
+  `문제내용` text,
+  `보기1` varchar(255) DEFAULT NULL,
+  `보기2` varchar(255) DEFAULT NULL,
+  `보기3` varchar(255) DEFAULT NULL,
+  `보기4` varchar(255) DEFAULT NULL,
+  `보기5` varchar(255) DEFAULT NULL,
+  `정답` varchar(50) NOT NULL,
+  `문항UID` varchar(50) NOT NULL,
+  `빈칸개수` int DEFAULT NULL,
+  `빈칸1의정답` varchar(50) DEFAULT NULL,
+  `빈칸2의정답` varchar(50) DEFAULT NULL,
+  `빈칸3의정답` varchar(50) DEFAULT NULL,
+  `빈칸4의정답` varchar(50) DEFAULT NULL,
+  `빈칸5의정답` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`문제번호`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `문제`
+--
+
+LOCK TABLES `문제` WRITE;
+/*!40000 ALTER TABLE `문제` DISABLE KEYS */;
+/*!40000 ALTER TABLE `문제` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `선생`
 --
 
@@ -236,4 +275,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-12 15:23:43
+-- Dump completed on 2024-04-17 14:58:06
