@@ -1,0 +1,2 @@
+기본적으로 가상환경에서 mysql-connector-python을 깔고 실행
+
