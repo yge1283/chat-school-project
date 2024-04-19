@@ -4,15 +4,15 @@ import pymysql
 #로컬 DB연결
 conn = pymysql.connect(
     host = 'localhost',
-    user = '',      
-    password= "",  #비번
-    database='',   #DB이름
+    user = 'root',     #user이름
+    password= "0000",  #비번
+    database='chatbot',   #DB이름
     charset='utf8'
 )
 
 curs = conn.cursor()
 
-query = "SELECT * FROM 테이블명"  #sql검색어
+query = "SELECT * FROM 선생"  #sql검색어 "SELECT * FROM 테이블명"
 curs.execute(query)
 
 '''

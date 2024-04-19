@@ -123,6 +123,6 @@ class gpt:
             presence_penalty=0
             )
         
-        self.totalUsed_tokens = response.usage.total_tokens # 토큰 누적사용량 기록
+        self.totalUsed_tokens += response.usage.total_tokens # 토큰 누적사용량 기록
         self.response = response.choices[0].message.content
         return print(self.response)
