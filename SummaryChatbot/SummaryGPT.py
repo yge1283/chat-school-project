@@ -6,9 +6,9 @@ client = OpenAI(api_key='') #openai api key입력
 
 
 
-file_name='lucky_dayPDF'
+file_name='lucky_dayPDF' #PDF 파일명
 pdf_path = "SummaryChatbot/"+file_name+".pdf"
-text=""
+text=""         #추출된 PDF의 문자를 저장할 변수
 doc = fitz.open(pdf_path)
 for page_num in range(doc.page_count):
     page = doc[page_num]
