@@ -56,17 +56,17 @@
 
     // google로 로그인
 
-       async function signInWithGoogle() {
-       const { data, error } = await client.auth.signInWithOAuth({
-         provider: "google",
-         options: {
-           redirectTo: "http://localhost:8000",
-         },
-       });
+      async function signInWithGoogle() {
+      const { data, error } = await client.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: "http://localhost:8000",
+        },
+      });
      }
      document
-       .querySelector("#login_google")
-       .addEventListener("click", signInWithGoogle);
+      .querySelector("#login_google")
+      .addEventListener("click", signInWithGoogle);
 
 
        // 카카오톡으로 로그인
@@ -86,9 +86,7 @@
 
      // 비밀번호 찾기
      async function forgetMyPw() {
-      const emailPWElement = document.querySelector("#Email_pw");
-      const emailPW = emailPWElement.value;
-      const { data, error } = await client.auth.resetPasswordForEmail(emailPW)
+      // 비밀번호 찾는 페이지로 이동!
      }
      document
        .querySelector("#forgetpw")
