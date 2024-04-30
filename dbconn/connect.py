@@ -1,127 +1,144 @@
-from mysql.connector import MySQLConnection, Error
+from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser
+from table import Student,Board,Dashboard,Comment,Teacher,Chatbot,Attachment,Problem,Timetable,Memo,LearningProgress
+from sqlalchemy import create_engine,text
+from table import Base
+from tabulate import tabulate
+from sqlalchemy_utils import database_exists, create_database
 class MySQLConnector:
     def __init__(self, config):
-        self.config = config
+        self.engine = create_engine(config)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
-    def read_config(filename='app.ini', section='mysql'):    
-        # Create a ConfigParser object to handle INI file parsing
+    def read_config(filename='app.ini', section='mysql'):
         config = ConfigParser()
-
-        # Read the specified INI configuration file
         config.read(filename)
-
-        # Initialize an empty dictionary to store configuration data
-        data = {}
-
-        # Check if the specified section exists in the INI file
         if config.has_section(section):
-            # Retrieve all key-value pairs within the specified section
-            items = config.items(section)
-
-            # Populate the data dictionary with the key-value pairs
-            for item in items:
-                data[item[0]] = item[1]
+            # 설정 파일에서 필요한 정보를 추출합니다.
+            username = config.get(section, 'username')
+            password = config.get(section, 'password')
+            host = config.get(section, 'host')
+            port = config.get(section, 'port')
+            database = config.get(section, 'database')
+            # 연결 문자열을 생성하여 반환합니다.
+            return f"mysql://{username}:{password}@{host}:{port}/{database}"
         else:
-            # Raise an exception if the specified section is not found
             raise Exception(f'{section} section not found in the {filename} file')
 
-        # Return the populated data dictionary
-        return data
     def connect(self):
-        """ MySQL 데이터베이스에 연결합니다. """
-        conn = None
+        print('MySQL 데이터베이스에 연결 중...')
         try:
-            print('MySQL 데이터베이스에 연결 중...')
-            conn = MySQLConnection(**self.config)
-
-            if conn.is_connected():
-                print('연결이 성공적으로 수립되었습니다.')
-            else:
-                print('연결에 실패했습니다.')
-        except Error as error:
-            print(error)
-        finally:
-            if conn is not None and conn.is_connected():
-                conn.close()
-                print('연결이 종료되었습니다.')
-
-    def call_grade_class(self, year, class_num):
+            connection = self.engine.connect()
+            print('연결이 성공적으로 수립되었습니다.')
+            connection.close()
+        except Exception as e:
+            print(f'연결에 실패했습니다: {e}')
+    def tb_insert(self, tbname, data):
         try:
-            # MySQL 데이터베이스에 연결합니다.
-            with MySQLConnection(**self.config) as conn:
-                # SQL 쿼리를 실행할 커서를 생성합니다.
-                with conn.cursor() as cursor:
-                    # grade_class 저장 프로시저를 호출하고 결과를 받습니다.
-                    cursor.callproc('grade_class', [year, class_num])
-
-                    # 저장 프로시저의 결과를 저장하기 위한 리스트를 생성합니다.
-                    students = []
-
-                    # OUT 매개변수의 값을 가져와 리스트에 추가합니다.
-                    for result in cursor.stored_results():
-                        students.extend(result.fetchall())
-
-                    # 결과를 반환합니다.
-                    return students
-
-        except Error as e:
-            # 예외가 발생한 경우 해당 예외를 다시 발생시킵니다.
-            raise e
-    def board(self, search, title):
-        try:
-            # MySQL 데이터베이스에 연결합니다.
-            with MySQLConnection(**self.config) as conn:
-                # SQL 쿼리를 실행할 커서를 생성합니다.
-                with conn.cursor() as cursor:
-                    # SQL 쿼리를 실행합니다. search가 제목, 내용 등의 칼럼명이라고 가정합니다.
-                    query = f"SELECT * FROM 게시판 WHERE {search} = %s"
-                    cursor.execute(query, (title,))
-
-                    # 결과를 저장하기 위한 리스트를 생성합니다.
-                    results = []
-
-                    # 결과를 가져와 리스트에 추가합니다.
-                    for row in cursor.fetchall():
-                        results.append(row)
-
-                    # 결과를 반환합니다.
-                    return results
-        except Error as e:
-            # 예외가 발생한 경우 해당 예외를 다시 발생시킵니다.
+            table = globals()[tbname]
+            for item in data:
+                obj_data = {}
+                for column, value in item.items():
+                    obj_data[column] = value
+                obj = table(**obj_data)
+                self.session.add(obj)
+            self.session.commit()
+            return tbname
+        except Exception as e:
+            self.session.rollback()
             raise e
 
-    def istable(self, tbname, data):
+    def tb_ninsert(self, tbname, data):
         try:
-            # MySQL 데이터베이스에 연결합니다.
-            with MySQLConnection(**self.config) as conn:
-                # SQL 쿼리를 실행할 커서를 생성합니다.
-                with conn.cursor() as cursor:
-                    # 삽입 쿼리를 생성합니다.
-                    if tbname == "게시판":
-                        query = "INSERT INTO 게시판 (게시물ID, 대시보드key, 제목, 학생ID, 선생ID, 작성내용, 작성시간) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                    elif tbname == "대시보드":
-                        query = "INSERT INTO 대시보드 (대시보드key, 과목명, 학년, 학급, 담당선생ID) VALUES (%s, %s, %s, %s, %s)"
-                    elif tbname == "댓글":
-                        query = "INSERT INTO 댓글 (댓글ID, 작성자ID, 내용, 댓글시간, 게시물ID) VALUES (%s, %s, %s, %s, %s)"
-                    elif tbname == "선생":
-                        query = "INSERT INTO 선생 (선생ID, 성별, 이름, 생년월일, 이메일) VALUES (%s, %s, %s, %s, %s)"
-                    elif tbname == "챗봇":
-                        query = "INSERT INTO 챗봇 (시간, 학생ID, 질문, 챗봇응답) VALUES (%s, %s, %s, %s)"
-                    elif tbname == "첨부파일":
-                        query = "INSERT INTO 첨부파일 (파일ID, 게시물ID, 파일명, 파일경로, 시간) VALUES (%s, %s, %s, %s, %s)"
-                    elif tbname=="학생":
-                        query = "INSERT INTO 학생 (학생ID, 성별, 이름, 생년월일, 휴대폰번호, 학년, 학급) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            table = globals()[tbname]
+            obj_data = {}
+            for item in data:
+                for col, val in zip(table.__table__.columns, item):
+                    if col.primary_key and tbname != "챗봇":  # 컬럼 이름으로 비교해야 합니다.
+                        continue
                     else:
-                        # 테이블이 없는 경우 예외를 발생시킵니다.
-                        raise ValueError(f"테이블 '{tbname}'이 존재하지 않습니다.")
-
-                    # 데이터를 순서대로 삽입합니다.
-                    for item in data:
-                        cursor.execute(query, item)
-                    conn.commit()
-
-        except Error as e:
-            # 예외가 발생한 경우 해당 예외를 다시 발생시킵니다.
+                        obj_data[col.name] = val  # 컬럼의 이름을 키로 사용합니다.
+                obj = table(**obj_data)
+                self.session.add(obj)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
             raise e
+        return 0
+
+    def bd_select(self, search, title, desc=True):
+        try:
+            # 검색 조건(search)에 해당하는 열을 사용하여 데이터베이스에서 게시글을 검색합니다.
+            query = self.session.query(Board).filter(getattr(Board, search) == title)
+            # 정렬 방식을 설정합니다.
+            if desc:
+                # 내림차순으로 정렬합니다.
+                query = query.order_by(Board.작성시간.desc())
+            else:
+                # 오름차순으로 정렬합니다.
+                query = query.order_by(Board.작성시간.asc())
+            # 정렬된 결과를 리스트로 반환합니다.
+            results = query.all()
+            return results
+        except Exception as e:
+            # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
+            raise e
+
+    def tb_select(self, tbname, search, title):
+        try:
+            # 테이블 클래스를 가져옵니다.
+            table = globals()[tbname]
+            # 검색 조건을 설정하여 쿼리를 수행합니다.
+            results = self.session.query(table).filter(getattr(table, search) == title).all()
+            return results
+        except Exception as e:
+            raise e
+
+    def tb_delete(self, tbname, column, title):
+        try:
+            table = globals()[tbname]
+            # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
+            self.session.query(table).filter(getattr(table, column) == title).delete()
+            # 변경사항을 커밋합니다.
+            self.session.commit()
+        except Exception as e:
+            # 오류가 발생한 경우 롤백합니다.
+            self.session.rollback()
+            raise e
+        return 0
+
+    def st_update(self,studend_id,student_new):
+        try:
+            # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
+            self.session.query(Student).filter(Student.ㅎ == studend_id).update()
+            # 변경사항을 커밋합니다.
+            self.session.commit()
+        except Exception as e:
+            # 오류가 발생한 경우 롤백합니다.
+            self.session.rollback()
+            raise e
+        return 0
+
+
+
+if __name__ == '__main__':
+    # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
+    config = MySQLConnector.read_config()
+    # MySQLConnector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
+    conn = MySQLConnector(config)
+    engine = create_engine(config)
+    if not database_exists(engine.url):
+        create_database(engine.url)   
+    else:
+        print("이미 데이터베이스가 있습니다.")
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    
+    Base.metadata.create_all(engine)
+    session.commit()
+    # 세션 종료
+    session.close()
+    
 
