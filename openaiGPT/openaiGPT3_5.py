@@ -20,15 +20,15 @@ class gpt:
     #     return client
     
     def define_systemRole(self, role_message):
-         '''
-         역할 정하기(자연어로)
-         role_message = (str)
+        '''
+        역할 정하기(자연어로)
+        role_message = (str)
 
-         예제(기본값)>
-         "You are a helpful educator. response with korean."
-         '''
-         self.systemRole = str(role_message)
-    
+        예제(기본값)>
+        "You are a helpful educator. response with korean."
+        '''
+        self.systemRole = str(role_message)
+        print(f'변경된 System Role:{self.systemRole}')
     def setApiKey(self,your_key):   #api키 변경
         self.client = OpenAI(api_key=your_key)
     
@@ -123,6 +123,6 @@ class gpt:
             presence_penalty=0
             )
         
-        self.totalUsed_tokens = response.usage.total_tokens # 토큰 누적사용량 기록
+        self.totalUsed_tokens += response.usage.total_tokens # 토큰 누적사용량 기록
         self.response = response.choices[0].message.content
         return print(self.response)
