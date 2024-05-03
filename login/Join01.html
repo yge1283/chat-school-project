@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>회원가입 양식1</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type=text], input[type=password], input[type=email], input[type=tel] {
+    width: 300px;
+    padding: 8px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  input[type=radio] {
+    margin: 0 10px 0 10px;
+  }
+  .radio-label {
+    display: inline;
+  }
+  button {
+    background-color: #48974a;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 20%;
+  }
+  button:hover {
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+<h2>회원가입</h2>
+<h3> ID ,성별, 이름, 전화번호 :SMS 인증 x </h3>
+<h4>가입 눌렀을때 이메일 전송(confirm 페이지로 이동하면 유저등록됨)</h4>
+
+<form action="/submit_your_form_endpoint" id="registration-form">
+  <div class="form-group">
+    <label for="name">Full name:</label>
+    <input type="text" id="name" name="name" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="birthdate">Birthdate: </label>
+    <input type="date" id="birthdate" name="birthdate" required>
+</div>
+<div class="form-group">
+    <label for="user_id">ID:</label>
+    <input type="text" id="user_id" name="user_id" required pattern="[A-Za-z0-9]{6,10}" title="ID must be 6-10 characters long and include only letters and numbers.">
+    <button type="button" id="verify">아이디 중복 체크</button>
+</div>
+    
+  </div>
+</div>
+
+  <div class="form-group">
+    <label class="radio-label">Male<input type="radio" name="gender" value="male" required></label>
+    <label class="radio-label">Female<input type="radio" name="gender" value="female"></label>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <button type="button" id="emailver">이메일 중복체크</button>
+    
+</div>
+
+
+  
+  <div class="form-group">
+    <label for="psw">Password:</label>
+    <input type="password" id="psw" name="psw" required minlength="6">
+  </div>
+  
+  <div class="form-group">
+    <label for="tel">Phone Number:</label>
+    <input type="tel" id="tel" name="phone" required minlength="11">
+  </div>
+  
+  <div class="form-group">
+    <label for="adr">Address:</label>
+    <input type="text" id="adr" name="address" required>
+  </div>
+  
+  <button type="submit">가입하기</button>
+</form>
+<script>
+    // 이메일 중복체크
+    function checkEmail() {
+        var email = document.getElementById('email').value;
+        axios.post('/check-email', { email: email })
+            .then(function (response) {
+                if (response.data.exists) {
+                    alert('이미 등록된 이메일입니다');
+                } else {
+                    alert('사용 가능한 이메일입니다');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+    }
+    // 아이디 중복체크
+    function checkUserId() {
+        var userId = document.getElementById('user_id').value;
+        axios.post('/check-id', { user_id: userId })
+            .then(function (response) {
+                if (response.data.exists) {
+                    alert('이미 사용중인 아이디입니다.');
+                } else {
+                    alert('사용 가능한 아이디입니다.');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+    }
+    
+    document.getElementById('registration-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // 폼의 기본 제출 방지
+
+    // 이메일 중복 체크 확인
+    var emailVerified = document.getElementById('email').dataset.isVerified === 'true';
+    if (!emailVerified) {
+        alert('이메일 중복 체크를 먼저 해주세요.');
+        return;
+    }
+
+    var formData = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('psw').value,
+        name: document.getElementById('name').value,
+        birthdate: document.getElementById('birthdate').value,
+        user_id: document.getElementById('user_id').value,
+        gender: document.querySelector('input[name="gender"]:checked').value,
+        phone: document.getElementById('tel').value,
+        address: document.getElementById('adr').value
+    };
+
+    axios.post('/register', formData)
+        .then(function (response) {
+            if (response.data.success) {
+                alert('회원가입이 완료되었습니다.');
+                // 회원가입 후 페이지 리다이렉션 또는 다른 처리
+                
+            } else {
+                alert('회원가입에 실패했습니다.');
+            }
+        })
+        .catch(function (error) {
+            console.error('Error during registration:', error);
+            alert('회원가입 중 오류가 발생했습니다.');
+        });
+});
+
+    document.getElementById('emailver').addEventListener('click', checkEmail);
+    document.getElementById('verify').addEventListener('click', checkUserId);
+</script>
+
+</body>
+</html>

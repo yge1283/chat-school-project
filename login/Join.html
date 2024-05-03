@@ -138,6 +138,8 @@
     }
     alert("사용가능한 이메일입니다");
     isEmailVerified = true;
+
+    // 추가: 사용가능한 이메일일 때, id = emailver 버튼 비활성화 
 }
 
 
@@ -201,7 +203,7 @@
             options: {
               data: {
                 name: user_name,
-                avatar_url: null,
+                avatar_url: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 phone: phone,
               },
                 emailRedirectTo: 'http://localhost:8000/'
