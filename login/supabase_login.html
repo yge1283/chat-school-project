@@ -5,9 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <title>Document</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .profile {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .profile a {
+      text-decoration: none;
+      color: black;
+      display: flex;
+      align-items: center;
+  }
+
+  .profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+  }
+
+  .fullname {
+      font-weight: bold;
+  }
+</style>
 </head>
+
 <body>
-    <h1>이메일+비번찾기+구글+카카오 로그인 인증 </h1>
+    <h1>이메일+구글+카카오 로그인 </h1>
+    <div class="profile">
+      <a href="Add: 회원정보 페이지로 이동">
+          <img src="프로필 사진 URL" alt="프로필 사진">
+          <span class="fullname">Full Name</span>
+      </a>
+  </div>
+
     <div> ID / email : <input type ="eamil" id ="Email"/></div>
     <div> password : <input type ="password" id ="Password"/>
     <input type="button" value="로그인" id="login_email" /> </div>
@@ -86,12 +122,12 @@
 
      // 비밀번호 찾기
      async function forgetMyPw() {
-      // 비밀번호 찾는 페이지로 이동!
+      // 비밀번호 재설정 페이지로 이동!
      }
      document
        .querySelector("#forgetpw")
        .addEventListener("click", forgetMyPw);
-     // reset 패스워드 링크.html 을 만들어야함
+
 
    </script>
     

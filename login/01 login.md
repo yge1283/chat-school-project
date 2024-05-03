@@ -16,7 +16,7 @@ Authentication에서 Sign-in-method 탭에서
 앱추가하기 - 웹 앱(sdk 키 발급 받아서 firebase.js 코드에 추가)
 
 
-# 1.2 supabase에서 기능 구현하기
+# 2 supabase에서 기능 구현하기
 ## 2.1 login 기능 구현
 참고 사이트: 
 https://velog.io/@dyorong/supabase-로그인-기능-구현
@@ -34,6 +34,9 @@ https://velog.io/@dyorong/supabase-로그인-기능-구현
     가입하기 버튼: 가입페이지로 이동
     비밀번호 찾기 버튼 : 비밀번호 재설정 페이지로 이동
 
+추가한 사항: 로그인이 되어있는경우 프로필 사진과, FULL name (사용자 이름)이 뜨도록변경
+    + 사진이나, 이름을 클릭했을 경우 >> 본인 mypage로 이동하는 기능 추가예정
+    <div class="profile"> 을 css로 위치와 사이즈를 바꿀수있음
 
 ## 2.2 supabase 회원가입 구현
 
@@ -75,3 +78,21 @@ supabase에서는 네이버 provider가 제공되지 않아서
 
 
 
+# 3 javaScript 코드를 flask 언어로 변환
+## 3.1 회원가입 페이지 변경사항
+기본적인 구조는 동일하나
+JS내에서 supabase와 연동해서 데이터를 찾는 과정과
+등록하는 과정 전부 서버에서 동작하도록 구현
+'Axios를 요청을 사용함'
+
+새로운 파일 > Join01.html , server.py
+
+server.py 는 플라스크 언어로 제작 > 이 코드를 main.py에 넣는지 안넣는지 <논의필요>
+
+config.py 에서 supabaseUrl, key 값 불러와서 사용함.
+
+## 3.2 로그인 페이지 변경사항
+기본적인 구조는 동일하나
+JS 코드 변경 및 서버 코드 추가
+
+새로운 파일 > login01.html

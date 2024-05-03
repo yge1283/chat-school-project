@@ -6,15 +6,14 @@ import config  # config 파일 불러오기
 
 app = Flask(__name__)
 
-# Supabase 키값은 config.py 에 저장!
-# config.py 파일이 Git 저장소에 포함되지 않도록 설정해야함.
 
-# Supabase 정보 설정
+# Supabase 키값 config.py 에서 가져오기 >> config파일은 업로드 하지 xx
+# config.py 파일이 Git 저장소에 포함되지 않도록 설정해야함.
 url = config.SUPABASE_URL
 key = config.SUPABASE_KEY
 supabase: Client = create_client(url, key)
 
-# supabase 
+# 이메일 중복 확인
 @app.route('/check-email', methods=['POST'])
 def check_email():
     email = request.json['email']
@@ -24,6 +23,7 @@ def check_email():
     else:
         return jsonify({"exists": False}), 200
 
+# 아이디 중복 확인
 @app.route('/check-id', methods=['POST'])
 def check_id():
     user_id = request.json['user_id']
@@ -33,6 +33,7 @@ def check_id():
     else:
         return jsonify({"exists": False}), 200
 
+# 회원가입
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
