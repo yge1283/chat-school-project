@@ -33,9 +33,9 @@ class MySQLConnector:
             connection.close()
         except Exception as e:
             print(f'연결에 실패했습니다: {e}')
-    def tb_insert(self, tb_name, data):
+    def tb_insert(self, tbname, data):
         try:
-            table = globals()[tb_name]
+            table = globals()[tbname]
             for item in data:
                 obj_data = {}
                 for column, value in item.items():
@@ -43,18 +43,18 @@ class MySQLConnector:
                 obj = table(**obj_data)
                 self.session.add(obj)
             self.session.commit()
-            return tb_name
+            return tbname
         except Exception as e:
             self.session.rollback()
             raise e
 
-    def tb_ninsert(self, tb_name, data):
+    def tb_ninsert(self, tbname, data):
         try:
-            table = globals()[tb_name]
+            table = globals()[tbname]
             obj_data = {}
             for item in data:
                 for col, val in zip(table.__table__.columns, item):
-                    if col.primary_key and tb_name != "챗봇":  # 컬럼 이름으로 비교해야 합니다.
+                    if col.primary_key and tbname != "챗봇":  # 컬럼 이름으로 비교해야 합니다.
                         continue
                     else:
                         obj_data[col.name] = val  # 컬럼의 이름을 키로 사용합니다.
@@ -66,24 +66,37 @@ class MySQLConnector:
             raise e
         return 0
 
+    def bd_select(self, search, title, desc=True):
+        try:
+            # 검색 조건(search)에 해당하는 열을 사용하여 데이터베이스에서 게시글을 검색합니다.
+            query = self.session.query(Board).filter(getattr(Board, search) == title)
+            # 정렬 방식을 설정합니다.
+            if desc:
+                # 내림차순으로 정렬합니다.
+                query = query.order_by(Board.작성시간.desc())
+            else:
+                # 오름차순으로 정렬합니다.
+                query = query.order_by(Board.작성시간.asc())
+            # 정렬된 결과를 리스트로 반환합니다.
+            results = query.all()
+            return results
+        except Exception as e:
+            # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
+            raise e
 
-
-    def tb_select(self,tb_name, search, title,db_name= -1 ):
+    def tb_select(self, tbname, search, title):
         try:
             # 테이블 클래스를 가져옵니다.
-            table = globals()[tb_name]
-            results = None
-            if db_name != -1:
-                results=self.session.query(table).filter(getattr(table, search)==db_name).filter(getattr(table, search) == title).all()
-            else:
-                results = self.session.query(table).filter(getattr(table, search) == title).all()
+            table = globals()[tbname]
+            # 검색 조건을 설정하여 쿼리를 수행합니다.
+            results = self.session.query(table).filter(getattr(table, search) == title).all()
             return results
         except Exception as e:
             raise e
 
-    def tb_delete(self, tb_name, column, title):
+    def tb_delete(self, tbname, column, title):
         try:
-            table = globals()[tb_name]
+            table = globals()[tbname]
             # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
             self.session.query(table).filter(getattr(table, column) == title).delete()
             # 변경사항을 커밋합니다.
@@ -94,11 +107,10 @@ class MySQLConnector:
             raise e
         return 0
 
-    def tb_update(self,tb_name,search,title,student_new):
+    def st_update(self,studend_id,student_new):
         try:
             # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
-            table = globals()[tb_name]
-            self.session.query(table).filter(getattr(table, search) == title).update(student_new)
+            self.session.query(Student).filter(Student.ㅎ == studend_id).update()
             # 변경사항을 커밋합니다.
             self.session.commit()
         except Exception as e:
@@ -106,25 +118,8 @@ class MySQLConnector:
             self.session.rollback()
             raise e
         return 0
-
-    def bd_select(self, search, title, desc=True):
-        try:
-            # 검색 조건(search)에 해당하는 열을 사용하여 데이터베이스에서 게시글을 검색합니다.
-            query = self.session.query(Board).filter(getattr(Board, search) == title)
-            # 정렬 방식을 설정합니다.
-            if desc:
-                # 내림차순으로 정렬합니다.
-                query = query.order_by(getattr(Board, search).desc())
-            else:
-                # 오름차순으로 정렬합니다.
-                query = query.order_by(getattr(Board, search).asc())
-            # 정렬된 결과를 리스트로 반환합니다.
-            results = query.all()
-            return results
-        except Exception as e:
-            # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
-            raise e
-
+    
+    
 
 
 
@@ -143,8 +138,6 @@ if __name__ == '__main__':
     session = Session()
     
     Base.metadata.create_all(engine)
-
-    
     session.commit()
     # 세션 종료
     session.close()
