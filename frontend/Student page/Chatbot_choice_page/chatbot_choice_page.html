@@ -38,12 +38,26 @@
         #file-input {
             display: flex;
         }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #d4edda;
+            padding: 10px;
+        }
+
+        /* Additional styling for the main content */
+        .main-content {
+            margin-bottom: 100px; /* Adjust this value to fit the footer */
+        }
     </style>
 
 </head>
 
 <body>
-    <div class="vh-100">
+    <div class="d-flex flex-column">
         <div class="form">
             <header class="p-3 mb-3 border-bottom bg-light-green jua-regular">
                 <div class="container col-lg-12 col-md-12 col-sm-6">
@@ -153,20 +167,13 @@
                 <input type="file" id="file-input" multiple>
             </div>
         </div>
-
-        <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5"
-            style="background-color:#d4edda;">
-            <!-- Copyright -->
-            <div class="text-white mb-3 mb-md-0 mt-1">
-            </div>
-            <!-- Copyright -->
-        </div>
-
-
     </div>
 
-
-
+    <div class="footer">
+        <div class="row d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5"
+            style="background-color:#d4edda;">
+        </div>
+    </div>
 
 
 
