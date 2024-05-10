@@ -25,15 +25,44 @@
                     </a>
 
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <li><a href="#" class="nav-link px-5 link-secondary"><button type="button" class="btn btn-dark">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-justify" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5">
-                                        </path>
-                                    </svg>
+                        <nav class="navbar navbar-light" aria-label="light offcanvas navbar">
+                            <div class="container-fluid">
+                                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                    aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
                                 </button>
-                            </a></li>
+                                <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1"
+                                    id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                                    <div class="offcanvas-header">
+                                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">이전 과제 문제 (날짜 빠른순이 위로)
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white"
+                                            data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body" style="background-color: white;">
+                                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">1.이전 과제 문제
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">2.이전 과제 문제
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">3.이전 과제 문제
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
                         <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
 
                         <li><a href="#" class="nav-link px-3 link-body-emphasis">과제</a></li>
