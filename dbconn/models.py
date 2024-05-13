@@ -6,7 +6,7 @@ Base = declarative_base()
 class Teacher(Base):
     __tablename__ = '선생'
 
-    선생_ID = Column(Integer, primary_key=True, autoincrement=True)
+    선생_ID = Column(Integer, primary_key=True)
     성별 = Column(String(255))
     이름 = Column(String(255))
     생년월일 = Column(Date)
@@ -20,7 +20,7 @@ class Teacher(Base):
 class Student(Base):
     __tablename__ = '학생'
 
-    학생_ID = Column(Integer, primary_key=True, autoincrement=True)
+    학생_ID = Column(Integer, primary_key=True)
     성별 = Column(String(255))
     이름 = Column(String(255))
     생년월일 = Column(Date)

@@ -1,32 +1,42 @@
 from sqlalchemy.orm import sessionmaker
-from configparser import ConfigParser
+from configparser import ConfigParser, ExtendedInterpolation
 from models import Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Timetable, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot
 from sqlalchemy import create_engine,text
 from models import Base
 from sqlalchemy_utils import database_exists, create_database
-class MySQLConnector:
+
+
+class Connector:
     def __init__(self, config):
         self.engine = create_engine(config)
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
     def read_config(filename='app.ini', section='mysql'):
-        config = ConfigParser()
+        config = ConfigParser(interpolation=ExtendedInterpolation())
         config.read(filename)
+        
         if config.has_section(section):
-            # 설정 파일에서 필요한 정보를 추출합니다.
-            username = config.get(section, 'username')
-            password = config.get(section, 'password')
-            host = config.get(section, 'host')
-            port = config.get(section, 'port')
-            database = config.get(section, 'database')
-            # 연결 문자열을 생성하여 반환합니다.
-            return f"mysql://{username}:{password}@{host}:{port}/{database}"
+            database_type = config.get(section, 'database')
+            
+            if database_type in ['mysql','postgresql', 'postgres']:
+                # MySQL의 경우 데이터베이스 선택 필요
+                username = config.get(section, 'username')
+                password = config.get(section, 'password')
+                host = config.get(section, 'host')
+                port = config.get(section, 'port')
+                dbname = config.get(section, 'dbname')  # MySQL의 경우 데이터베이스 명 필요
+                
+                return f"{database_type}://{username}:{password}@{host}:{port}/{dbname}"
+            
+            else:
+                raise Exception(f"Invalid database type '{database_type}' in the configuration file")
         else:
-            raise Exception(f'{section} section not found in the {filename} file')
+            raise Exception(f"{section} section not found in the {filename} file")
+
 
     def connect(self):
-        print('MySQL 데이터베이스에 연결 중...')
+        print('데이터베이스에 연결 중...')
         try:
             connection = self.engine.connect()
             print('연결이 성공적으로 수립되었습니다.')
@@ -68,13 +78,13 @@ class MySQLConnector:
 
 
 
-    def tb_select(self,tb_name, search, title,db_name= -1 ):
+    def tb_select(self,tb_name, search, title,db_name_name= -1 ):
         try:
             # 테이블 클래스를 가져옵니다.
             table = globals()[tb_name]
             results = None
-            if db_name != -1:
-                results=self.session.query(table).filter(getattr(table, search)==db_name).filter(getattr(table, search) == title).all()
+            if db_name_name != -1:
+                results=self.session.query(table).filter(getattr(table, search)==db_name_name).filter(getattr(table, search) == title).all()
             else:
                 results = self.session.query(table).filter(getattr(table, search) == title).all()
             return results
@@ -107,19 +117,33 @@ class MySQLConnector:
             raise e
         return 0
 
-    def bd_select(self, search, title, desc=True):
+    def bd_select(self, db_name,search=None, title=None, desc=True):
         try:
+            if search==None:
+                query = self.session.query(Board).filter(Board.대시보드_key==db_name)
             # 검색 조건(search)에 해당하는 열을 사용하여 데이터베이스에서 게시글을 검색합니다.
-            query = self.session.query(Board).filter(getattr(Board, search) == title)
+            else:
+                query = self.session.query(Board).filter(Board.대시보드_key==db_name).filter(getattr(Board, search) == title)
             # 정렬 방식을 설정합니다.
             if desc:
                 # 내림차순으로 정렬합니다.
-                query = query.order_by(getattr(Board, search).desc())
+                query = query.order_by(Board.작성시간.desc())
             else:
                 # 오름차순으로 정렬합니다.
-                query = query.order_by(getattr(Board, search).asc())
+                query = query.order_by(Board.작성시간.asc())
             # 정렬된 결과를 리스트로 반환합니다.
             results = query.all()
+            return results
+        except Exception as e:
+            # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
+            raise e
+    def sn_persent(self, db_name, st_id):
+        try:
+            ass=self.session.query(Assignment).filter(Assignment.대시보드_key==db_name).count()
+            sub=self.session.query(Submission).filter(Submission.과제_ID==db_name).filter(Submission.제출자_ID==db_name).count()
+            
+
+
             return results
         except Exception as e:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
@@ -130,9 +154,9 @@ class MySQLConnector:
 
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
-    config = MySQLConnector.read_config()
+    config = 'postgresql://postgres.twnuhbmbxsiocrwmcizf:*V+$9a~+YGX6%ZF@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
     # MySQLConnector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
-    conn = MySQLConnector(config)
+    conn = Connector(config)
     engine = create_engine(config)
     if not database_exists(engine.url):
         create_database(engine.url)   
@@ -143,8 +167,6 @@ if __name__ == '__main__':
     session = Session()
     
     Base.metadata.create_all(engine)
-
-    
     session.commit()
     # 세션 종료
     session.close()
