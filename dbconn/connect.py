@@ -137,24 +137,24 @@ class Connector:
         except Exception as e:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
-    def sn_persent(self, db_name, st_id):
+    
+    def sn_persent(self, db_name, ass_id,st_id):
         try:
             ass=self.session.query(Assignment).filter(Assignment.대시보드_key==db_name).count()
-            sub=self.session.query(Submission).filter(Submission.과제_ID==db_name).filter(Submission.제출자_ID==db_name).count()
-            
-
-
+            sub=self.session.query(Submission).filter(Submission.과제_ID==ass_id).filter(Submission.제출자_ID==st_id).count()
+            results=(ass/sub)*100
             return results
         except Exception as e:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
 
+    
 
 
 
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
-    config = 'postgresql://postgres.twnuhbmbxsiocrwmcizf:*V+$9a~+YGX6%ZF@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
+    config = Connector.read_config(section='postgres')
     # MySQLConnector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
     conn = Connector(config)
     engine = create_engine(config)

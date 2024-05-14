@@ -9,7 +9,7 @@ def convert_to_list(objects):
     return data_list
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
-    config = 'postgresql://postgres.twnuhbmbxsiocrwmcizf:*V+$9a~+YGX6%ZF@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres'
+    config = Connector.read_config(section='postgres')
     # Connector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
     conn = Connector(config)
     conn.connect()
