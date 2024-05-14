@@ -10,3 +10,4 @@ SQLAlchemy
 SQLAlchemy-Utils
 PyMySQL
 mysql-connector-python
+psycopg2(postgresql버젼 추가용)
