@@ -5,9 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <title>Document</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .profile {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .profile a {
+      text-decoration: none;
+      color: black;
+      display: flex;
+      align-items: center;
+  }
+
+  .profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+  }
+
+  .fullname {
+      font-weight: bold;
+  }
+</style>
 </head>
+
 <body>
-    <h1>이메일+비번찾기+구글+카카오 로그인 인증 </h1>
+    <h1>이메일+구글+카카오 로그인 </h1>
+
+
+  <div class="profile">
+    <a href="Add: 회원정보 페이지로 이동">
+        <img src="" alt="프로필 사진" id="profileImage">
+        <span class="fullname" id="fullName">Loading...</span>
+    </a>
+</div>
+
     <div> ID / email : <input type ="eamil" id ="Email"/></div>
     <div> password : <input type ="password" id ="Password"/>
     <input type="button" value="로그인" id="login_email" /> </div>
@@ -23,9 +61,33 @@
     </div>
 
    <script>
-    const supabaseUrl = "복붙";
-    const supabaseKey = "복붙";
+    const supabaseUrl = "copy";
+     const supabaseKey = "copy";
     const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 프로필 표시
+    async function loadProfileData() {
+        // Supabase에서 프로필 데이터 조회
+        let { data: profiles, error } = await client
+            .from('profile')
+            .select('avatar_url, username')
+            .single();
+            
+        if (error) {
+            console.error('Error loading profile data:', error);
+            return;
+        }
+
+        // 이미지 URL과 사용자 이름을 페이지에 적용
+        const profileImage = document.getElementById('profileImage');
+        const fullName = document.getElementById('fullName');
+
+        profileImage.src = profiles.avatar_url;
+        profileImage.alt = '프로필 사진 of ' + profiles.username;
+        fullName.textContent = profiles.username;
+
+        document.querySelector('.profile').style.display = 'inline'; 
+    };
 
     // 가입하기 버튼 눌렀을때 > 가입페이지으로 이동
     window.onload = function() {
@@ -48,9 +110,7 @@
 
         });
     }
-    document
-    .querySelector("#login_email")
-    .addEventListener("click", signInWithEmail);
+    document.querySelector("#login_email").addEventListener("click", signInWithEmail);
 
 
 
@@ -79,19 +139,15 @@
          },
        });
      }
-     document
-       .querySelector("#login_kakaotalk")
-       .addEventListener("click", signInWithKakao);
+     document.querySelector("#login_kakaotalk").addEventListener("click", signInWithKakao);
 
 
      // 비밀번호 찾기
      async function forgetMyPw() {
-      // 비밀번호 찾는 페이지로 이동!
+      // 비밀번호 재설정 페이지로 이동!
      }
-     document
-       .querySelector("#forgetpw")
-       .addEventListener("click", forgetMyPw);
-     // reset 패스워드 링크.html 을 만들어야함
+     document.querySelector("#forgetpw").addEventListener("click", forgetMyPw);
+
 
    </script>
     
@@ -105,6 +161,9 @@
         document.querySelector("#login_google").style.display = "none";
         document.querySelector("#login_kakaotalk").style.display = "none";
         document.querySelector("#logout").style.display = "none";
+        document.querySelector('.profile').style.display = 'none'; 
+        
+
         if (session === null) {
             // 로그인 되어있지 않을때
           document.querySelector("#login_google").style.display = "inline";
@@ -112,10 +171,13 @@
         } else {
             // 로그인되어있을때
           document.querySelector("#logout").style.display = "inline";
+          loadProfileData();
+
         }
       }
       checkLogin();
     </script>
+
   <script>
     async function signOut() {
       const { error } = await client.auth.signOut();

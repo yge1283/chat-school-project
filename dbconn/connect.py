@@ -1,9 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser
-from table import Student,Board,Dashboard,Comment,Teacher,Chatbot,Attachment,Problem,Timetable,Memo,LearningProgress
+from models import Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Timetable, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot
 from sqlalchemy import create_engine,text
-from table import Base
-from tabulate import tabulate
+from models import Base
 from sqlalchemy_utils import database_exists, create_database
 class MySQLConnector:
     def __init__(self, config):

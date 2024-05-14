@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .profile {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .profile a {
+      text-decoration: none;
+      color: black;
+      display: flex;
+      align-items: center;
+  }
+
+  .profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+  }
+
+  .fullname {
+      font-weight: bold;
+  }
+</style>
+</head>
+
+<body>
+    <h1>이메일+구글+카카오 로그인 </h1>
+
+
+  <div class="profile">
+    <a href="Add: 회원정보 페이지로 이동">
+        <img src="" alt="프로필 사진" id="profileImage">
+        <span class="fullname" id="fullName">Loading...</span>
+    </a>
+</div>
+
+    <div> ID / email : <input type ="eamil" id ="Email"/></div>
+    <div> password : <input type ="password" id ="Password"/>
+    <input type="button" value="로그인" id="login_email" /> </div>
+    <div>비번을 찾을 이메일주소 입력 : <input type ="eamil" id ="Email_pw"/></div>
+    <div>
+
+        <input type="button" value="비밀번호찾기" id="forgetpw" />
+        <input type="button" value="가입하기" id="join" />
+    </div>
+    <div>
+    <input type="button" value="google로 login" id="login_google" />
+    <input type="button" value="Kakaotalk으로 login" id="login_kakaotalk" />
+    </div>
+    <script>
+         // 프로필 표시
+         async function loadProfileData() {
+            axios.get('/profile')
+            .then(response => {
+            const profileData = response.data;
+            
+            const profileImage = document.getElementById('profileImage');
+            const fullName = document.getElementById('fullName');
+
+            profileImage.src = profileData.avatar_url;
+            profileImage.alt = '프로필 사진 of ' + profileData.username;
+            fullName.textContent = profileData.username;
+
+            document.querySelector('.profile').style.display = 'inline';
+        })
+        .catch(error => {
+            console.error('Error loading profile data:', error);
+        });
+        }
+
+         //로그인 체크 기능 
+        async function checkLogin() {
+        axios.post('/checklogin')
+            .then(response => {
+            const status = response.data.status;
+            
+            // 모든 버튼을 기본적으로 숨김
+            document.querySelector("#login_google").style.display = "none";
+            document.querySelector("#login_kakaotalk").style.display = "none";
+            document.querySelector("#logout").style.display = "none";
+            document.querySelector('.profile').style.display = 'none';
+
+            if (status === 'logged_out') {
+                // 로그인 되어있지 않을 때
+                document.querySelector("#login_google").style.display = "inline";
+                document.querySelector("#login_kakaotalk").style.display = "inline";
+            } else {
+                // 로그인되어있을 때
+                document.querySelector("#logout").style.display = "inline";
+                document.querySelector('.profile').style.display = 'inline';
+                loadProfileData();
+            }
+        })
+        .catch(error => {
+            console.error('Check login failed:', error);
+        });
+}
+      
+      checkLogin();
+        // 이메일로 로그인하기
+        async function signInWithEmail() {
+            const email = document.getElementById('Email').value;
+            const password = document.getElementById('Password').value;
+    
+            axios.post('/login', { email, password })
+                .then(response => {
+                    // 로그인 성공 시 리디렉션
+                })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
+        }
+        document.getElementById('login_email').addEventListener('click', signInWithEmail);
+    
+
+        // google로 로그인
+
+      async function signInWithGoogle() {
+        axios.post('/login-google')
+                .then(response => {
+                    // 로그인 성공 시 리디렉션
+                })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
+     }
+     document.querySelector("#login_google").addEventListener("click", signInWithGoogle);
+
+
+       // 카카오톡으로 로그인
+
+       async function signInWithKakao() {
+        axios.post('/login-kakao')
+                .then(response => {
+                    // 로그인 성공 시 리디렉션
+                })
+                .catch(error => {
+                    console.error('Login failed:', error);
+                });
+     }
+     document
+       .querySelector("#login_kakaotalk")
+       .addEventListener("click", signInWithKakao);
+
+
+
+        // 로그아웃 버튼 눌렀을 경우
+        async function signOut() {
+            axios.post('/logout')
+                .then(response => {
+                    checkLogin(); // 로그아웃 성공 시 UI 업데이트
+                })
+                .catch(error => {
+                    console.error('Logout failed:', error);
+                });
+        }
+        document.getElementById('logout').addEventListener('click', signOut);
+    </script>
+
+</body>
+</html>
