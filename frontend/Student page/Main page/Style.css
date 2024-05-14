@@ -168,10 +168,6 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 
 }
 
-.bg-light-green {
-    background-color: #d4edda;
-}
-
 .jua-regular {
     font-family: "Jua", sans-serif;
     font-weight: 400;
@@ -215,4 +211,43 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 .navbar-light .navbar-toggler {
     filter: invert(100%);
     /* Makes the icon white if your navbar background is dark */
+}
+
+/* main colors */
+.gradient-background {
+    background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
+    background-size: 180% 180%;
+    animation: gradient-animation 18s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 1200px) {
+    .h-custom {
+        height: 140%;
+    }
 }
