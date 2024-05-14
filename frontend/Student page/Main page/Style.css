@@ -168,10 +168,13 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 
 }
 
+<<<<<<< HEAD
 .bg-light-green {
     background-color: #d4edda;
 }
 
+=======
+>>>>>>> a95333027ce94b6431b9a2bb8d42c39db236e934
 .jua-regular {
     font-family: "Jua", sans-serif;
     font-weight: 400;
@@ -191,5 +194,71 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 
 /* Additional styling for the main content */
 .main-content {
+<<<<<<< HEAD
     margin-bottom: 100px; /* Adjust this value to fit the footer */
+=======
+    margin-bottom: 100px;
+    /* Adjust this value to fit the footer */
+}
+
+/* nav style */
+.navbar {
+    background-color: transparent;
+    /* Adjust or remove the background */
+}
+
+/* Customize the navbar toggler icon */
+.navbar-toggler {
+    border-color: rgba(255, 251, 251, 0.675);
+    /* Optional: change or remove the border */
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Additional customization for light backgrounds */
+.navbar-light .navbar-toggler {
+    filter: invert(100%);
+    /* Makes the icon white if your navbar background is dark */
+}
+
+/* main colors */
+.gradient-background {
+    background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
+    background-size: 180% 180%;
+    animation: gradient-animation 18s ease infinite;
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+@media (max-width: 1200px) {
+    .h-custom {
+        height: 140%;
+    }
+>>>>>>> a95333027ce94b6431b9a2bb8d42c39db236e934
 }

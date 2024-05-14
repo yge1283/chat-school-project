@@ -6,21 +6,21 @@ Base = declarative_base()
 class Teacher(Base):
     __tablename__ = '선생'
 
-    선생_ID = Column(Integer, primary_key=True, autoincrement=True)
+    선생_ID = Column(Integer, primary_key=True)
     성별 = Column(String(255))
     이름 = Column(String(255))
     생년월일 = Column(Date)
     이메일 = Column(String(255))
 
-    dashboard = relationship("Dashboard", backref="teacher", cascade="all, delete-orphan")
+    dashboard = relationship("Dashboard", cascade="all, delete-orphan")
     comment = relationship("Comment", cascade="all, delete-orphan")
-    assignment = relationship("Assignment", cascade="all, delete-orphan")
-    t_memo= relationship("T_Memo", cascade="all, delete-orphan")
+    
+    t_memo= relationship("T_memo", cascade="all, delete-orphan")
 
 class Student(Base):
     __tablename__ = '학생'
 
-    학생_ID = Column(Integer, primary_key=True, autoincrement=True)
+    학생_ID = Column(Integer, primary_key=True)
     성별 = Column(String(255))
     이름 = Column(String(255))
     생년월일 = Column(Date)
@@ -32,7 +32,7 @@ class Student(Base):
     comment = relationship("Comment", cascade="all, delete-orphan")
     chat = relationship("Chat", cascade="all, delete-orphan")
     submission = relationship("Submission", cascade="all, delete-orphan")
-    s_Memo= relationship("S_Memo", cascade="all, delete-orphan")
+    s_Memo= relationship("S_memo", cascade="all, delete-orphan")
     score= relationship("Score")
 
 class S_memo(Base):
@@ -80,7 +80,8 @@ class Dashboard(Base):
     학년 = Column(Integer)
     학급 = Column(Integer)
     
-    teacher = relationship("Teacher", backref="dashboard")
+    teacher = relationship("Teacher", back_populates="dashboard", overlaps="dashboard")
+    assignment = relationship("Assignment", cascade="all, delete-orphan")
     timetable = relationship("Timetable", cascade="all, delete-orphan")
 class Timetable(Base):
     __tablename__ = '시간표'
@@ -100,7 +101,7 @@ class Board(Base):
     작성내용 = Column(String(255))
     작성시간 = Column(DateTime)
 
-    student = relationship("Student")
+    student = relationship("Student", back_populates="boards", overlaps="boards")
     dashboard = relationship("Dashboard")
     comments = relationship("Comment", cascade="all, delete-orphan")
     attachment = relationship("Attachment", cascade="all, delete-orphan")
@@ -128,7 +129,7 @@ class Assignment(Base):
     __tablename__ = '과제'
 
     과제_ID = Column(Integer, primary_key=True, autoincrement=True)
-    대시보드 = Column(Integer, ForeignKey('대시보드.대시보드_key'))
+    대시보드_key = Column(Integer, ForeignKey('대시보드.대시보드_key'))
     주차 = Column(Integer)
     제목 = Column(String(25))
     내용 = Column(Text)
@@ -232,7 +233,7 @@ class Chatbot(Base):
     __tablename__ = '챗봇'
 
     챗봇_ID = Column(Integer, primary_key=True, autoincrement=True)
-    대시보드 = Column(Integer, ForeignKey('대시보드.대시보드_key'))
+    대시보드_key = Column(Integer, ForeignKey('대시보드.대시보드_key'))
     주차 = Column(Float)
     추가시간 = Column(Date)
     내용 = Column(Text)
