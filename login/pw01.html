@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>이메일 or 비밀번호 재설정</title>
+</head>
+<body>
+    <div>
+        <label for="email">이메일 주소:</label>
+        <input type="email" id="email" required>
+        <button type="button" id="forgetpw">전송</button>
+    </div>
+
+    <div>
+        <label for="token">메일로 받은 OTP :</label>
+        <input type="token" id="token" minlength="6" required>
+        <button type="button" onclick="verifytoken()" id = "verify">토큰 인증</button>
+    </div>
+    <form id="resetPasswordForm">
+        <div>
+            <label for="password1">새 비밀번호:</label>
+            <input type="password" id="password1" minlength="9" required>
+        </div>
+        <div>
+            <label for="password2">비밀번호 확인:</label>
+            <input type="password" id="password2" minlength="9" required>
+        </div>
+        <button type="submit">비밀번호 재설정</button>
+    </form>
+    
+    
+    <script>
+        async function forgetMyPw() {
+            const email = document.getElementById('email').value;
+            const response = await fetch('/reset-password-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert('정상적으로 전송되었습니다. 이메일을 확인해주세요');
+                document.getElementById('forgetpw').disabled = true;
+            } else {
+                console.error('Error:', data.error);
+            }
+        }
+        
+        async function verifytoken() {
+            const email = document.getElementById('email').value;
+            const token = document.getElementById('token').value;
+            const response = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, token })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert('토큰이 성공적으로 인증되었습니다.');
+                setupPasswordReset();
+            } else {
+                console.error('Error verifying token:', data.error);
+                alert('토큰 인증에 실패했습니다.');
+            }
+        }
+        
+        function setupPasswordReset() {
+            const form = document.getElementById('resetPasswordForm');
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const password = document.getElementById('password1').value;
+                const passwordConfirm = document.getElementById('password2').value;
+                if (password !== passwordConfirm) {
+                    alert("입력하신 비밀번호가 서로 다릅니다.");
+                    return;
+                }
+            const response = await fetch('/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert("비밀번호가 정상적으로 업데이트 되었습니다");
+        } else {
+            alert("비밀번호 재설정을 실패했습니다");
+            console.log("Error updating password:", data.error);
+        }
+    });
+}
+</script>
+</body>
+</html>
