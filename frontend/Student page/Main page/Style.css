@@ -168,6 +168,13 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 
 }
 
+<<<<<<< HEAD
+.bg-light-green {
+    background-color: #d4edda;
+}
+
+=======
+>>>>>>> a95333027ce94b6431b9a2bb8d42c39db236e934
 .jua-regular {
     font-family: "Jua", sans-serif;
     font-weight: 400;
@@ -187,6 +194,9 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 
 /* Additional styling for the main content */
 .main-content {
+<<<<<<< HEAD
+    margin-bottom: 100px; /* Adjust this value to fit the footer */
+=======
     margin-bottom: 100px;
     /* Adjust this value to fit the footer */
 }
@@ -250,4 +260,5 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
     .h-custom {
         height: 140%;
     }
+>>>>>>> a95333027ce94b6431b9a2bb8d42c39db236e934
 }
