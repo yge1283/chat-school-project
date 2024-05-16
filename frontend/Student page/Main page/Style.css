@@ -213,7 +213,7 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
     /* Makes the icon white if your navbar background is dark */
 }
 
-/* main colors */
+/* main colors  오타 수정용.*/
 .gradient-background {
     background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
     background-size: 180% 180%;
