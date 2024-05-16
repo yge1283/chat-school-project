@@ -225,6 +225,38 @@
                                     style="height: 45px; margin-left: 10px;">Send</button>
                             </div>
 
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const sendButton = document.querySelector('button.btn-outline-dark'); // Select the send button
+                                    const messageInput = document.getElementById('exampleFormControlInput2'); // Select the input field
+                                    const chatWindow = document.querySelector('.pt-3.pe-3'); // Select the chat window
+                            
+                                    sendButton.addEventListener('click', function() {
+                                        const messageText = messageInput.value.trim(); // Get input value and trim any whitespace
+                                        if (messageText !== "") {
+                                            // Create the chat bubble as an HTML string
+                                            const chatBubble = `<div class="d-flex flex-row justify-content-end">
+                                                                    <div>
+                                                                        <p class="p-2 me-3 mb-1 text-white rounded-3 bg-primary">${messageText}</p>
+                                                                        <p class="me-3 mb-3 rounded-3 text-muted float-end" style="font-size: 12px;">${new Date().toLocaleTimeString()} | ${new Date().toLocaleDateString()}</p>
+                                                                    </div>
+                                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp" alt="avatar 1" style="width: 45px; height: 100%;">
+                                                                </div>`;
+                                            chatWindow.innerHTML += chatBubble; // Append new chat bubble to chat window
+                                            messageInput.value = ""; // Clear the input field after sending a message
+                                            chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom of the chat window
+                                        }
+                                    });
+                            
+                                    messageInput.addEventListener('keypress', function(event) {
+                                        if (event.key === "Enter") {
+                                            sendButton.click(); // Trigger click on Send button when Enter is pressed
+                                        }
+                                    });
+                                });
+                            </script>
+                            
+
                         </div>
                     </div>
                 </div>
