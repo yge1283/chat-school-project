@@ -17,24 +17,14 @@ supabase: Client = create_client(url, key)
 @app.route('/check-email', methods=['POST'])
 def check_email():
     email = request.json['email']
-    result = supabase.table("userinfo").select("email").eq("email", email).execute()
+    result = supabase.table("profile").select("email").eq("email", email).execute()
     if result.data:
         return jsonify({"exists": True}), 200
     else:
         return jsonify({"exists": False}), 200
 
-# 아이디 중복 확인
-@app.route('/check-id', methods=['POST'])
-def check_id():
-    user_id = request.json['user_id']
-    result = supabase.table("userinfo").select("user_id").eq("user_id", user_id).execute()
-    if result.data:
-        return jsonify({"exists": True}), 200
-    else:
-        return jsonify({"exists": False}), 200
-
-# 회원가입 (이메일로 하는 경우)
-@app.route('/register', methods=['POST'])
+# 회원가입 (이메일로 하는 경우) - JS에서 학생인지, 선생인지 받아오는경우
+@app.route('/register_student', methods=['POST'])
 def register():
     data = request.json
     options = {
@@ -47,13 +37,14 @@ def register():
     response = supabase.auth.sign_up(email=data['email'], password=data['password'], options=options)
     if 'user' in response:
         user_data = {
+            
             'user_name': data['name'],
             'birthday': data['birthdate'],
-            'user_id': data['user_id'],
             'gender': data['gender'],
             'phone': data['phone'],
             'address': data['address'],
-            'email': data['email']
+            'email': data['email'],
+            'isT' : data.get('is_teacher', False) 
         }
         supabase.table('userinfo').insert(user_data).execute()
         return jsonify({'success': True}), 201
@@ -76,9 +67,36 @@ def login():
 @app.route('/login-google')
 def login_google():
     return redirect(
-        supabase.auth.sign_in_with_provider('google', 
-            redirect_to='메인페이지')
+        supabase.auth.sign_in_with_provider('google', redirect_to=url_for('callback', _external=True))
     )
+# 구글(서드파티)로 로그인이 처음인 경우
+@app.route('/callback')
+def callback():
+    # 세션에 저장된 사용자 ID 가져오기
+    user_id = session.get('user_id')
+    
+    if not user_id:
+        # Supabase 세션에서 사용자 ID를 가져오는 방법 예시 (구체적 구현 필요)
+        user_id = supabase.auth.user().id if supabase.auth.user() else None
+        session['user_id'] = user_id
+
+    if user_id:
+        # userinfo 테이블에서 사용자 정보 확인
+        user_info = supabase.table('userinfo').select("*").eq('user_id', user_id).execute()
+        
+        if user_info.data and len(user_info.data) > 0:
+            # 사용자 정보가 있으면 메인 페이지로 리다이렉트
+            return redirect(url_for('main_page'))
+        else:
+            # 사용자 정보가 없으면 추가 정보 입력 페이지로 리다이렉트
+            return redirect(url_for('additional_info'))
+    else:
+        return 'Authentication failed', 401
+
+@app.route('/additional-info')
+def additional_info():
+    return 'Please provide additional information'
+
 
 # 카카오로 로그인
 @app.route('/login-kakao')

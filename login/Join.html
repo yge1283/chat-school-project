@@ -60,11 +60,7 @@
     <label for="birthdate">Birthdate: </label>
     <input type="date" id="birthdate" name="birthdate" required>
 </div>
-<div class="form-group">
-    <label for="user_id">ID:</label>
-    <input type="text" id="user_id" name="user_id" required pattern="[A-Za-z0-9]{6,10}" title="ID must be 6-10 characters long and include only letters and numbers.">
-    <button type="button" id="verify">아이디 중복 체크</button>
-</div>
+
     
   </div>
 </div>
@@ -103,8 +99,8 @@
 
 <script>
     // supabase 기본 설정
-    const supabaseUrl = "복붙";
-    const supabaseKey = "복붙";
+    const supabaseUrl = ;
+    const supabaseKey = ;
     const client = supabase.createClient(supabaseUrl, supabaseKey);
 
     // 이메일 체크 여부 확인하게하기
@@ -123,7 +119,7 @@
 
     async function checkDuplicateEmail() {
     var inputEmail = document.getElementById("email").value;
-    let { data: record, error } = await client.from("userinfo").select("*");
+    let { data: record, error } = await client.from("profile").select("*");
 
     if (error) {
         console.error('Error fetching data:', error);
@@ -144,37 +140,6 @@
 
 
 
-
-    // ID가 조건에 충족하면:유효성검사 >> ID 중복 확인
-
-    document.getElementById("verify").addEventListener("click", function() {
-    var inputId = document.getElementById("user_id");
-    if (inputId.checkValidity()) {
-        checkDuplicateId(); // ID가 유효성 조건을 충족할 때만 함수 실행
-    } else {
-        alert("아이디는 6-10자의 영문자와 숫자만 포함해야 합니다."); // 유효하지 않을 경우 경고 메시지 출력
-    }
-    });
-
-    async function checkDuplicateId() {
-    var inputId = document.getElementById("user_id").value;
-    let { data: record, error } = await client.from("userinfo").select("*");
-
-    if (error) {
-        console.error('Error fetching data:', error);
-        return;
-    }
-
-    for (let i = 0; i < record.length; i++) {
-        console.log(`Record ${i}: ${record[i].user_id}`);
-        if (record[i].user_id === inputId) {
-            alert("이미 사용중인 아이디입니다.");
-            return; // 중복된 아이디 발견 시 for문 종료
-        }
-    }
-    alert("사용 가능한 아이디입니다."); // for문을 모두 돌고 중복된 아이디가 없을 경우
-    
-}
 
 
    // 이메일과 비밀번호로 가입하기
@@ -206,21 +171,25 @@
                 avatar_url: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                 phone: phone,
               },
-                emailRedirectTo: 'http://localhost:8000/'
+                emailRedirectTo: 'http://localhost:5500/'
             }
         });
+    if (signUpResponse.error) {
+    console.error('Error signing up:', signUpResponse.error);
+    alert('회원 가입에 실패했습니다.');
+      
+    } else {
+    // 이메일을 기반으로 profile 테이블에서 user_id 가져오기
+          
+          const profileResponse = await client.from('profile').select('id').eq('email', email).single();
+            const user_id = profileResponse.data.id;
 
-        if (signUpResponse.error) {
-            console.error('Error signing up:', signUpResponse.error);
-            alert('회원 가입에 실패했습니다.');
-        } else {
-            // 계정 생성에 성공했으면 사용자 정보를 DB에 저장
             const formData = {
+                user_id: user_id,
                 user_name: user_name,
                 birthday: document.getElementById("birthdate").value,
-                user_id: document.getElementById("user_id").value,
                 gender: document.querySelector('input[name="gender"]:checked').value,
-                email: email, // 이미 변수로 저장되어 있으므로 재사용
+                email: email,
                 phone : phone,
                 address: document.getElementById("adr").value
             };
