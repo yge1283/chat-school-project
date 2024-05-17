@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from connect import Connector
+from .connect import Connector
 from flask_migrate import Migrate
 
 

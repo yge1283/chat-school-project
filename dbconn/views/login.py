@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+import asyncio
 
 
 bp = Blueprint('main', __name__, url_prefix='/login') # /login 페이지 설정
@@ -22,7 +23,7 @@ def examine_signup_info(email, phone, teacher): #가입정보를 받아 db있는
 
 @bp.route('/')
 def index():
-    return render_template('login/Login_page.html') # 첫 로그인 페이지 화면
+    return render_template('./login/Login_page.html') # 첫 로그인 페이지 화면
 
 @bp.route('/signup')
 def signup():
