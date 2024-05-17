@@ -1,8 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from models import Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Timetable, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot
+from .models import Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Timetable, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot
 from sqlalchemy import create_engine,text
-from models import Base
+from .models import Base
 from sqlalchemy_utils import database_exists, create_database
 
 
@@ -12,7 +12,7 @@ class Connector:
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
-    def read_config(filename='app.ini', section='mysql'):
+    def read_config(filename='dbconn/app.ini', section='postgres'):
         config = ConfigParser(interpolation=ExtendedInterpolation())
         config.read(filename)
         
