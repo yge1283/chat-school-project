@@ -93,6 +93,7 @@ def callback():
     else:
         return 'Authentication failed', 401
 
+# 
 @app.route('/additional-info')
 def additional_info():
     return 'Please provide additional information'
