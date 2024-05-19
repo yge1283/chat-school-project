@@ -1,6 +1,12 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify, redirect
 import asyncio
+from supabase import create_client, Client
+from .. import config  # dbconn 폴더의 config 파일 불러오기
 
+
+url = config.SUPABASE_URL
+key = config.SUPABASE_KEY
+supabase: Client = create_client(url, key)
 
 bp = Blueprint('main', __name__, url_prefix='/login') # /login 페이지 설정
 
@@ -41,6 +47,17 @@ def signin():
     #로그인 정보가 DB에 없으면 'login_fail' 반환
     #로그인 정보가 있으면 'main page' html 표시 
 
+
+# 이메일로 로그인
+@bp.route('/login', methods=['POST'])
+def login():
+    email = request.json['email']
+    password = request.json['password']
+    result = supabase.auth.sign_in(email=email, password=password)
+    if result.get('error') is None:
+        return jsonify({'session': result['session']}), 200
+    else:
+        return jsonify({'error': result['error']}), 401
 
 
 
