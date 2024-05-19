@@ -9,7 +9,7 @@ key = config.SUPABASE_KEY
 supabase: Client = create_client(url, key)
 
 bp = Blueprint('main', __name__, url_prefix='/login') # /login 페이지 설정
-
+6
 
 # @bp.route('/signup')
 # def hello_pybo():
