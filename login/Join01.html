@@ -150,7 +150,9 @@
         user_id: document.getElementById('user_id').value,
         gender: document.querySelector('input[name="gender"]:checked').value,
         phone: document.getElementById('tel').value,
-        address: document.getElementById('adr').value
+        address: document.getElementById('adr').value,
+        // 학생 페이지인경우
+        is_teacher: false
     };
 
     axios.post('/register', formData)
