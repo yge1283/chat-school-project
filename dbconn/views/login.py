@@ -33,8 +33,11 @@ def index():
 
 @bp.route('/signup')
 def signup():
-
     return render_template('login/SignUp_page.html') # 회원가입 html 페이지 표시
+
+@bp.route('/findIDandPW')
+def findidandpw():
+    return render_template('login/Find_ID_and_PW.html') # id, pw찾기 페이지 표시
 
 @bp.route('/signin')
 def signin():

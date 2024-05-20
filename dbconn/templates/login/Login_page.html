@@ -101,23 +101,23 @@
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="Khmer">
-                <img src="./Images/Khmer.png" alt="Khmer" style="width: 24px; height: auto; margin-right: 8px;"> Khmer
+                <img src="{{ url_for('static', filename='./images/Khmer.png') }}" alt="Khmer" style="width: 24px; height: auto; margin-right: 8px;"> Khmer
               </a>
             </li>
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="Korean">
-                <img src="./Images/Korea.png" alt="Korean" style="width: 24px; height: auto; margin-right: 8px;"> Korean
+                <img src="{{ url_for('static', filename='./images/Korea.png') }}" alt="Korean" style="width: 24px; height: auto; margin-right: 8px;"> Korean
               </a>
             </li>
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="English">
-                <img src="./Images/English.png" alt="English" style="width: 24px; height: auto; margin-right: 8px;">
+                <img src="{{ url_for('static', filename='./images/English.png') }}" alt="English" style="width: 24px; height: auto; margin-right: 8px;">
                 English
               </a>
             </li>
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="Chinese">
-                <img src="./Images/Chinese.png" alt="Chinese" style="width: 24px; height: auto; margin-right: 8px;">
+                <img src="{{ url_for('static', filename='./images/Chinese.png') }}" alt="Chinese" style="width: 24px; height: auto; margin-right: 8px;">
                 Chinese
               </a>
             </li>
@@ -194,19 +194,19 @@
               <p class="lead fw-normal mb-0 me-3">Sign in with</p>
               <button type="button" data-mdb-button-init data-mdb-ripple-init
                 class="btn btn-outline-link btn-floating mx-1">
-                <img class="kakao" src="./Images/kakao.png" alt="kakao icon">
+                <img class="kakao" src="{{ url_for('static', filename='./images/kakao.png') }}" alt="kakao icon">
                 <i class="fab fa-kakaotalk-f"></i>
               </button>
 
               <button type="button" data-mdb-button-init data-mdb-ripple-init
                 class="btn btn-outline-link btn-floating mx-1">
-                <img class="naver" src="./Images/naver.png" alt="naver icon">
+                <img class="naver" src="{{ url_for('static', filename='./images/naver.png') }}" alt="naver icon">
                 <i class="fab fa-naver"></i>
               </button>
 
               <button type="button" data-mdb-button-init data-mdb-ripple-init
                 class="btn btn-outline-link btn-floating mx-1">
-                <img class="gmail" src="./Images/google.png" alt="gmail">
+                <img class="gmail" src="{{ url_for('static', filename='./images/google.png') }}" alt="gmail">
                 <i class="fab fa-gmail-in"></i>
               </button>
             </div>
@@ -233,7 +233,7 @@
                   Remember me
                 </label>
               </div>
-              <a href="./Find_ID_and_PW.html" class="link-light">Find_ID/PW</a>
+              <a href="./findIDandPW" class="link-light">Find_ID/PW</a>
             </div>
 
             <div class="text-center text-lg-start mt-4 pt-2">
@@ -255,7 +255,7 @@
               <button id="loginButton" type="button" data-mdb-button-init data-mdb-ripple-init
                 class="btn btn-dark btn btn-outline-light"
                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-              <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="./SignUp_page.html"
+              <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="./signup"
                   class="link-warning">Sign Up</a></p>
             </div>
 
