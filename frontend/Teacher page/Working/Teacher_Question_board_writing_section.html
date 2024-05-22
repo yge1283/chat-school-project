@@ -11,6 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
 
+<style>
+    .arrow-left {
+        position: relative;
+        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
+    }
+    .arrow-right {
+        position: relative;
+        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
+    }
+</style>
+
 <body>
     <div class="d-flex flex-column">
         <div class="form jua-regular">
@@ -126,6 +137,9 @@
 
         <div class="container mt-3"> <!-- 메인 컨테이너 -->
             <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
+                <div class="col-auto arrow-left"> <!-- 왼쪽 화살표 -->
+                    <p class="mb-0"><<<</p>
+                </div>
                 <div class="col-sm-8"> <!-- 추가 콘텐츠 영역 -->
                     <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
                         <div class="col-sm-12"> <!-- 12개의 열로 확장 -->
@@ -136,7 +150,7 @@
                                         <input type="text" id="searchdata" placeholder="질문1: 국어 34p 3번 문제에 대해서" class="form-control">
                                     </div>
                                 </div>                                
-
+        
                                 <div class="card text-center shadow-sm mb-3"> <!-- 카드 -->
                                     <div class="d-flex justify-content-start border p-2" style="background: #f8f9fa; gap: 30px;"> <!-- 플렉스와 gap 적용 -->
                                         
@@ -160,7 +174,6 @@
                                     </div>
                                 </div>
                                 
-                                
                                 <div class="mt-4"> <!-- 상단 마진 추가 -->
                                     <div class="card shadow-sm" style="height: 200px;"> <!-- 고정된 높이 설정 -->
                                         <div class="d-flex flex-column justify-content-start align-items-center border p-2" style="background: #f8f9fa;"> <!-- 줄어든 패딩 -->
@@ -169,7 +182,6 @@
                                     </div>
                                 </div>
                                 
-                        
                                 <div class="mt-3"> <!-- 간격을 주기 위해 상단 마진 추가 -->
                                     <div class="card shadow-sm"> <!-- 질문 내용 카드 -->
                                         <div class="d-flex justify-content-between border p-2" style="background: #f8f9fa;"> <!-- 양쪽 정렬 -->
@@ -179,13 +191,13 @@
                                                 <span class="text-muted me-3">OOO 선생님</span> <!-- 선생님 이름 -->
                                                 <span class="text-muted">답은 000입니다.</span> <!-- 답 내용 -->
                                             </div>
-                                
+                                    
                                             <!-- 두 번째 그룹 (오른쪽 끝) -->
                                             <span class="text-muted">2024-04-15 17:58:23</span> <!-- 날짜 -->
                                         </div>
                                     </div>
                                 </div>
-
+        
                                 <div class="mt-1"> <!-- 간격을 주기 위해 상단 마진 추가 -->
                                     <div class="card shadow-sm"> <!-- 질문 내용 카드 -->
                                         <div class="d-flex justify-content-between border p-2" style="background: #f8f9fa;"> <!-- 양쪽 정렬 -->
@@ -195,7 +207,7 @@
                                                 <span class="text-muted me-3">OOO 선생님</span> <!-- 선생님 이름 -->
                                                 <span class="text-muted">답은 000입니다.</span> <!-- 답 내용 -->
                                             </div>
-                                
+                                    
                                             <!-- 두 번째 그룹 (오른쪽 끝) -->
                                             <span class="text-muted">2024-04-15 17:58:23</span> <!-- 날짜 -->
                                         </div>
@@ -203,22 +215,27 @@
                                 </div>
                             </div>
                         </div>
-
+        
                         <div class="row justify-content-center mb-4 mt-4"> <!-- 업로드된 파일 및 메모 카드 중앙 정렬 -->
-
+        
                             <div class="mt-1"> <!-- 간격을 주기 위해 상단 마진 추가 -->
                                 <div class="input-group">
                                     <textarea id="searchdata" placeholder="댓글 입력창" class="form-control" style="resize: both;"></textarea>
                                     <button type="button" class="btn btn-outline-dark">등록</button>
                                 </div>                                
                             </div>
-
+        
                         </div>
-
+        
                     </div>
+                </div>
+                <div class="col-auto arrow-right"> <!-- 오른쪽 화살표 -->
+                    <p class="mb-0">>>></p>
                 </div>
             </div>
         </div>
+        
+        
     </div>
 
 
