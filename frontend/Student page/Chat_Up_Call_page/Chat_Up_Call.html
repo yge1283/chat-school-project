@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="../Chat_Up_Call_page/Chat_Up_Call.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 에모칸 사라지기 코드  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 알림창 css -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <!-- 글꼴 부트스트랩 -->
+
+  
+</head>
+<style>
+    /* 버튼, 전체 글꼴 지정 */
+        .Button {
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.7rem;
+            /* 버튼 안 글자 성질 조정  */
+       
+        
+        }
+        body{
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.2rem;
+
+        }
+
+
+
+
+    /* 메뉴바와 푸터 구역 */
+    .gradient-background {
+        background-size: 180% 180%;
+        animation: gradient-animation 18s ease infinite;
+    }
+
+    @keyframes gradient-animation {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .divider:after,
+    .divider:before {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
+
+    .h-custom {
+        height: calc(100% - 73px);
+    }
+
+    @media (max-width: 1200px) {
+        .h-custom {
+            height: 140%;
+        }
+    }
+
+    .jua-regular {
+        font-family: "Jua", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.2rem;
+    }
+
+    #dropzone {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+    }
+
+    #dropzone p {
+        margin-top: 0;
+    }
+
+    #file-input {
+        display: flex;
+    }
+
+
+    /* Additional styling for the main content */
+    .main-content {
+        margin-bottom: 100px;
+        /* Adjust this value to fit the footer */
+    }
+
+    /* nav style */
+    .navbar {
+        background-color: transparent;
+        /* Adjust or remove the background */
+    }
+
+    /* Customize the navbar toggler icon */
+    .navbar-toggler {
+        border-color: rgba(255, 251, 251, 0.675);
+        /* Optional: change or remove the border */
+    }
+
+    .navbar-light .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* Additional customization for light backgrounds */
+    .navbar-light .navbar-toggler {
+        filter: invert(100%);
+        /* Makes the icon white if your navbar background is dark */
+    }
+</style>
+
+<body>
+
+    <!-- 메뉴뱌 구역 시작 -->
+    <header>
+        <div class="main_container"
+            style="background-color: #aaf1ff;"> 
+            <!-- 메뉴바 컬러 지정  -->
+            
+            <!-- 헤더 섹션  -->
+            <header class="p-3 mb-3 border-bottom">
+                <div class="container-fluid">
+                    <div class="d-flex flex-wrap align-items-center justify-content-between justify-content-lg-between">
+                        <!-- ChatUpschool Text -->
+                        <span class="chatupschool-text">ChatUpSchool</span>
+
+
+
+                        <!-- 프로필 -->
+                        <div class="dropdown">
+                            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                    class="rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu text-small dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                            </ul>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </header>
+            <!-- 헤더 섹션 끝 -->
+        </div>
+    </header>
+    <!-- 메뉴바 구역 끝 -->
+
+    <div>
+        <p class="text1"><span class="name">홍길동</span>님 환영합니다</p>
+    </div>
+
+
+
+    <!-- 알림창 구역 -->
+    <div class="table-container">
+        
+        <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true" style="width: 150px;">
+            <div class="toast-header">
+                <strong class="me-auto">과목</strong>
+                <button type="button" class="btn-close" onclick="hideNotification()" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <div class="row">
+                    <div class="box-container">
+                        <div class="box box2">담당선생님<br>홍길동</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box-container">
+                        <div class="box tru">9:00 ~ 12:00</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box-container1">
+                        <div>홍길동 선생님은 오늘 결석입니다.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 알림창 구역 끝 -->
+
+        <!-- 표 -->
+        <table>
+            <tr>
+                <!-- 시간표의 과목 항목에 마우스를 대면 알림창이 숨겨지거나 보여줌  -->
+                <th style="width: 12%;">교시/요일</th>
+                <th onmouseover="hideNotification()">월</th>
+                <th onmouseover="hideNotification()">화</th>
+                <th onmouseover="hideNotification()">수</th>
+                <th onmouseover="hideNotification()">목</th>
+                <th onmouseover="hideNotification()">금</th>
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">1교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">2교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+   
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">3교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+           
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">4교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">5교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">6교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+            
+            </tr>
+            <tr>
+                <td onmouseover="hideNotification()">7교시</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+                <td onmouseover="showNotification('영어', event)">영어</td>
+                <td onmouseover="showNotification('사회', event)">사회</td>
+                <td onmouseover="showNotification('역사', event)">역사</td>
+                <td onmouseover="showNotification('국어', event)">국어</td>
+            </tr>
+
+         
+        </table>
+        
+    </div>
+    <!-- 표 구역 끝 -->
+
+
+    <!-- 버튼 구역 시작-->
+
+    <div class="Button_con">
+
+       <a style="text-decoration: none;" href="./Main_page.html"> <div class="Button">국어</div></a>
+        <a style="text-decoration: none;" href="./Main_page.html"><div class="Button">영어</div></a>
+       <a  style="text-decoration: none;" href="./Main_page.html"> <div class="Button">사회</div></a>
+        <a style="text-decoration: none;"href="./Main_page.html"><div class="Button">과학</div></a>
+       <!-- 버튼 끝의 아이콘 구역  -->
+        <div class="icon">
+            
+            <a href="./Chatbot_or_communication_page.html">
+                <!-- 감정 분석 챗봇 페이지로 이동  -->
+                <div class="chat_bt"><img class="chat_bt" src="{{ url_for('static', filename='./images/chat_icon') }}"  alt="chat_icon">
+                </div>
+            </a>
+
+            <a href="#">
+                <!-- 도와주는 챗봇(서비스 도우미 챗봇?) 페이지로 이동 -->
+                <div class="HelpChatbot"><img class=HelpChatbot src="{{ url_for('static', filename='./images/help_icon') }}" alt="help_icon"></div>
+            </div>
+            </a>
+
+
+    </div>
+    <!-- 버튼 구역 끝 -->
+
+
+
+
+
+   
+
+  <!-- 표의 과목에 마우스를 댈 시 나오는 알림창 기능 함수   -->
+    <script>
+        var toast = document.querySelector('.toast');
+        // 알람칭의 html에서 찾아서 toast 클래스에 변수를 할당
+
+        function showNotification(subject, event) {
+            hideNotification(); // 기존 알림창 숨기기
+            //이는 기존 알림창을 숨기는 역할을 합니다.
+
+             // 고정값으로 선언된 선생님 이름과 시간, 메시지를 변수에 할당합니다.
+            var teacherName = "홍길동"; // 예시로 고정값 사용
+            var time = "9:00 ~ 12:00"; // 예시로 고정값 사용
+            var message = teacherName + " 선생님은 오늘 결석입니다.";
+
+            // 과목, 담당 선생님, 시간, 메시지를 표시하는 요소들을 가져와서 각각의 내용을 설정합니다.
+            var subjectElement = document.querySelector('.me-auto');
+            subjectElement.textContent = subject;
+            var teacherElement = document.querySelector('.box2');
+            teacherElement.innerHTML = "담당선생님<br>" + teacherName;
+            var timeElement = document.querySelector('.tru');
+            timeElement.textContent = time;
+            var messageElement = document.querySelector('.box-container1 div');
+            messageElement.textContent = message;
+
+            // 알림창을 보이도록 설정하고, 이벤트가 발생한 요소의 위치에 따라 알림창의 위치를 조정합니다.
+            toast.style.display = 'block';
+            toast.style.left = event.target.offsetLeft + 100 +'px';
+            toast.style.top = event.target.offsetTop + event.target.offsetHeight
+             + 'px';
+        }
+
+        
+        // 알림창을 숨기는 함수입니다.
+        function hideNotification() {
+            toast.style.display = 'none';
+        }
+        
+        // 문서 전체를 감시하여 클릭 이벤트가 발생했을 때 실행됩니다.
+        document.addEventListener('click', function (event) {
+            // 클릭된 요소가 표(table)이 아니면 알림창을 숨기는 함수를 호출합니다.
+            var isTableClicked = event.target.closest('table');
+            if (!isTableClicked) {
+                hideNotification();
+            }
+        });
+    </script>
+
+
+
+
+
+
+
+</body>
+
+</html>
