@@ -1,17 +1,28 @@
-# 플라스크 언어 (서버용)
 
-from flask import Flask, request, jsonify, redirect
-from supabase import create_client, Client
-import config  # config 파일 불러오기
+# 플라스크 auth 인증으로 사용하기 위해
+# 디렉토리 구조 : 
+# /directory
+#|-- app.py   : 여기에서 인증 기능 구현
+#|-- .env     : 여기에서 url, key값 저장
+#|-- flask_storage.py    : 업로드, ALLOWED_EXTENSIONS, storage 버킷에 저장됨
+#|-- supabase_client.py
+
+from flask import Flask, request, redirect, url_for, jsonify, session
+from flask_storage import upload_file as upload_to_supabase
+from supabase_client import supabase
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY")  # Ensure you have a SECRET_KEY in your .env file
+
+@app.route('/')
+def index():
+    return 'Welcome to the Flask app!'
 
 
-# Supabase 키값 config.py 에서 가져오기 >> config파일은 업로드 하지 xx
-# config.py 파일이 Git 저장소에 포함되지 않도록 설정해야함.
-url = config.SUPABASE_URL
-key = config.SUPABASE_KEY
-supabase: Client = create_client(url, key)
 
 # 이메일 중복 확인
 @app.route('/check-email', methods=['POST'])
@@ -65,12 +76,31 @@ def login():
 
 # 구글로 로그인
 @app.route('/login-google')
-def login_google():
-    return redirect(
-        supabase.auth.sign_in_with_provider('google', redirect_to=url_for('callback', _external=True))
+def signin_with_google():
+    res = supabase.auth.sign_in_with_oauth(
+        {
+            "provider": "google",
+            "options": {
+                "redirect_to": f"{request.host_url}callback"
+            },
+        }
     )
+    return redirect(res.url)
+
+# 인증 후 리디렉트 하는 함수
+@app.route("/callback")
+def callback():
+    code = request.args.get("code")
+    next = request.args.get("next", "/")
+
+    if code:
+        res = supabase.auth.exchange_code_for_session({"auth_code": code})
+
+    return redirect(next)
+    
+    
 # 구글(서드파티)로 로그인이 처음인 경우
-@app.route('/callback')
+@app.route('/checkfirst')
 def callback():
     # 세션에 저장된 사용자 ID 가져오기
     user_id = session.get('user_id')
@@ -93,25 +123,37 @@ def callback():
     else:
         return 'Authentication failed', 401
 
+# 
 @app.route('/additional-info')
 def additional_info():
     return 'Please provide additional information'
 
 
 # 카카오로 로그인
+# 구글로 로그인
 @app.route('/login-kakao')
-def login_kakao():
-    return redirect(
-        supabase.auth.sign_in_with_provider('kakao', 
-            redirect_to='메인페이지')
+def signin_with_kakao():
+    res = supabase.auth.sign_in_with_oauth(
+        {
+            "provider": "kakao",
+            "options": {
+                "redirect_to": f"{request.host_url}callback"
+            },
+        }
     )
+    return redirect(res.url)
+
 
 # 로그아웃 
 @app.route('/logout', methods=['POST'])
 def logout():
-    session = request.headers.get('Authorization')
-    result = supabase.auth.sign_out(session)
+    user_session = session.get('user')
+    if not user_session:
+        return jsonify({'error': 'User not logged in'}), 401
+    
+    result = supabase.auth.sign_out(user_session['access_token'])
     if result.get('error') is None:
+        session.pop('user', None)
         return jsonify({'message': 'Logged out successfully'}), 200
     else:
         return jsonify({'error': result['error']}), 401
@@ -132,6 +174,7 @@ def profile():
     if not user_token:
         return jsonify({'error': 'User not logged in'}), 401
 
+# username은 userinfo에서 가져와야함
     response = supabase.table("profile").select("avatar_url, username").single().execute()
     if response.error:
         return jsonify({'error': 'Failed to fetch profile data'}), 500
@@ -147,7 +190,7 @@ def profile():
 
 
 # 비밀번호 재설정
-# 이메일 OTP 전송코드
+
 @app.route('/reset-password-request', methods=['POST'])
 def reset_password_request():
     email = request.json['email']
@@ -156,6 +199,9 @@ def reset_password_request():
         return jsonify({'message': 'Password reset email sent'}), 200
     return jsonify({'error': result['error']}), 400
 
+
+
+# 이메일 OTP 전송코드
 @app.route('/verify-otp', methods=['POST'])
 def verify_otp():
     email = request.json['email']
