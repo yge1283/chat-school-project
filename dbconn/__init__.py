@@ -17,7 +17,9 @@ def create_app():
     migrate.init_app(app, db)
     from . import models
 
-    from .views import login
+    from .views import login, student_main
     app.register_blueprint(login.bp)
+    app.register_blueprint(student_main.bp)
+
 
     return app
