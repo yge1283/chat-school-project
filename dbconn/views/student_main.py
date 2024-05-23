@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
 
-bp = Blueprint('main', __name__, url_prefix='/student_main')
+bp = Blueprint('main', __name__, url_prefix='/student')
 
 
-@app.route('/<page_name>')
-def page(page_name):
-    return render_template(f'{page_name}.html')
+@bp.route('/')
+def show_student_mainPage():
+    return render_template('./Student_page/Main_page.html')
+
+
+
+
 
 
