@@ -1,0 +1,270 @@
+/* 날짜 버튼 위치  */
+
+.date_bt_po{
+
+    position: fixed;
+    left: 570px;
+    top: 25px;
+}
+.date_bt{
+
+    width: 40px;
+    height: 40px;
+    border-radius: 15%;
+}
+
+
+
+/* 한주간의 나의 감정 구역 시작  */
+
+.Container {
+    width: 753px;
+    height: 550px;
+    position: relative;
+    right: 10%;
+    top: 20px;
+    background-color: white;
+    border: 10px solid rgb(206, 234, 241);
+    /* 한주간 나의 감정 구역 배경색 지정 */
+    border-radius: 45px;
+ 
+}
+
+.Container > div {
+    position: absolute;
+}
+
+
+
+
+/* 이모티콘 가로로 고정시키는 코드 시작  */
+
+
+ .Container > .WeekEmojiPicture {
+    width: 658px;
+    height: 139.35px;
+    /* 그림 전체 위치 조정 */
+    position: relative;
+    top: 230px;
+    left: 70px;
+  
+  
+} 
+
+
+
+.WeekEmojiPicture {
+    display: flex; /* Flexbox를 사용하여 요소들을 가로로 배치 */
+    margin: 0px -30px;
+
+  }
+  
+  .WeekEmojiPicture div {
+    margin-right: 10px; /* 각 이미지 사이에 간격을 주기 위한 마진 설정 */
+    margin: 20px auto;
+  }
+  
+  .WeekEmojiPicture img {
+    max-width: 100px; /* 이미지의 최대 너비 설정 */
+ 
+  }
+  
+/* 이모티콘 가로로 고정시키는 코드 끝  */
+
+
+
+
+.Container > .WeekEmojiPicture > .EmojiFaceWithColdSweat {
+    width: 82.78px;
+    height: 127.66px;
+    
+}
+
+
+
+
+.Container > .WeekEmojiPicture > .EmojiSmilingFaceWithOpenMouth {
+    width: 82.78px;
+    height: 127.66px;
+  
+}
+
+
+
+
+
+.Container > .WeekEmojiPicture > .EmojiSlightlyFrowningFace {
+    width: 82.78px;
+    height: 127.66px;
+    
+}
+
+
+
+
+.Container > .WeekEmojiPicture > .EmojiDisappointedButRelievedFace {
+    width: 82.78px;
+    height: 127.66px;
+    left: 148.78px;
+    top: 11.69px;
+}
+
+
+
+
+.Container > .WeekEmojiPicture > .EmojiLoudlyCryingFace {
+    width: 82.78px;
+    height: 127.66px;
+}
+
+
+
+/* 컨테이너 안의 날짜위의 줄 성질 조정 */
+.Container > .Line1 {
+    width: 665px;
+    height: 0px;
+    left: 45px;
+    top: 399px;
+    border: 8px solid  rgb(163, 237, 255) ;
+}
+
+/* 날짜 구역 */
+.Date  {
+    display: grid; /* 그리드를 사용하여 요소들을 배열 */
+    grid-template-columns: repeat(5, 39px); /* 열을 5개로 설정하고 각 열의 너비는 자동으로 조정 */
+    gap: 90px; /* 각 열 사이의 간격을 조정 */
+    top: 430px;
+    left: 99px ;
+/* 날짜 글꼴 */
+    text-align: center;
+    color: black;
+    font-size: 25px;
+    font-family: Inter;
+    font-weight: 700;
+    font-family: "Jua", sans-serif;
+
+}
+
+
+
+
+
+
+/* 한주간 나의 감정 상태 끝  */
+
+/* 일주일간 상태의 이모티콘 성질 조정  */
+.vector1{
+    width: 100px;
+    height: 130px;
+    border-radius: 50%;
+}
+/* 일주일간 나의 감정상태 문구 위치, 글꼴 조정 */
+.text4 {
+   position: absolute;
+
+   top: 15%;
+   left: 24%;
+
+   font-family: "Jua", sans-serif;
+   font-weight: 400;
+
+   font-style: bold;
+   font-size: 2.5rem;
+
+}
+
+
+
+/* 오늘의 감정상태 컨테이너  */
+.container2{
+    display: grid;
+    grid-template-rows: 1fr 3fr 1fr;
+    gap: 40px;
+    width: 495px;
+    height: 550px;
+    background: rgb(228, 247, 255);
+    padding: 20px 40px;
+    box-sizing: border-box;
+    position: relative;
+    left: 15%;
+    top: 20px;
+    border-radius: 10%;
+    
+    
+
+}
+/* 오늘의 감정상태는 문구 위치, 글꼴 지정 */
+.title2{
+    text-align: center;
+    position: relative;
+    top: 20%;
+    color: black;
+    font-size: 36px;
+    font-family: Inter;
+    word-wrap: break-word;
+    font-family: "Jua", sans-serif;
+} 
+
+
+/* 오늘의 감정 상태 이모티콘 구역 */
+.emoji2 {
+    width: 350px;
+    height: 320px;
+    border-radius: 100%;
+    position: relative;
+    left: 7%;
+}
+/* 나쁘지 않아요 문구안의 직사각형 구역  */
+.message-container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+/* 나쁘지 않아요 문구 성질 조정  */
+.message2 {
+    text-align: center;
+    color: black;
+    font-size: 24px;
+    font-family: Inika;
+    font-weight: 700;
+    word-wrap: break-word;
+         font-family: "Jua", sans-serif;
+}
+
+/* 두 컨테이너 영역의 간의 간격 조절 */
+.total{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 5px;
+ 
+ 
+}
+
+
+
+@media (max-width: 800px) {
+    .total {
+        grid-template-columns: 2fr; /* 화면이 작아졌을 때 컨테이너를 한 줄에 배치합니다. */
+    }
+
+    .container2 {
+        grid-row: 1; /* 첫 번째 위치에 배치합니다. */
+
+        
+    }
+
+    .Container {
+        grid-row: 2; /* 두 번째 위치에 배치합니다. */
+        position: relative;
+        left: 1px;
+}
+
+}
+
+
+

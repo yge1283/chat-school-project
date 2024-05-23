@@ -1,0 +1,84 @@
+
+
+
+
+
+.graph {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    grid-column-gap: 60px;
+    grid-gap: 30px;
+      
+
+}
+
+.graph01, .graph02 {
+    display: grid;
+    margin-right: 0px auto; /* Remove margin for horizontal layout */
+    grid-gap: 20px;
+    width: 100%;
+    margin-bottom: -10px;
+  
+
+}
+.gr1, .gr2{
+    background-color: beige;
+    width: auto;
+}
+
+/* CSS for vertical layout when screen width is reduced */
+@media (max-width: 768px) and (min-width:1200px) {
+    .graph {
+        grid-template-columns: 1fr; /* One column for vertical layout */
+        position: fixed;
+        width: 50%;
+        bottom: 7%;
+        
+    }
+    .ci{
+        grid-template-columns: 1fr ;
+       position: fixed;
+       left: 70%;
+       
+        
+    }
+    .text1{
+        position: fixed;
+        left:40%;
+        
+    }
+    .footer gradient-background{
+        height: 5px;
+
+    }
+
+    
+}
+
+.text1{
+
+   display: flex;
+
+   margin-right: 200px;
+   margin-top: -10px;
+   font-size: 14px;
+   font-weight: bold;
+   
+}
+.text2{
+    font-size: 12px;
+}
+
+.color1{
+    background-color: cadetblue;
+}
+
+
+
+.percent{
+    margin: 0px 10px 0px auto;
+   
+    
+}
+
+
