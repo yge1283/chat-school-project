@@ -17,9 +17,10 @@ def create_app():
     migrate.init_app(app, db)
     from . import models
 
-    from .views import login, student_main
-    app.register_blueprint(login.bp)
+    from .views import student_main, chatbot
+    #app.register_blueprint(login.bp)
     app.register_blueprint(student_main.bp)
+    app.register_blueprint(chatbot.bp)
 
 
     return app
