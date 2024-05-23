@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    
+       
+
+    <link rel="stylesheet" href="../Education_Status_page/Education_Status.css">
+    <link rel="stylesheet" href="../Education_Status_page/Education_Status_Graph.css">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    
+
+  
+</head>
+
+
+<style>
+
+/* 전체 글꼴 변경  */
+    body{
+        font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.2rem;
+    }
+
+/* 메뉴바 스타일 시작  */
+
+    .gradient-background {
+        background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
+        background-size: 180% 180%;
+        animation: gradient-animation 18s ease infinite;
+        
+
+    }
+
+    @keyframes gradient-animation {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .divider:after,
+    .divider:before {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
+
+    .h-custom {
+        height: calc(100% - 73px);
+    }
+
+    @media (max-width: 1200px) {
+        .h-custom {
+            height: 140%;
+        }
+        .gradient-background{
+            height: 3%;
+        }
+    }
+
+    .jua-regular {
+        font-family: "Jua", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.2rem;
+    }
+
+    #dropzone {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+    }
+
+    #dropzone p {
+        margin-top: 0;
+    }
+
+    #file-input {
+        display: flex;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* Additional styling for the main content */
+    .main-content {
+        margin-bottom: 100px;
+        /* Adjust this value to fit the footer */
+    }
+
+    /* nav style */
+    .navbar {
+        background-color: transparent;
+        /* Adjust or remove the background */
+    }
+
+    /* Customize the navbar toggler icon */
+    .navbar-toggler {
+        border-color: rgba(255, 251, 251, 0.675);
+        /* Optional: change or remove the border */
+    }
+
+    .navbar-light .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* Additional customization for light backgrounds */
+    .navbar-light .navbar-toggler {
+        filter: invert(100%);
+        /* Makes the icon white if your navbar background is dark */
+    }
+
+    /* 메뉴바 스타일 끝  */
+</style>
+
+<body>
+    <!-- 전체 페이지 코드 -->
+
+
+      
+
+       <!-- 메뉴바 구역 시작 -->
+
+       <!-- 메뉴바 컬러 지정  -->
+    <div class="" style="background-color: #aaf1ff;">
+        <header class="p-3 mb-3 border-bottom bg-light-green">
+            <div class="container col-lg-12 col-md-6 col-sm-3">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a href="/"
+                        class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                            <use xlink:href="#bootstrap"></use>
+                        </svg>
+                    </a>
+
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li><a href="#" class="nav-link px-5 link-secondary"><button type="button"
+                                    class="btn btn-dark">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-justify" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </a></li>
+                        <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
+
+                        <li><a href="#" class="nav-link px-3 link-body-emphasis">과제</a></li>
+
+                        <div class="dropdown text-end">
+                            <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">챗봇과의 대화
+                            </a>
+                            <ul class="dropdown-menu" data-bs-popper="static">
+                                <li><a class="dropdown-item" href="#">교육용 챗봇</a></li>
+                                <li><a class="dropdown-item" href="#">심리상담 챗봇</a></li>
+                            </ul>
+                        </div>
+
+                        <li><a href="#" class="nav-link px-3 link-body-emphasis">오답노트</a></li>
+
+                        <div class="dropdown text-end">
+                            <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">기타사항
+                            </a>
+                            <ul class="dropdown-menu" data-bs-popper="static">
+                                <li><a class="dropdown-item" href="#">오늘의 학습</a></li>
+                                <li><a class="dropdown-item" href="#">파일 다운로드</a></li>
+                                <li><a class="dropdown-item" href="#">메모장</a></li>
+                                <li><a class="dropdown-item" href="#">학습진도현황</a></li>
+                                <li><a class="dropdown-item" href="#">감정 현황</a></li>
+                            </ul>
+                        </div>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" data-toggle="modal" class="px-3" data-target="#logoutModal">로그아웃</a></li>
+                    </ul>
+
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>     
+        <!--메뉴바 전체 구역 끝  -->
+            
+    
+          <!-- 원 그래프 2개 구역 시작  -->
+          
+                <div class="" style="margin: 50px;">
+        
+                    <div class="ci">
+                        <!-- 그래프 전체 구역 클래스명 : -->
+        
+                        <!-- 국어 그래프 -->
+        
+                        <div class="column col-sm-6">
+        
+                            <div class="text1">오늘 학습현황</div>
+        
+                            <div class="progress blue mt-5 my-5">
+        
+                                <span class="progress-left">
+        
+                                    <span class="progress-bar"></span>
+        
+                                </span>
+        
+                                <span class="progress-right">
+        
+                                    <span class="progress-bar"></span>
+        
+                                </span>
+        
+                                <div class="progress-value">90%</div>
+        
+                            </div>
+        
+                        </div>
+        
+                        <!-- 1학기 그래프 -->
+        
+                        <div class="column col-md-6">
+        
+                            <div class="text1">1학기 학습현황</div>
+        
+                            <div class="progress yellow mt-5 my-5">
+        
+                                <span class="progress-left">
+        
+                                    <span class="progress-bar"></span>
+        
+                                </span>
+        
+                                <span class="progress-right">
+        
+                                    <span class="progress-bar"></span>
+        
+                                </span>
+        
+                                <div class="progress-value">37.5%</div>
+        
+                            </div>
+        
+                        </div>
+        
+                </div>
+        
+    
+    
+            
+    
+                <!-- 그래프 전체 구역 코드  -->
+           <div class="graph">
+
+
+                <!-- 오늘 학습현황 막대 그래프  -->
+                <div class="graph01">
+                         <div class="text2">총<span>N</span>문제/<span>N1</span>문항</div>
+
+                           <div class="gr1" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-success" style="width: 25%"><span class="percent">25%</span></div>
+                          </div>
+                         
+
+                          <div class="gr1" role="progressbar" aria-label="Info example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-info text-dark" style="width: 50%"><span class="percent" >50%</span></div>
+                          </div>
+
+                          <div class="gr1" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-warning text-dark" style="width: 75%"><span class="percent">75%</span></div>
+                          </div>
+
+                          <div class="gr1" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar bg-danger" style="width: 100%"><span class="percent">100%</span></div>
+                          </div>
+                    
+
+                
+
+                 </div> 
+              
+                <!-- 1학기 학습현황 막대 그래프  -->
+                <div class="graph02">
+
+                  <div class="text2">총 <span>N</span>문제/<span>N</span>문항</div>
+
+                  <div class="gr2" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-success" style="width: 25%"><span class="percent">25%</span></div>
+                  </div>
+
+                  <div class="gr2" role="progressbar" aria-label="Info example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-info text-dark" style="width: 50%"><span class="percent">50%</span></div>
+                  </div>
+
+                  <div class="gr2" role="progressbar" aria-label="Warning example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-warning text-dark" style="width: 75%"><span class="percent">75%</span></div>
+                  </div>
+
+                  <div class="gr2" role="progressbar" aria-label="Danger example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar bg-danger" style="width: 100%"><span class="percent">100%</span></div>
+                  </div>
+
+          
+                  
+                </div>
+           </div>
+       </div>
+
+                
+       
+ 
+    
+            
+        
+
+
+
+
+
+
+
+
+
+    
+
+
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+       crossorigin="anonymous"></script>
+
+
+        
+       
+</body>
+</html>
