@@ -231,18 +231,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> <!-- jQuery UI -->
-    <script>
-    $(function() {
-        // 달력 위젯 초기화
-        $("#datepicker").datepicker(); 
-
-        // "달력 이미지" 클릭 시 달력 위젯을 토글
-        $("#calendarTrigger").click(function(event) {
-            event.preventDefault(); // 기본 동작 방지
-            $("#datepicker-container").toggle(); // 달력의 가시성을 토글
-        });
-    });
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
