@@ -82,7 +82,7 @@ class Dashboard(Base):
     과목명 = Column(String(255))
     학년 = Column(Integer)
     학급 = Column(Integer)
-    시간표 = Column(Date)
+    시간표 = Column(String(255))
 
     teacher = relationship("Teacher", back_populates="dashboard", overlaps="dashboard")
     assignment = relationship("Assignment", cascade="all, delete-orphan")
