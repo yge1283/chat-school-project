@@ -21,6 +21,6 @@ def create_app():
     #app.register_blueprint(login.bp)
     app.register_blueprint(student_main.bp)
     app.register_blueprint(chatbot.bp)
-
+    # app.register_blueprint()
 
     return app
