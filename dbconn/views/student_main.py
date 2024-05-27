@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
-from .. import conn
 bp = Blueprint('student_main', __name__, url_prefix='/student')
 
 

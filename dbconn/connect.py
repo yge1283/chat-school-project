@@ -1,8 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from models import Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
+from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
 from sqlalchemy import create_engine,text
-from models import Base
 from sqlalchemy_utils import database_exists, create_database
 
 
@@ -148,7 +147,11 @@ class Connector:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
 
-    
+    def convert_to_list(objects):
+        data_list = []
+        for obj in objects:
+            data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
+        return data_list
 
 
 #이 파일은 기본적으로 상대주소로 작동하지 않고 한 파일내에 다 있다는 가정하에 작동되게 대기 때문에 이상이 import에 문제가 생길 수 있습니다.

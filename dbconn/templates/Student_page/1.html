@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+</head>
+<body>
+    <div id="chat-messages"></div>
+    <input type="text" id="message-input">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        // Socket.IO 클라이언트 생성
+        const socket = io('/chat');
+
+        // 서버로부터 메시지를 받았을 때 처리하는 함수
+        socket.on('message', message => {
+            displayMessage(message);
+        });
+
+        // 메시지를 서버로 전송하는 함수
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            socket.emit('chat', { msg: message });
+            messageInput.value = ''; // 메시지 입력창 초기화
+        }
+
+        // 화면에 메시지를 표시하는 함수
+        function displayMessage(message) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.innerText = message;
+            chatMessages.appendChild(messageElement);
+        }
+    </script>
+</body>
+</html>
