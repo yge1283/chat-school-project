@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
-
+from .. import conn
+from .. import socketio
 bp = Blueprint('chatbot', __name__, url_prefix='/edu_chatbot')
 
 
