@@ -134,9 +134,6 @@ class Assignment(Base):
     attachment = relationship("Assignment_attachment", cascade="all, delete-orphan")
     submission = relationship("Submission", cascade="all, delete-orphan")
 
-
-
-
 class Assignment_attachment(Base):
     __tablename__ = '과제_첨부파일'
 
