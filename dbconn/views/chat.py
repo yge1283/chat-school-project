@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
-from flask_socketio import emit,SocketIO
+from flask_socketio import emit
 from datetime import datetime
 from .. import conn,socketio  # 여기서는 모듈 간의 의존성을 최소화합니다.
 bp = Blueprint('chat', __name__, url_prefix='/chat')
@@ -21,4 +21,5 @@ def handle_message(data):
 def post_message(data):
     message = data['msg']
     nowdate = datetime.now()
-    conn.tb_ninsert("Chat", [(1, uid, nowdate, message, "")])
+    new_chat = [(1, "082d8640-9287-4284-9a73-47543b255309", nowdate, message, "")]
+    conn.tb_ninsert("Chat", new_chat)
