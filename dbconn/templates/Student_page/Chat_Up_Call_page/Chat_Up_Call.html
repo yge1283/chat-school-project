@@ -10,7 +10,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 
-    <link rel="stylesheet" href="../Chat_Up_Call_page/Chat_Up_Call.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/Chat_Up_Call.css') }}">
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -302,13 +302,13 @@
             
             <a href="./Chatbot_or_communication_page.html">
                 <!-- 감정 분석 챗봇 페이지로 이동  -->
-                <div class="chat_bt"><img class="chat_bt" src="{{ url_for('static', filename='./images/chat_icon') }}"  alt="chat_icon">
+                <div class="chat_bt"><img class="chat_bt" src="{{ url_for('static', filename='./images/chat_icon.png') }}"  alt="chat_icon">
                 </div>
             </a>
 
             <a href="#">
                 <!-- 도와주는 챗봇(서비스 도우미 챗봇?) 페이지로 이동 -->
-                <div class="HelpChatbot"><img class=HelpChatbot src="{{ url_for('static', filename='./images/help_icon') }}" alt="help_icon"></div>
+                <div class="HelpChatbot"><img class=HelpChatbot src="{{ url_for('static', filename='./images/help_icon.png') }}"" alt="help_icon"></div>
             </div>
             </a>
 
