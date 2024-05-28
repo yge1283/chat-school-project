@@ -4,8 +4,8 @@ bp = Blueprint('teacher_main', __name__, url_prefix='/teacher')
 
 
 @bp.route('/')
-def show_teacher_mainPage():
-    return render_template('./Teacher_page/Teacher_Main_page/Teacher_Page_Main_page.html')
+def show_teacher_DashboardPage():
+    return render_template('./Teacher_page/Teacher_Main_page/Teacher_Main_page_Dashboard.html')
 
 # 과제 게시판 페이지를 위한 라우트 추가
 @bp.route('/homeworkpage')
@@ -36,6 +36,10 @@ def show_teacher_memoPage():
 @bp.route('/MemoEditpage')
 def show_teacher_memoEditPage():
     return render_template('./Teacher_page/Teacher_Memo_page/Teacher_Memo_edit_page.html')
+
+@bp.route('/teachermainpage')
+def show_teacher_mainPage():
+    return render_template('./Teacher_page/Teacher_Main_page/Teacher_Main_page.html')
 
 
 
