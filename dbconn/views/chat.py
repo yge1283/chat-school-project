@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
 from flask_socketio import emit,SocketIO
 from datetime import datetime
-from .. import conn  # 여기서는 모듈 간의 의존성을 최소화합니다.
-socketio=SocketIO
+from .. import conn,socketio  # 여기서는 모듈 간의 의존성을 최소화합니다.
 bp = Blueprint('chat', __name__, url_prefix='/chat')
 uid = ""
 
