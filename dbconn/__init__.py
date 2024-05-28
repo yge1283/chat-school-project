@@ -1,15 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_socketio import SocketIO
 from .connect import Connector
-app = Flask(__name__)
-socketio = SocketIO(app)
+from flask_migrate import Migrate
+from .connect import Connector
+from flask_socketio import SocketIO
 db_uri = Connector.read_config(section='postgres')
 conn = Connector(db_uri)
+socketio = SocketIO()
 def create_app():
-    # 데이터베이스 설정
-    
+    app = Flask(__name__)
+    db_uri = Connector.read_config(section='postgres')  # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -17,14 +17,13 @@ def create_app():
     migrate = Migrate()
     db.init_app(app)
     migrate.init_app(app, db)
+    socketio.init_app(app)
 
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
-    from .views import student_main, chat
+     
+    from .views import student_main
     #app.register_blueprint(login.bp) # login은 별도 api사용하니 구현 다 되면 연결해주세요
     app.register_blueprint(student_main.bp)
-
-    app.register_blueprint(chat.bp)
-    socketio.init_app(app)
     
     return app
 

@@ -161,6 +161,8 @@ if __name__ == '__main__':
     # MySQLConnector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
     conn = Connector(config)
     engine = create_engine(config)
+    # SQLALCHEMY    
+    
     if not database_exists(engine.url):
         create_database(engine.url)   
     else:
