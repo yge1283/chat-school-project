@@ -4,5 +4,3 @@ login/config.py
 dbconn/config.py
 *.pyc
 __pycache__/
-dbconn/__init__.py
-frontend/Teacher page/Working/Teacher_Page_Main_Frame.html
