@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata,Userinfo
+from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata,Userinfo
 from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime, date
@@ -12,7 +12,7 @@ class Connector:
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
-    def read_config(filename='app.ini', section='postgres'):
+    def read_config(filename='dbconn/app.ini', section='postgres'):
         config = ConfigParser(interpolation=ExtendedInterpolation())
         config.read(filename)
         
@@ -162,6 +162,16 @@ class Connector:
                 return results
             except Exception as e:
                 raise e
+
+    def bd_get(self,tb_name ,search):
+            try:
+                table = globals()[tb_name]
+                query = self.session.filter(table.게시물_ID==search).query(table, Userinfo.user_name).join(Userinfo, table.학생_ID == Userinfo.user_id)
+
+                results = query.get()
+                return results
+            except Exception as e:
+                raise e
     
     def sn_persent(self, db_name, ass_id,st_id):
         try:
@@ -194,7 +204,6 @@ class Connector:
             return results
         except Exception as e:
             raise e
-        
     
     def table_to_list(self, objects):
         data_list = []
