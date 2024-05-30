@@ -65,10 +65,6 @@
       height: 40px;
     }
 
-    .naver {
-      height: 40px;
-    }
-
     .gmail {
       height: 40px;
     }
@@ -101,24 +97,28 @@
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="Khmer">
-                <img src="{{ url_for('static', filename='./images/Khmer.png') }}" alt="Khmer" style="width: 24px; height: auto; margin-right: 8px;"> Khmer
+                <img src="{{ url_for('static', filename='./images/Khmer.png') }}" alt="Khmer"
+                  style="width: 24px; height: auto; margin-right: 8px;"> Khmer
                 <!-- <img src="./Images/Khmer.png" alt="Khmer" -->
               </a>
             </li>
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="Korean">
-                <img src="{{ url_for('static', filename='./images/Korean.png') }}" alt="Korean" style="width: 24px; height: auto; margin-right: 8px;"> Korean
+                <img src="{{ url_for('static', filename='./images/Korean.png') }}" alt="Korean"
+                  style="width: 24px; height: auto; margin-right: 8px;"> Korean
               </a>
             </li>
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="English">
-                <img src="{{ url_for('static', filename='./images/English.png') }}" alt="English" style="width: 24px; height: auto; margin-right: 8px;">
+                <img src="{{ url_for('static', filename='./images/English.png') }}" alt="English"
+                  style="width: 24px; height: auto; margin-right: 8px;">
                 English
               </a>
             </li>
             <li>
               <a class="dropdown-item language-option" href="#" data-lang="Chinese">
-                <img src="{{ url_for('static', filename='./images/Chinese.png') }}" alt="Chinese" style="width: 24px; height: auto; margin-right: 8px;">
+                <img src="{{ url_for('static', filename='./images/Chinese.png') }}" alt="Chinese"
+                  style="width: 24px; height: auto; margin-right: 8px;">
                 Chinese
               </a>
             </li>
@@ -200,12 +200,6 @@
 
               <button type="button" data-mdb-button-init data-mdb-ripple-init
                 class="btn btn-outline-link btn-floating mx-1">
-                <img src="{{ url_for('static', filename='./images/naver.png') }}" alt="naver icon">
-                <i class="fab fa-naver"></i>
-              </button>
-
-              <button type="button" data-mdb-button-init data-mdb-ripple-init
-                class="btn btn-outline-link btn-floating mx-1">
                 <img src="{{ url_for('static', filename='./images/gmail.png') }}" alt="gmail">
                 <i class="fab fa-gmail-in"></i>
               </button>
@@ -239,14 +233,14 @@
             <div class="text-center text-lg-start mt-4 pt-2">
               <div class="conateiner d-flex" style="justify-content: space-evenly; height: 50px;">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                  <label class="form-check-label" for="flexRadioDefault1">
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
                     Teacher
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                  <label class="form-check-label" for="flexRadioDefault2">
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                  <label class="form-check-label" for="flexCheckChecked">
                     Student
                   </label>
                 </div>
@@ -258,9 +252,6 @@
               <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="./SignUp_page.html"
                   class="link-warning">Sign Up</a></p>
             </div>
-
-            
-
           </form>
         </div>
       </div>
@@ -278,9 +269,8 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous">
-  </script>
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 </body>
 
 </html>

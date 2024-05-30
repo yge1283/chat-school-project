@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>회원가입 양식1</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type=text], input[type=password], input[type=email], input[type=tel] {
+    width: 300px;
+    padding: 8px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  input[type=radio] {
+    margin: 0 10px 0 10px;
+  }
+  .radio-label {
+    display: inline;
+  }
+  button {
+    background-color: #48974a;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 20%;
+  }
+  button:hover {
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+<h2>회원가입</h2>
+<h3> ID ,성별, 이름, 전화번호 :SMS 인증 x </h3>
+<h4>가입 눌렀을때 이메일 전송(confirm 페이지로 이동하면 유저등록됨)</h4>
+
+<form action="/submit_your_form_endpoint" id="registration-form">
+  <div class="form-group">
+    <label for="name">Full name:</label>
+    <input type="text" id="name" name="name" required>
+  </div>
+  
+  <div class="form-group">
+    <label for="birthdate">Birthdate: </label>
+    <input type="date" id="birthdate" name="birthdate" required>
+</div>
+
+    
+  </div>
+</div>
+
+  <div class="form-group">
+    <label class="radio-label">Male<input type="radio" name="gender" value="male" required></label>
+    <label class="radio-label">Female<input type="radio" name="gender" value="female"></label>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <button type="button" id="emailver">이메일 중복체크</button>
+    
+</div>
+
+
+  
+  <div class="form-group">
+    <label for="psw">Password:</label>
+    <input type="password" id="psw" name="psw" required minlength="6">
+  </div>
+  
+  <div class="form-group">
+    <label for="tel">Phone Number:</label>
+    <input type="tel" id="tel" name="phone" required minlength="11">
+  </div>
+  
+  <div class="form-group">
+    <label for="adr">Address:</label>
+    <input type="text" id="adr" name="address" required>
+  </div>
+  
+  <button type="submit">가입하기</button>
+</form>
+
+<script>
+    // supabase 기본 설정
+    const supabaseUrl = "dd";
+    const supabaseKey = "dd";
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+    // 이메일 체크 여부 확인하게하기
+    let isEmailVerified = false;
+
+    // 이메일 유효성 체크
+    document.getElementById("emailver").addEventListener("click", function() {
+    var inputEmail = document.getElementById("email");
+    if (inputEmail.checkValidity()) {
+        checkDuplicateEmail(); // ID가 유효성 조건을 충족할 때만 함수 실행
+    } else {
+        alert("이메일 양식에 맞춰서 다시 작성해주세요"); // 유효하지 않을 경우 경고 메시지 출력
+    }
+    });
+    // 해당 이메일 중복체크
+
+    async function checkDuplicateEmail() {
+    var inputEmail = document.getElementById("email").value;
+    let { data: record, error } = await client.from("profile").select("*");
+
+    if (error) {
+        console.error('Error fetching data:', error);
+        return;
+    }
+
+    for (let i = 0; i < record.length; i++) {
+        if (record[i].email === inputEmail) {
+            alert("이미 등록된 이메일입니다");
+            return;
+        }
+    }
+    alert("사용가능한 이메일입니다");
+    isEmailVerified = true;
+
+    // 추가: 사용가능한 이메일일 때, id = emailver 버튼 비활성화 
+}
+
+
+
+
+
+   // 이메일과 비밀번호로 가입하기
+  // 먼저 회원가입 부터 실행 후
+  
+    // 이름, 성별, 전화, 주소 입력하기 >> DB에 저장하기 (비밀번호 제외)
+
+    document.getElementById("registration-form").addEventListener("submit", async function(event) {
+    event.preventDefault(); // 폼의 기본 제출을 방지
+
+    if (isEmailVerified) {
+        const emailElement = document.querySelector("#email");
+        const passwordElement = document.querySelector("#psw");
+        const nameElement = document.querySelector("#name");
+        const telElement =  document.querySelector("#tel");
+        const email = emailElement.value;
+        const password = passwordElement.value;
+        const user_name = nameElement.value;
+        const phone = telElement.value;
+
+
+        // 먼저 사용자 계정 생성 시도
+        const signUpResponse = await client.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+              data: {
+                name: user_name,
+                avatar_url: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                phone: phone,
+              },
+                emailRedirectTo: 'http://localhost:5500/'
+            }
+        });
+    if (signUpResponse.error) {
+    console.error('Error signing up:', signUpResponse.error);
+    alert('회원 가입에 실패했습니다.');
+      
+    } else {
+    // 이메일을 기반으로 profile 테이블에서 user_id 가져오기
+          
+          const profileResponse = await client.from('profile').select('id').eq('email', email).single();
+            const user_id = profileResponse.data.id;
+
+            const formData = {
+                user_id: user_id,
+                user_name: user_name,
+                birthday: document.getElementById("birthdate").value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                email: email,
+                phone : phone,
+                address: document.getElementById("adr").value
+            };
+
+            const insertResponse = await client.from('userinfo').insert([formData]);
+
+            if (insertResponse.error) {
+                console.error('Error inserting data:', insertResponse.error);
+                alert('데이터 저장에 실패했습니다.');
+            } else {
+                console.log('Data inserted:', insertResponse.data);
+                alert('회원 가입이 완료되었습니다.');
+            }
+        }
+    } else {
+        alert("이메일 중복 체크를 먼저 해주세요.");
+    }
+});
+
+
+</script>
+
+
+</body>
+</html>

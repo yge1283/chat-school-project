@@ -1,8 +1,7 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from models import Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
+from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
 from sqlalchemy import create_engine,text
-from models import Base
 from sqlalchemy_utils import database_exists, create_database
 
 
@@ -148,16 +147,22 @@ class Connector:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
 
-    
+    def convert_to_list(objects):
+        data_list = []
+        for obj in objects:
+            data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
+        return data_list
 
 
-
+#이 파일은 기본적으로 상대주소로 작동하지 않고 한 파일내에 다 있다는 가정하에 작동되게 대기 때문에 이상이 import에 문제가 생길 수 있습니다.
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
     config = Connector.read_config(section='postgres')
     # MySQLConnector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
     conn = Connector(config)
     engine = create_engine(config)
+    # SQLALCHEMY    
+    
     if not database_exists(engine.url):
         create_database(engine.url)   
     else:
@@ -172,3 +177,25 @@ if __name__ == '__main__':
     session.close()
     
 
+# Score.__table__.drop(engine, checkfirst=True)
+# Choice.__table__.drop(engine, checkfirst=True)
+# Long_answer.__table__.drop(engine, checkfirst=True)
+# Short_answer.__table__.drop(engine, checkfirst=True)
+# Test.__table__.drop(engine, checkfirst=True)
+# Submission_attachment.__table__.drop(engine, checkfirst=True)
+# Submission.__table__.drop(engine, checkfirst=True)
+# Assignment_attachment.__table__.drop(engine, checkfirst=True)
+# Assignment.__table__.drop(engine, checkfirst=True)
+# Attachment.__table__.drop(engine, checkfirst=True)
+# Comment.__table__.drop(engine, checkfirst=True)
+# Board.__table__.drop(engine, checkfirst=True)
+# Attendee.__table__.drop(engine, checkfirst=True)
+# Dashboard.__table__.drop(engine, checkfirst=True)
+# Chat.__table__.drop(engine, checkfirst=True)
+# Emotion.__table__.drop(engine, checkfirst=True)
+# S_memo.__table__.drop(engine, checkfirst=True)
+# T_memo.__table__.drop(engine, checkfirst=True)
+# Student.__table__.drop(engine, checkfirst=True)
+# Teacher.__table__.drop(engine, checkfirst=True)
+# Chatbot.__table__.drop(engine, checkfirst=True)
+# Classdata.__table__.drop(engine, checkfirst=True)
