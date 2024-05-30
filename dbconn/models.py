@@ -2,7 +2,6 @@ from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, T
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.schema import PrimaryKeyConstraint
 from sqlalchemy import func
 
 Base = declarative_base()
@@ -11,11 +10,7 @@ class Teacher(Base):
     __tablename__ = '선생'
 
     선생_ID = Column(UUID(as_uuid=True), primary_key=True, server_default=func.uuid_generate_v4())
-    성별 = Column(String(255))
-    이름 = Column(String(255))
-    생년월일 = Column(Date)
-    이메일 = Column(String(255))
-
+    
     dashboard = relationship("Dashboard", cascade="all, delete-orphan")
     comment = relationship("Comment", cascade="all, delete-orphan")
     
@@ -25,12 +20,7 @@ class Student(Base):
     __tablename__ = '학생'
 
     학생_ID = Column(UUID(as_uuid=True), primary_key=True, server_default=func.uuid_generate_v4())
-    성별 = Column(String(255))
-    이름 = Column(String(255))
-    생년월일 = Column(Date)
-    휴대폰번호 = Column(String(255))
-    학년 = Column(Integer)
-    학급 = Column(Integer)
+
 
     boards = relationship("Board", cascade="all, delete-orphan")
     comment = relationship("Comment", cascade="all, delete-orphan")
@@ -143,9 +133,6 @@ class Assignment(Base):
 
     attachment = relationship("Assignment_attachment", cascade="all, delete-orphan")
     submission = relationship("Submission", cascade="all, delete-orphan")
-
-
-
 
 class Assignment_attachment(Base):
     __tablename__ = '과제_첨부파일'

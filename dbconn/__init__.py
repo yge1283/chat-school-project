@@ -2,31 +2,29 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .connect import Connector
 from flask_migrate import Migrate
-
-
+from .connect import Connector
+from flask_socketio import SocketIO
+db_uri = Connector.read_config(section='postgres')
+conn = Connector(db_uri)
+socketio = SocketIO()
 def create_app():
-
     app = Flask(__name__)
     db_uri = Connector.read_config(section='postgres')  # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    conn = Connector(db_uri) #app.ini에서 db주소 가져와 객체 생성
-    conn.connect()           #db와 연결 (프로그램 실행시 최초1회만)
-
     db = SQLAlchemy()
     migrate = Migrate()
     db.init_app(app)
     migrate.init_app(app, db)
+    socketio.init_app(app)
 
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
      
-    from .views import student_main, chatbot
+    from .views import student_main,chat
     #app.register_blueprint(login.bp) # login은 별도 api사용하니 구현 다 되면 연결해주세요
     app.register_blueprint(student_main.bp)
-    app.register_blueprint(chatbot.bp)
-
-
+    app.register_blueprint(chat.bp)
     return app
 
 """

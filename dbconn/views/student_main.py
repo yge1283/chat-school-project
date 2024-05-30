@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect
-from models import Dashboard, Timetable
+
 
 
 """
@@ -33,6 +33,7 @@ def show_student_mainPage():
     # 해당 학생의 시간표 정보 전송 코드
     return render_template('./Student_page/Chat_Up_Call_page/Chat_Up_Call.html')
     #해당 학생의 시간표 페이지 표시
+
 """
 @bp.route('/')
 '/'는 위 접두사에 이은 최상위 경를 나타냄
@@ -43,10 +44,10 @@ def show_student_mainPage() 함수 실행.  # 함수명 복붙하고 그대로 �
 
 """
 
-@bp.route('/<subject_id>') #클라이언트에게 받을 변수'subject_id'를 url로 지정
-def show_subject_page():
-    #학생정보 불러와 해당 과목{subject_id}의 정보 전송
-    return render_template('./Student_page/Main_page/Main_page.html')
+# @bp.route('/<subject_id>') #클라이언트에게 받을 변수'subject_id'를 url로 지정
+# def show_subject_page():
+#     #학생정보 불러와 해당 과목{subject_id}의 정보 전송
+#     return render_template('./Student_page/Main_page/Main_page.html')
 
 """
 @bp.route('/{subject_id}')
