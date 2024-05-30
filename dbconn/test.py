@@ -1,12 +1,19 @@
 from connect import Connector
 from datetime import datetime
 
+# 학생 mainpage
+# conn.tb_select("Assignment","작성자",uid,db_key)
+# conn.tb_select("Board","작성자",uid,db_key)
+# conn.tb_select("Classdata",db_key=db_key,today_only=True).count()
+# conn.tb_select("S_memo","작성자_ID",uid,db_key)
 
-def convert_to_list(objects):
-    data_list = []
-    for obj in objects:
-        data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
-    return data_list
+# Q&A 게시판
+# bd_select( 1,"이름")작성자, 이름이 작성한 게시판 최신 게시물부터
+# bd_select( 1,desc=False) 작성자 상관 안하고 모두 보여줌, 오래된 게시물부터
+
+# 과제 선생
+# at_sn_join(1) 대시보드 내에 제출된 모든 과제파일 반환
+
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
     config = Connector.read_config(section='postgres')
