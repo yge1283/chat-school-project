@@ -1,8 +1,15 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify, redirect
+import asyncio
+from supabase import create_client, Client
+from .. import config  # dbconn 폴더의 config 파일 불러오기
 
+
+url = config.SUPABASE_URL
+key = config.SUPABASE_KEY
+supabase: Client = create_client(url, key)
 
 bp = Blueprint('main', __name__, url_prefix='/login') # /login 페이지 설정
-
+6
 
 # @bp.route('/signup')
 # def hello_pybo():
@@ -22,12 +29,15 @@ def examine_signup_info(email, phone, teacher): #가입정보를 받아 db있는
 
 @bp.route('/')
 def index():
-    return render_template('login/Login_page.html') # 첫 로그인 페이지 화면
+    return render_template('./login/Login_page.html') # 첫 로그인 페이지 화면
 
 @bp.route('/signup')
 def signup():
-
     return render_template('login/SignUp_page.html') # 회원가입 html 페이지 표시
+
+@bp.route('/findIDandPW')
+def findidandpw():
+    return render_template('login/Find_ID_and_PW.html') # id, pw찾기 페이지 표시
 
 @bp.route('/signin')
 def signin():
@@ -40,9 +50,56 @@ def signin():
     #로그인 정보가 DB에 없으면 'login_fail' 반환
     #로그인 정보가 있으면 'main page' html 표시 
 
+# 로그인- 이메일, 구글, 카카오톡
+# 이메일로 로그인
+@bp.route('/login', methods=['POST'])
+def login():
+    email = request.json['email']
+    password = request.json['password']
+    result = supabase.auth.sign_in(email=email, password=password)
+    if result.get('error') is None:
+        return jsonify({'session': result['session']}), 200
+    else:
+        return jsonify({'error': result['error']}), 401
+# 구글로 로그인
+@bp.route('/login-google')
+def login_google():
+    return redirect(
+        supabase.auth.sign_in_with_provider('google', redirect_to=url_for('callback', _external=True))
+    )
+# 카톡으로 로그인
+@bp.route('/login-kakao')
+def login_kakao():
+    return redirect(
+        supabase.auth.sign_in_with_provider('kakao', 
+            redirect_to='메인페이지')
+    )
 
+# 구글,카톡(서드파티)로 로그인이 처음인 경우
+@bp.route('/callback')
+def callback():
+    # 세션에 저장된 사용자 ID 가져오기
+    user_id = session.get('user_id')
+    
+    if not user_id:
+        # Supabase 세션에서 사용자 ID를 가져오는 방법 예시 (구체적 구현 필요)
+        user_id = supabase.auth.user().id if supabase.auth.user() else None
+        session['user_id'] = user_id
 
-
+    if user_id:
+        # userinfo 테이블에서 사용자 정보 확인
+        user_info = supabase.table('userinfo').select("*").eq('user_id', user_id).execute()
+        
+        if user_info.data and len(user_info.data) > 0:
+            # 사용자 정보가 있으면 메인 페이지로 리다이렉트
+            return redirect(url_for('main_page'))
+        else:
+            # 사용자 정보가 없으면 추가 정보 입력 페이지로 리다이렉트
+            return redirect(url_for('additional_info'))
+    else:
+        return 'Authentication failed', 401
+    
+    
 @bp.route('/send_signupform')
 def send_signupform():
     #가입정보 받는 코드 {딕셔너리}(json)

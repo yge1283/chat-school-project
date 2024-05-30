@@ -1,3 +1,7 @@
 koGPT2/
 dbconn/venv/
 login/config.py
+dbconn/config.py
+*.pyc
+__pycache__/
+

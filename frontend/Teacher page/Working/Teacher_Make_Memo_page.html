@@ -11,6 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
 
+<style>
+    .arrow-left {
+        position: relative;
+        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
+    }
+    .arrow-right {
+        position: relative;
+        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
+    }
+</style>
+
 <body>
     <div class="d-flex flex-column">
         <div class="form jua-regular">
@@ -126,6 +137,9 @@
 
         <div class="container mt-3"> <!-- 메인 컨테이너 -->
             <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
+                <div class="col-auto arrow-left"> <!-- 왼쪽 화살표 -->
+                    <p class="mb-0"><<<</p>
+                </div>
                 <div class="col-sm-8"> <!-- 추가 콘텐츠 영역 -->
                     <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
                         <div class="col-sm-12"> <!-- 최근에 작성한 메모 카드 -->
@@ -152,6 +166,9 @@
 
                         </div>
 
+                    </div>
+                    <div class="col-auto arrow-right"> <!-- 오른쪽 화살표 -->
+                        <p class="mb-0">>>></p>
                     </div>
                 </div>
             </div>
