@@ -14,7 +14,8 @@
     rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css" />
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="{{ url_for('static', filename='login.js') }}" defer></script>
   <style>
     .gradient-background {
       background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
@@ -204,7 +205,7 @@
                 <i class="fab fa-naver"></i>
               </button>
 
-              <button type="button" data-mdb-button-init data-mdb-ripple-init
+              <button type="button" id="googlebutton" data-mdb-button-init data-mdb-ripple-init
                 class="btn btn-outline-link btn-floating mx-1">
                 <img class="gmail" src="{{ url_for('static', filename='./images/google.png') }}" alt="gmail">
                 <i class="fab fa-gmail-in"></i>
