@@ -97,7 +97,7 @@ def login():
         
         
 
-# 구글로 로그인(보류중)
+# 구글로 로그인(보류중) -작동확인 완료
 @bp.route('/login-google', methods=['GET'])
 def signin_with_google():
     try:
@@ -178,7 +178,7 @@ def logout():
         return jsonify({'error': result['error']}), 401
 
 
-# 대쉬보드 페이지 html 이름 수정해야함
+# 대시보드 페이지 올라오면 >> 로그인 후 dashboard로 이동
 @bp.route('/teacher/dashboard_page')
 def teacher_main_page():
     return render_template('./Teacher_page/Teacher_Page_Main_Frame.html')
