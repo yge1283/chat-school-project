@@ -79,7 +79,7 @@ class Connector:
 
 
 
-    def tb_select(self, tb_name, search=None, title=None, db_key=None, today_only=None):
+    def tb_select(self, tb_name, col=None, search=None, db_key=None, today_only=None):
         try:
             # 테이블 클래스를 가져옵니다.
             table = globals()[tb_name]
@@ -90,8 +90,8 @@ class Connector:
                 query = query.filter(getattr(table, "대시보드_ID") == db_key)
             
             # search와 title 조건이 있는 경우
-            if search is not None and title is not None:
-                query = query.filter(getattr(table, search) == title)
+            if col is not None and search is not None:
+                query = query.filter(getattr(table, col) == search)
             
             # 오늘 날짜 조건 추가
             if today_only:
@@ -105,24 +105,24 @@ class Connector:
             raise e
 
         
-    def tb_get(self,tb_name, search, title,db_key=None ):
+    def tb_get(self,tb_name, col, search,db_key=None ):
         try:
             # 메모,게시판만 작동
             table = globals()[tb_name]
             results = None
             if db_key:
-                results=self.session.query(table).filter(getattr(table, "Dashboard")==db_key).filter(getattr(table, search) == title).order_by(getattr(table,"작성시간").desc()).first()
+                results=self.session.query(table).filter(getattr(table, "Dashboard")==db_key).filter(getattr(table, col) == search).order_by(getattr(table,"작성시간").desc()).first()
             else:
-                results = self.session.query(table).filter(getattr(table, search) == title).order_by("작성시간").first()
+                results = self.session.query(table).filter(getattr(table, col) == search).order_by("작성시간").first()
             return results
         except Exception as e:
             raise e
 
-    def tb_delete(self, tb_name, column, title):
+    def tb_delete(self, tb_name, col, search):
         try:
             table = globals()[tb_name]
             # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
-            self.session.query(table).filter(getattr(table, column) == title).delete()
+            self.session.query(table).filter(getattr(table, col) == search).delete()
             # 변경사항을 커밋합니다.
             self.session.commit()
         except Exception as e:
@@ -131,11 +131,11 @@ class Connector:
             raise e
         return 0
 
-    def tb_update(self,tb_name,search,title,student_new):
+    def tb_update(self,tb_name,col,search,student_new):
         try:
             # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
             table = globals()[tb_name]
-            self.session.query(table).filter(getattr(table, search) == title).update(student_new)
+            self.session.query(table).filter(getattr(table, col) == search).update(student_new)
             # 변경사항을 커밋합니다.
             self.session.commit()
         except Exception as e:
@@ -144,14 +144,14 @@ class Connector:
             raise e
         return 0
 
-    def bd_select(self, db_key, search=None, title=None, desc=True):
+    def bd_select(self, db_key, col=None, search=None, desc=True):
             try:
                 query = self.session.query(Board, Userinfo.user_name).join(Userinfo, Board.학생_ID == Userinfo.user_id)
 
-                if search:
+                if col:
                     query = query.filter(Board.대시보드_key == db_key)
                 else:
-                    query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, search) == title)
+                    query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, col) == search)
 
                 if desc:
                     query = query.order_by(Board.작성시간.desc())
@@ -173,7 +173,7 @@ class Connector:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
 
-    def at_sn_join(self, dashboard_key):
+    def at_sn_join(self, db_key):
         try:
             # 쿼리를 통해 과제와 사용자 이름을 가져옵니다.
             results = self.session.query(
@@ -188,28 +188,25 @@ class Connector:
             ).join(
                 Userinfo, Submission.제출자_ID == Userinfo.user_id
             ).filter(
-                Assignment.대시보드_key == dashboard_key
+                Assignment.대시보드_key == db_key
             ).all()
 
             return results
         except Exception as e:
             raise e
         
+    
     def table_to_list(self, objects):
         data_list = []
         for obj in objects:
-            data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
-        return data_list
-    def colunm_to_list(self,objects):
-        data_list = []
-        for obj in objects:
-            # SQLAlchemy 결과 행일 때만 속성에 접근합니다.
+            # 객체가 SQLAlchemy 결과 행인지 확인합니다.
             if hasattr(obj, '__table__'):
-                data_list.append([getattr(obj, column.name) for column in obj])
+                data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
             else:
-                # 결과 행이 아닌 경우에는 그대로 추가합니다.
+                # 객체가 테이블이 아닌 경우에는 그대로 추가합니다.
                 data_list.append(obj)
         return data_list
+
 
 
 

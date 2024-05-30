@@ -13,6 +13,12 @@ from datetime import datetime
 
 # 과제 선생
 # at_sn_join(1) 대시보드 내에 제출된 모든 과제파일 반환
+#과제 제출
+sub=[{"제출자_ID":"082d8640-9287-4284-9a73-47543b255309","과제_ID":1,"제목":"국어1test 제출","내용":"내용","점수":'0'}]
+# tb_insert("Submission",sub)
+# tb_select("Assignment",db_key=db_key)
+
+
 
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
@@ -20,10 +26,10 @@ if __name__ == '__main__':
     # Connector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
     conn = Connector(config)
     conn.connect()
-    print(conn.colunm_to_list(conn.at_sn_join(1)))
+    print(conn.table_to_list(conn.at_sn_join(1)))
 
     assignment=[(1,1,3,"국어1test","내용",'2000-10-15',"개인")]
-    sub=[((1,"082d8640-9287-4284-9a73-47543b255309",1,"국어1test 제출","내용",'0'))]
+    sub=[(1,"082d8640-9287-4284-9a73-47543b255309",1,"국어1test 제출","내용",'0')]
     # conn.tb_ninsert("Submission",sub)
 
     board_data = [{
