@@ -181,7 +181,7 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #d4edda;
+    background-color: #AAF1FF;
     padding: 10px;
 }
 
@@ -194,28 +194,33 @@ body>div>div>div.row.mt-100.d-flex.mt-0.col-lg-8.col-md-8.col-sm-8>div.row {
 /* nav style */
 .navbar {
     background-color: transparent;
+    display: flex;
+            align-items: center;
+            height: 100%;
     /* Adjust or remove the background */
 }
 
 /* Customize the navbar toggler icon */
 .navbar-toggler {
-    border-color: rgba(255, 251, 251, 0.675);
-    /* Optional: change or remove the border */
+    border-color: #AAF1FF;
+    background-color: #AAF1FF; /* Set the background color to white */
+    border-radius: 5px; /* Optional: add border radius for better appearance */
 }
 
 .navbar-light .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 1)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
 /* Additional customization for light backgrounds */
 .navbar-light .navbar-toggler {
-    filter: invert(100%);
-    /* Makes the icon white if your navbar background is dark */
+    filter: none;
+    /* Makes sure the icon is not inverted */
 }
+
 
 /* main colors  오타 수정용.*/
 .gradient-background {
-    background: linear-gradient(300deg, #aaf1ff, #0bb49d, #0292da);
+    background: linear-gradient(300deg, #AAF1FF, #AAF1FF, #AAF1FF);
     background-size: 180% 180%;
     animation: gradient-animation 18s ease infinite;
 }
