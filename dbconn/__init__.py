@@ -20,7 +20,6 @@ def create_app():
     socketio.init_app(app)
 
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
-     
     from .views import student_main,chat
     #app.register_blueprint(login.bp) # login은 별도 api사용하니 구현 다 되면 연결해주세요
     app.register_blueprint(student_main.bp)

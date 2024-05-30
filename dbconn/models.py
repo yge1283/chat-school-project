@@ -1,7 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, Text, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, Text, Float, ForeignKey,Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID,VARCHAR,DATE,TIMESTAMP
 from sqlalchemy import func
 
 Base = declarative_base()
@@ -242,3 +242,15 @@ class Classdata(Base):
     파일명 = Column(String(255))
     파일경로 = Column(String(255))
     시간 = Column(DateTime)
+
+class Userinfo(Base):
+    __tablename__ = 'userinfo'
+
+    user_id=Column(UUID, primary_key=True)
+    gender=Column(VARCHAR)
+    birthday=Column(DATE)
+    phone=Column(VARCHAR)
+    address=Column(Text)
+    user_name=Column(VARCHAR)
+    email=Column(Text)
+    IsT=Column(Boolean)

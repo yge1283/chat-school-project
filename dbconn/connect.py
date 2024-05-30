@@ -1,9 +1,10 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
+from models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata,Userinfo
 from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
-
+from datetime import datetime, date
+from sqlalchemy.sql import func
 
 class Connector:
     def __init__(self, config):
@@ -42,6 +43,7 @@ class Connector:
             connection.close()
         except Exception as e:
             print(f'연결에 실패했습니다: {e}')
+
     def tb_insert(self, tb_name, data):
         try:
             table = globals()[tb_name]
@@ -77,15 +79,41 @@ class Connector:
 
 
 
-    def tb_select(self,tb_name, search, title,db_name_name= -1 ):
+    def tb_select(self, tb_name, search=None, title=None, db_key=None, today_only=None):
         try:
             # 테이블 클래스를 가져옵니다.
             table = globals()[tb_name]
+            query = self.session.query(table)
+            
+            # db_key 조건이 있는 경우
+            if db_key is not None:
+                query = query.filter(getattr(table, "대시보드_ID") == db_key)
+            
+            # search와 title 조건이 있는 경우
+            if search is not None and title is not None:
+                query = query.filter(getattr(table, search) == title)
+            
+            # 오늘 날짜 조건 추가
+            if today_only:
+                today = date.today()
+                query = query.filter(func.date(table.시간) == today)
+            
+            results = query.all()
+            return results
+        
+        except Exception as e:
+            raise e
+
+        
+    def tb_get(self,tb_name, search, title,db_key=None ):
+        try:
+            # 메모,게시판만 작동
+            table = globals()[tb_name]
             results = None
-            if db_name_name != -1:
-                results=self.session.query(table).filter(getattr(table, search)==db_name_name).filter(getattr(table, search) == title).all()
+            if db_key:
+                results=self.session.query(table).filter(getattr(table, "Dashboard")==db_key).filter(getattr(table, search) == title).order_by(getattr(table,"작성시간").desc()).first()
             else:
-                results = self.session.query(table).filter(getattr(table, search) == title).all()
+                results = self.session.query(table).filter(getattr(table, search) == title).order_by("작성시간").first()
             return results
         except Exception as e:
             raise e
@@ -116,26 +144,24 @@ class Connector:
             raise e
         return 0
 
-    def bd_select(self, db_name,search=None, title=None, desc=True):
-        try:
-            if search==None:
-                query = self.session.query(Board).filter(Board.대시보드_key==db_name)
-            # 검색 조건(search)에 해당하는 열을 사용하여 데이터베이스에서 게시글을 검색합니다.
-            else:
-                query = self.session.query(Board).filter(Board.대시보드_key==db_name).filter(getattr(Board, search) == title)
-            # 정렬 방식을 설정합니다.
-            if desc:
-                # 내림차순으로 정렬합니다.
-                query = query.order_by(Board.작성시간.desc())
-            else:
-                # 오름차순으로 정렬합니다.
-                query = query.order_by(Board.작성시간.asc())
-            # 정렬된 결과를 리스트로 반환합니다.
-            results = query.all()
-            return results
-        except Exception as e:
-            # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
-            raise e
+    def bd_select(self, db_key, search=None, title=None, desc=True):
+            try:
+                query = self.session.query(Board, Userinfo.user_name).join(Userinfo, Board.학생_ID == Userinfo.user_id)
+
+                if search:
+                    query = query.filter(Board.대시보드_key == db_key)
+                else:
+                    query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, search) == title)
+
+                if desc:
+                    query = query.order_by(Board.작성시간.desc())
+                else:
+                    query = query.order_by(Board.작성시간.asc())
+
+                results = query.all()
+                return results
+            except Exception as e:
+                raise e
     
     def sn_persent(self, db_name, ass_id,st_id):
         try:
@@ -147,11 +173,44 @@ class Connector:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
 
-    def convert_to_list(objects):
+    def at_sn_join(self, dashboard_key):
+        try:
+            # 쿼리를 통해 과제와 사용자 이름을 가져옵니다.
+            results = self.session.query(
+                Assignment.제목, 
+                Assignment.주차, 
+                Assignment.내용, 
+                Assignment.기한, 
+                Assignment.유형, 
+                Userinfo.user_name
+            ).join(
+                Submission, Assignment.과제_ID == Submission.과제_ID
+            ).join(
+                Userinfo, Submission.제출자_ID == Userinfo.user_id
+            ).filter(
+                Assignment.대시보드_key == dashboard_key
+            ).all()
+
+            return results
+        except Exception as e:
+            raise e
+        
+    def table_to_list(self, objects):
         data_list = []
         for obj in objects:
             data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
         return data_list
+    def colunm_to_list(self,objects):
+        data_list = []
+        for obj in objects:
+            # SQLAlchemy 결과 행일 때만 속성에 접근합니다.
+            if hasattr(obj, '__table__'):
+                data_list.append([getattr(obj, column.name) for column in obj])
+            else:
+                # 결과 행이 아닌 경우에는 그대로 추가합니다.
+                data_list.append(obj)
+        return data_list
+
 
 
 #이 파일은 기본적으로 상대주소로 작동하지 않고 한 파일내에 다 있다는 가정하에 작동되게 대기 때문에 이상이 import에 문제가 생길 수 있습니다.
