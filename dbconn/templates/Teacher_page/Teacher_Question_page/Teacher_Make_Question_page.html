@@ -4,29 +4,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Check Student Study Page</title>
+    <title>Teacher_Make_Question_page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='./css/Style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
     <style>
-        .emoji {
-            font-size: 1.7em; /* 이모지 크기 조정 */
+        .gradient-background {
+            background: linear-gradient(300deg, #aaf1ff, #0bb49d, #0292da);
+            background-size: 180% 180%;
+            animation: gradient-animation 18s ease infinite;
         }
 
-        table {
-            width: 100%; /* 테이블 너비 설정 */
-            border-collapse: collapse; /* 테이블 테두리 병합 */
-        }   
-    
-        td, th {
-            padding: 8px; /* 셀 안쪽 여백 설정 */
-            border: 1px solid #ddd; /* 셀 테두리 스타일 설정 */
-            text-align: center; /* 텍스트 가로 중앙 정렬 */
-            vertical-align: middle; /* 텍스트 세로 중앙 정렬 */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
-    </style> 
+
+        .divider:after,
+        .divider:before {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+
+        .h-custom {
+            height: calc(100% - 73px);
+        }
+
+        @media (max-width: 1200px) {
+            .h-custom {
+                height: 140%;
+            }
+        }
+
+        .jua-regular {
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.2rem;
+        }
+
+        #dropzone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+        }
+
+        #dropzone p {
+            margin-top: 0;
+        }
+
+        #file-input {
+            display: flex;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+        }
+
+        /* Additional styling for the main content */
+        .main-content {
+            margin-bottom: 100px;
+            /* Adjust this value to fit the footer */
+        }
+
+        /* nav style */
+        .navbar {
+            background-color: transparent;
+            /* Adjust or remove the background */
+        }
+
+        /* Customize the navbar toggler icon */
+        .navbar-toggler {
+            border-color: rgba(255, 251, 251, 0.675);
+            /* Optional: change or remove the border */
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+        /* Additional customization for light backgrounds */
+        .navbar-light .navbar-toggler {
+            filter: invert(100%);
+            /* Makes the icon white if your navbar background is dark */
+        }
+
+        .arrow-left {
+        position: relative;
+        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
+        }
+        
+        .arrow-right {
+        position: relative;
+        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
+        }
+
+
+    </style>
 
 </head>
 
@@ -135,100 +229,51 @@
 
         <div class="container mt-3"> <!-- 메인 컨테이너 -->
             <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
-                <div class="col-sm-10"> <!-- 추가 콘텐츠 영역 -->                   
-                    <div class="container mt-3 mb-4"> <!-- 메인 컨테이너 -->
-                        <div class="row"> <!-- 행 시작 -->
-                            <div class="col-sm-12 d-flex justify-content-end align-items-center"> <!-- 우측 정렬 -->
-                                <div class="col-sm-12 d-flex justify-content-end align-items-center"> <!-- 우측 정렬 -->
-                                    <input type="date" id="datepicker"> <!-- 달력 위젯 -->
-                                </div> 
-                            </div>     
+                <div class="col-auto arrow-left"> <!-- 왼쪽 화살표 -->
+                    <p class="mb-0"><<<</p>
+                </div>
+                <div class="col-sm-8"> <!-- 추가 콘텐츠 영역 -->
+                    <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
+                        <div class="d-flex justify-content-between mb-3">
+                            <input type="subject" class="form-control" id="exampleFormControlInput1" placeholder="제목">
+                            <div class="d-flex align-items-center border p-0" style="background: #f8f9fa;">
+                                <button type="button" class="btn btn-outline-dark me-2" style="width: 60px;">수정</button>
+                                <button type="button" class="btn btn-outline-dark" style="width: 60px;">삭제</button>
+                            </div>
+                        </div> 
+
+                        <div class="container jua-regular" style="justify-content: space-evenly;">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" placeholder="질문 내용"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center mb-1"> <!-- 업로드된 파일 및 메모 카드 중앙 정렬 -->
+                            <div class="container">
+                                <div id="dropzone"
+                                    class="container col-lg-10 col-md-6 col-sm-4 jua-regular d-flex flex-column justify-content-center align-items-center"
+                                    style="margin-bottom: 1rem;"> <!-- drop zone의 하단 마진을 1rem으로 변경 -->
+                                    <p>Drag some files here, or click to select files</p>
+                                    <input type="file" id="file-input" multiple>
+                                </div>
+                            </div>
+                            
+                            <!-- 버튼 영역 -->
+                            <div class="row justify-content-center mt-2" style="margin-top: 1rem;"> <!-- 버튼 영역의 상단 마진을 1rem으로 변경 -->
+                                <div class="col-sm-6 d-flex justify-content-center"> <!-- 우측 정렬 -->
+                                    <button type="button" class="btn btn-outline-dark">작성 완료</button> <!-- 작성 완료 버튼 -->
+                                </div>
+                            </div>
                         </div>
                     </div>
-                                       
-                    <table class="table table-hover mb-4" style="width: 100%;">
-                        <thead style="background-color: #4CAF50; color: white;"> <!-- 테이블의 머리 부분 -->
-                            <tr> <!-- 행 -->
-                                <th style="width: 10%;">이름</th> <!-- 헤더 셀 -->
-                                <th style="width: 10%;">4/1</th>
-                                <th style="width: 10%;">4/2</th>
-                                <th style="width: 10%;">4/3</th>
-                                <th style="width: 10%;">4/4</th>
-                                <th style="width: 10%;">4/5</th>
-                                <th style="width: 10%;">4/6</th>
-                            </tr>
-                        </thead>
-                        <tbody> <!-- 테이블의 몸체 부분 -->
-                            <tr> <!-- 데이터 행 -->
-                                <td>홍길동</td> <!-- 데이터 셀 -->
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                            </tr>
-                            <tr> <!-- 데이터 행 -->
-                                <td>OOO</td> <!-- 데이터 셀 -->
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                            </tr>
-                            <tr> <!-- 데이터 행 -->
-                                <td>ㅁㅁㅁ</td> <!-- 데이터 셀 -->
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                            </tr>
-                            <tr> <!-- 데이터 행 -->
-                                <td>ㅂㅂㅂ</td> <!-- 데이터 셀 -->
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                            </tr>
-                            <tr> <!-- 데이터 행 -->
-                                <td>학생4</td> <!-- 데이터 셀 -->
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                            </tr>
-                            <tr> <!-- 데이터 행 -->
-                                <td>학생5</td> <!-- 데이터 셀 -->
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                                <td>n%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <div class="d-flex justify-content-center" style="gap: 10px;"> <!-- 플렉스 박스를 사용하여 중앙 정렬 -->
-                        <p>&lt;&lt;&lt;</p> <!-- '<'는 이스케이프 문자로 표현 -->
-                        <span>1</span>
-                        <span>&gt;&gt;&gt;</span> <!-- '>'는 이스케이프 문자로 표현 -->
-                    </div>
+                </div>
+                <div class="col-auto arrow-right"> <!-- 오른쪽 화살표 -->
+                    <p class="mb-0">>>></p>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> <!-- jQuery UI -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
