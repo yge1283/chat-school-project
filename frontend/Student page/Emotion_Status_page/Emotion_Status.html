@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-    
-    <link rel="stylesheet" href="../Emotion_Status/Emotion_Status.css">
-    
+
+    <link rel="stylesheet" href="./Emotion_Status.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 
 
 </head>
 <style>
-    
     body {
         font-family: "Jua", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-            font-size: 1.2rem;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 1.2rem;
     }
-   
-    
-    
+
+
+
     .gradient-background {
         background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);
         background-size: 180% 180%;
@@ -128,23 +128,21 @@
 </style>
 
 <body>
-  <!-- 메뉴바 시작  -->
+    <!-- 메뉴바 시작  -->
     <div class="" style="background-color: #aaf1ff;">
         <header class="p-3 mb-3 border-bottom bg-light-green">
             <div class="container col-lg-12 col-md-6 col-sm-3">
                 <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                    <a href="/"
-                        class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                    <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
                         <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
                             <use xlink:href="#bootstrap"></use>
                         </svg>
                     </a>
 
                     <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                        <li><a href="#" class="nav-link px-5 link-secondary"><button type="button"
-                                    class="btn btn-dark">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-justify" viewBox="0 0 16 16">
+                        <li><a href="#" class="nav-link px-5 link-secondary"><button type="button" class="btn btn-dark">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-justify" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
                                             d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5">
                                         </path>
@@ -204,96 +202,101 @@
         </header>
     </div>
     <!-- 메뉴바 끝 -->
-       
+
 
 
 
 
     <div class="total">
         <!-- 메뉴바 제외 모든 구역  -->
-       
-      
-    
-        
+
+
+
+
         <!-- 오늘의 감정 상태 컨테이너 구역  -->
-         <div class="container2">
+        <div class="container2">
             <div class="title2">오늘의 감정 상태는?</div>
             <div>
-            <img class="emoji2" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">    
+                <img class="emoji2" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">
             </div>
             <div class="message-container2">
                 <div class="message2">나쁘지 않아요!</div>
             </div>
-         </div>
-         <!-- 오늘의 감정 상태 컨테이너 구역 끝-->
-        
-    
-       
+        </div>
+        <!-- 오늘의 감정 상태 컨테이너 구역 끝-->
 
-        
-    
-    
-        
-           <!-- 일주일간의 감정 상태 컨테이너 구역 시작-->
+
+
+
+
+
+
+
+        <!-- 일주일간의 감정 상태 컨테이너 구역 시작-->
         <div class="Container">
 
-           
-    
-          <span class="text4">일주일간의 나의 감정 상태</span>
 
-             <!-- 날짜 버튼 -->
-           
-             <div class="date_bt_po" style="margin-bottom: 30px" ;>
-                <input type="date" >
+
+            <span class="text4">일주일간의 나의 감정 상태</span>
+
+            <!-- 날짜 버튼 -->
+
+            <div class="date_bt_po" style="margin-bottom: 30px" ;>
+                <input type="date">
             </div>
-        
-    
+
+
             <div class="WeekEmojiPicture">
-               
-    
+
+
                 <div class="EmojiFaceWithColdSweat">
                     <!-- 벡터 : 날짜 별 이모티콘  -->
-                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">
+                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}"
+                        alt="emoji_Status">
 
-                   
+
                 </div>
-    
+
                 <div class="EmojiSmilingFaceWithOpenMouth">
-    
-                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">
-                    
+
+                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}"
+                        alt="emoji_Status">
+
                 </div>
-    
+
                 <div class="EmojiSlightlyFrowningFace">
-    
-                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">
-                    
+
+                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}"
+                        alt="emoji_Status">
+
                 </div>
-    
+
                 <div class="EmojiDisappointedButRelievedFace">
-                   
-                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">
-                    
+
+                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}"
+                        alt="emoji_Status">
+
                 </div>
-    
-    
+
+
                 <div class="EmojiLoudlyCryingFace">
-                    
-                   <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}" alt="emoji_Status">
-    
+
+                    <img class="vector1" src="{{ url_for('static', filename='./images/emoji_Status') }}"
+                        alt="emoji_Status">
+
                 </div>
-    
-    
-           
-              
-                 
-    
+
+
+
+
+
+
             </div>
-    
-    
+
+
             <div class="Line1"></div>
-    
-    
+
+
             <div class="Date">
                 <div class="date1">4/1</div>
                 <div class="date2">4/2</div>
@@ -301,28 +304,29 @@
                 <div class="date4">4/4</div>
                 <div class="date5">4/5</div>
             </div>
-       
-    
-         
-      
-          
-        
-    
+
+
+
+
+
+
+
         </div>
         <!-- 일주일간의 감정 상태 컨테이너 구역 끝-->
-        
+
     </div>
 
 
 
 
- 
-    
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-    
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
 
 </body>
+
 </html>

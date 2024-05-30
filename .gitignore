@@ -4,3 +4,4 @@ login/config.py
 dbconn/config.py
 *.pyc
 __pycache__/
+myenv/
