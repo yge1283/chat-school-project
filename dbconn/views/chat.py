@@ -7,8 +7,8 @@ uid = "082d8640-9287-4284-9a73-47543b255309"
 
 @bp.route('/')
 def show_chatbot_page():
-    # return render_template('./Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
-    return render_template("./Student_page/1.html")
+    return render_template('./Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
+    #return render_template("./Student_page/1.html")
 
 @socketio.on('connect', namespace='/')
 def handle_message(data):
