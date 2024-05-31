@@ -224,12 +224,14 @@
                             </div>
 
                             <script>
+
                                 document.addEventListener('DOMContentLoaded', function () {
                                     const sendButton = document.querySelector('button.btn-outline-dark'); // Select the send button
                                     const messageInput = document.getElementById('exampleFormControlInput2'); // Select the input field
                                     const chatWindow = document.querySelector('.pt-3.pe-3'); // Select the chat window
 
                                     sendButton.addEventListener('click', function () {
+
                                         const messageText = messageInput.value.trim(); // Get input value and trim any whitespace
                                         if (messageText !== "") {
                                             // Create the chat bubble as an HTML string
@@ -246,6 +248,7 @@
                                         }
                                     });
 
+
                                     messageInput.addEventListener('keypress', function (event) {
                                         if (event.key === "Enter") {
                                             sendButton.click(); // Trigger click on Send button when Enter is pressed
@@ -253,8 +256,6 @@
                                     });
                                 });
                             </script>
-
-
                         </div>
                     </div>
                 </div>

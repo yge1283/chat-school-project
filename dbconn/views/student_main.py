@@ -64,13 +64,4 @@ def submit():
 def submit_doc_to_chatbot():
     return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
 
-@bp.route('/submit_doc_to_chatbot')
-def submit_doc_to_chatbot():
-    return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
-"""
-클라이언트 쪽에서 https://127.0.0.1:5000/student/korean으로 접속하여 
-    {"uuid":"OAQMNCd2D76DCbx34MK"}를 받아왔다면
-    서버에서 url의 변수 'korean'과 'uuid'를 사용하여
-    학생이 수강하고 있는 korean 과목에 대한 정보를 찾아 전송.
-
-"""
+# 같은 함수가 2개 있어서 삭제합니다.
