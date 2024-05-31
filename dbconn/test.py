@@ -27,7 +27,7 @@ sub=[{"제출자_ID":"082d8640-9287-4284-9a73-47543b255309","과제_ID":1,"제�
 
 if __name__ == '__main__':
     # config 파일에서 설정을 읽어옵니다. 기본설정시 app.ini의 mysql 부분을 가져옴
-    config = Connector.read_config(filename='app.ini',section='postgres')
+    config = Connector.read_config(section='postgres')
     # Connector 클래스의 인스턴스를 생성하고 구성을 전달합니다.
     conn = Connector(config)
     conn.connect()

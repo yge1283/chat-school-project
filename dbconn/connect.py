@@ -12,7 +12,7 @@ class Connector:
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
-    def read_config(filename='dbconn/app.ini', section='postgres'):
+    def read_config(filename='./dbconn/app.ini', section='postgres'):
         config = ConfigParser(interpolation=ExtendedInterpolation())
         config.read(filename)
         
