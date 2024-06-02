@@ -3,7 +3,7 @@ from configparser import ConfigParser, ExtendedInterpolation
 from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
 from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
-
+from sqlalchemy.inspection import inspect
 
 class Connector:
     def __init__(self, config):
@@ -152,6 +152,69 @@ class Connector:
         for obj in objects:
             data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
         return data_list
+
+    # 과목, 시간표 ORM
+    def fetch_timetable_data(self):
+        try:
+            if session['role'] == 'teacher':
+                uid = session['user']['uid']
+                results = self.session.query(Dashboard.과목명, Dashboard.시간표).filter(Dashboard.담당선생_ID == uid).all()
+
+            elif session['role'] == 'student':
+                uid = session['user']['uid']
+                keys_results = self.session.query(Student.대시보드_key).filter(Student.uid == uid).all()
+                keys = [item.대시보드_key for item in keys_results]
+                results = self.session.query(Dashboard.과목명, Dashboard.시간표).filter(Dashboard.대시보드_key.in_(keys)).all()
+
+            data = [{'과목명': result.과목명, '시간표': result.시간표} for result in results]
+            return data
+        except Exception as e:
+            raise e
+
+    # uid과 role에 따라서 
+    def get_dashboard_infos(self):
+        try:
+            uid = session['user']['uid']
+            role = session['role']
+
+            if role == 'teacher':
+                results = (
+                    self.session.query(Dashboard, Teacher)
+                    .join(Teacher, Dashboard.담당선생_ID == Teacher.선생_ID)
+                    .filter(Dashboard.담당선생_ID == uid)
+                    .all()
+                )
+
+            elif role == 'student':
+                keys_results = self.session.query(Student.대시보드_key).filter(Student.uid == uid).all()
+                dashboard_keys = [item.대시보드_key for item in keys_results]
+                results = (
+                    self.session.query(Dashboard, Teacher)
+                    .join(Teacher, Dashboard.담당선생_ID == Teacher.선생_ID)
+                    .filter(Dashboard.대시보드_key.in_(dashboard_keys))
+                    .all()
+                )
+
+            else:
+                raise Exception("Invalid role")
+
+            teacher_info_list = []
+            for dashboard, teacher in results:
+                # Convert the Dashboard and Teacher objects to dictionaries
+                dashboard_dict = {c.key: getattr(dashboard, c.key) for c in inspect(Dashboard).mapper.column_attrs}
+                teacher_dict = {c.key: getattr(teacher, c.key) for c in inspect(Teacher).mapper.column_attrs}
+
+                # Combine the dictionaries
+                info_dict = {**dashboard_dict, **teacher_dict}
+
+                teacher_info_list.append(info_dict)
+
+            return teacher_info_list
+        except Exception as e:
+            raise e
+        
+
+
 
 
 #이 파일은 기본적으로 상대주소로 작동하지 않고 한 파일내에 다 있다는 가정하에 작동되게 대기 때문에 이상이 import에 문제가 생길 수 있습니다.

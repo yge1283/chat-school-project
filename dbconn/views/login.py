@@ -2,6 +2,11 @@ from flask import Blueprint, render_template, request, jsonify, redirect,session
 import asyncio
 from supabase import create_client, Client
 from .. import config  # dbconn 폴더의 config 파일 불러오기
+import logging
+from ..connect import DatabaseConnector
+
+logger = logging.getLogger(__name__)
+
 
 url = config.SUPABASE_URL
 key = config.SUPABASE_KEY
@@ -15,13 +20,91 @@ bp = Blueprint('main', __name__, url_prefix='/login') # /login 페이지 설정
 def index():
     return render_template('./login/Login_page.html') # 첫 로그인 페이지 화면
 
+# <a href="{{ url_for('main.signup') }}" 로 사용가능
 @bp.route('/signup')
 def signup():
-    return render_template('login/SignUp_page.html') # 회원가입 html 페이지 표시
+    return render_template('./login/SignUp_page.html') # 회원가입 html 페이지 표시
 
 @bp.route('/findIDandPW')
 def findidandpw():
-    return render_template('login/Find_ID_and_PW.html') # id, pw찾기 페이지 표시
+    return render_template('./login/Find_ID_and_PW.html') # id, pw찾기 페이지 표시
+
+
+# 프로필 반환 코드
+@bp.route('/profile', methods=['GET'])
+def show_profile():
+    user = session.get('user')
+    if user:
+        return jsonify(user), 200
+    else:
+        return jsonify({"error": "User not logged in"}), 401
+
+
+# 어디다 넣을지 몰라서 쓰는 시간표 생성코드
+colors = [
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
+    "#33FFF6", "#FF9633", "#8D33FF", "#33FFB5", "#FF3333"
+]
+
+# 데이터 가져와서 가공하는 코드
+def process_timetable(data):
+    processed_data = []
+    color_index = 0
+
+    for entry in data:
+        subject = entry['과목명']
+        schedule = entry['시간표'].split(',')
+
+        # 순차적으로 색상을 할당
+        color = colors[color_index % len(colors)]
+        color_index += 1
+
+        timetable = {
+            "월": {},
+            "화": {},
+            "수": {},
+            "목": {},
+            "금": {}
+        }
+
+        for time in schedule:
+            day = time[0]
+            period = time[1]
+            if day == '월':
+                timetable['월'][f"{period}교시"] = subject
+            elif day == '화':
+                timetable['화'][f"{period}교시"] = subject
+            elif day == '수':
+                timetable['수'][f"{period}교시"] = subject
+            elif day == '목':
+                timetable['목'][f"{period}교시"] = subject
+            elif day == '금':
+                timetable['금'][f"{period}교시"] = subject
+        
+        processed_data.append({
+            "과목명": subject,
+            "색상": color,
+            "시간표": timetable
+        })
+    
+    return processed_data
+
+# 색깔, 과목명, 시간표 반환 JSON
+@bp.route('/dbapi/timetable', methods=['GET'])
+def get_timetable():
+    db_connector = DatabaseConnector()  # DatabaseConnector 클래스 인스턴스 생성
+    data = db_connector.fetch_timetable_data()  # 인스턴스를 통해 메서드 호출
+    processed_data = process_timetable(data)
+    return jsonify(processed_data)
+
+# 대시보드_key, 선생이름, 과목명 등등 반환
+@bp.route('/dbapi/dashboard', methods=['GET'])
+def get_dashboard():
+    db_connector = DatabaseConnector()  # DatabaseConnector 클래스 인스턴스 생성
+    data = db_connector.get_dashboard_infos()  # 인스턴스를 통해 메서드 호출
+    return jsonify(data)
+
+
 
 @bp.route('/signin')
 def signin():
@@ -34,7 +117,6 @@ def signin():
     #로그인 정보가 DB에 없으면 'login_fail' 반환
     #로그인 정보가 있으면 'main page' html 표시 
 
-# 로그인- 이메일, 구글 (예정)
 # 이메일로 로그인
 @bp.route('', methods=['POST'])
 def login():
@@ -85,6 +167,7 @@ def login():
         else:
             return jsonify({
                 "isSuccess": False,
+                "message": "이메일 또는 비밀번호 오류"
             }), 401
         
     except Exception as e:
@@ -97,7 +180,7 @@ def login():
         
         
 
-# 구글로 로그인(보류중) -작동확인 완료
+# 구글로 로그인(보류) - 작동이 갑자기 안됨.
 @bp.route('/login-google', methods=['GET'])
 def signin_with_google():
     try:
@@ -115,28 +198,44 @@ def signin_with_google():
 @bp.route('/callback')
 def oauth_callback():
     try:
+        print("Callback route accessed")
         # OAuth 인증 후 사용자를 확인
-        session = supabase.auth.get_session()
-        print(f'구글 세션 {session}')
-        uid = session.user.id
-        print(f'uid: {uid}')
+        session_info = supabase.auth.get_user()
+        print(f'구글 세션 {session_info}')
+        uid = session_info.user.id
+        email = session_info.user.email
+        avr = session_info.user.user_metadata['avatar_url']
 
         if uid:
-            userinfo = supabase.table('userinfo').select('IsT').eq('user_id', uid).execute()
+            userinfo = supabase.table('userinfo').select('IsT', 'user_name').eq('user_id', uid).execute()
             value = userinfo.data[0]['IsT'] if userinfo.data else None
+            name = userinfo.data[0]['user_name'] if userinfo.data else None
             print(f'teacher: {value}, {type(value)}')
+
+            if value is None:
+                my_url = "/login/userinfo_page"
+                session['user'] = {
+                    'uid': uid,
+                    'email': email,
+                    'avr_url': avr,
+                }
+                return jsonify({
+                    "isSuccess": True,
+                    "message": "Sign in Google, first time",
+                    "redirect_url": my_url
+                })
 
             role = 'teacher' if value else 'student'
             redirect_url = "/login/teacher/dashboard_page" if value else "/login/student/dashboard_page"
 
-            if value is None:
-                # IsT 값이 없으면
-                my_url = "/login/teacher/my_page" if role == 'teacher' else "/login/student/my_page"
-                return jsonify({
-                    "isSuccess": False,
-                    "message": "Login failed",
-                    "redirect_url": my_url
-                })
+            session['user'] = {
+                'uid': uid,
+                'email': email,
+                'role': role,
+                'avr_url': avr,
+                'name': name
+            }
+            session['role'] = role
 
             return jsonify({
                 "isSuccess": True,
@@ -149,16 +248,11 @@ def oauth_callback():
             return jsonify({
                 "isSuccess": False,
                 "message": "Login failed",
-                "redirect_url": my_url
             })
 
     except Exception as e:
         print(f"Error during OAuth callback: {e}")
         return jsonify({'error': str(e)}), 500
-
-
-
-
 
 # 로그아웃
 @bp.route('/logout', methods=['POST'])
@@ -178,16 +272,65 @@ def logout():
         return jsonify({'error': result['error']}), 401
 
 
-# 대시보드 페이지 올라오면 >> 로그인 후 dashboard로 이동
+# 로그인 후 dashboard로 이동
 @bp.route('/teacher/dashboard_page')
 def teacher_main_page():
-    return render_template('./Teacher_page/Teacher_Page_Main_Frame.html')
+    print(f'현재 세션: {session}')
+    return render_template('./Teacher_page/Teacher_Main_page/Teacher_Main_page_Dashboard.html')
 
+# student- callup 페이지 =시간표/대시보드 페이지
 @bp.route('/student/dashboard_page')
 def student_main_page():
-    return render_template('./Student_page/Main_page/Main_page.html')
+    # testttt = supabase.auth.get_user() (이메일로 로그인하면 유저정보도 있음)
+    test2222= supabase.table('userinfo').select('*').execute()
+    print(f'현재 세션: {session}')
+    print(f'현재 정보가있나: {test2222}')
+    return render_template('./Student_page/Chat_Up_Call_page/Chat_Up_Call.html')
+
+# 선생인지, 학생인지 알기 전에 userinfo 로 보내기 -아직페이지가 없어서 signup에 보내기
+@bp.route('/userinfo_page')
+def userinfo_page():
+    return render_template('./login/SignUp_page.html')
 
 
-# 회원가입 2순위로 미룰예정
+# 회원가입 - 현재 중복확인 버튼 id값이 없음
 
+# 이메일 중복 확인
+@bp.route('/check-email', methods=['POST'])
+def check_email():
+    email = request.json['email']
+    result = supabase.table("profile").select("email").eq("email", email).execute()
 
+    if result.data:
+        return jsonify({"exists": True}), 200
+    else:
+        return jsonify({"exists": False}), 200
+
+# 회원가입 (이메일로 하는 경우) - JS에서 학생인지, 선생인지 받아오는경우
+@bp.route('/register', methods=['POST'])
+def register_user():
+    data = request.json
+    options = {
+        "data": {
+            "name": data['name'],
+            "avatar_url": data.get('avatar_url', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'), # 기본 이미지 제공
+            "phone": data['phone']
+        }
+    }
+    response = supabase.auth.sign_up(email=data['email'], password=data['password'], options=options)
+
+    if 'user' in response:
+        user_data = {
+            
+            'user_name': data['name'],
+            'birthday': data['birthdate'],
+            'gender': data['gender'],
+            'phone': data['phone'],
+            'address': data['address'],
+            'email': data['email'],
+            'IsT' : data.get['teacher']
+        }
+        supabase.table('userinfo').insert(user_data).execute()
+        return jsonify({'success': True}), 201
+    else:
+        return jsonify({'error': 'Registration failed'}), 400

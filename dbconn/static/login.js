@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginButton').addEventListener('click', signInWithEmail);
     document.getElementById('googlebutton').addEventListener('click', signInWithGoogle);
 
-    // 마르디가 버튼 ID 붙여준다고 했음
     // signup페이지 - Sign up 버튼 누를때 실행
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        registerUser();
+    });
+    
 
 
 });
@@ -39,13 +43,12 @@ async function signInWithEmail() {
             alert('잘못된 이메일이나 비밀번호를 입력하셨습니다.');
         });
 }
-
 async function signInWithGoogle() {
     try {
         const response = await axios.get('/login/login-google');
         if (response.data.redirect_url) {
             // 리디렉션 URL로 이동
-            alert("로그인 성공");
+            alert("구글 url로 이동중");
             //콜백으로 이동
             window.location.href = response.data.redirect_url;
         } else {
@@ -84,7 +87,38 @@ window.onload = function() {
     }
 };
 
+// SignUP 회원가입 코드
 
+async function registerUser() {
+    const userData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        phone: document.getElementById('phone').value,
+        birthdate: document.getElementById('birthdate').value,
+        gender: document.getElementById('gender').value,
+        address: document.getElementById('address').value,
+        teacher: document.getElementById('teacher').checked // assuming it's a checkbox
+    };
+
+    try {
+        const response = await axios.post('/login/register', userData);
+        if (response.data.success) {
+            alert('Registration successful');
+            window.location.href = '/login/';
+        } else {
+            alert('Registration failed: ' + response.data.error);
+        }
+    } catch (error) {
+        console.error('Registration failed:', error);
+        alert('Registration failed: ' + error.response.data.error);
+    }
+}
+
+
+
+
+// 로그아웃 참고 JS 코드
 async function logout() {
     try {
         const response = await axios.post('/login/logout', {}, {
