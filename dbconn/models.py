@@ -10,7 +10,8 @@ class Teacher(Base):
     __tablename__ = '선생'
 
     선생_ID = Column(UUID(as_uuid=True), primary_key=True, server_default=func.uuid_generate_v4())
-    
+    선생이름 = Column(String(255))
+
     dashboard = relationship("Dashboard", cascade="all, delete-orphan")
     comment = relationship("Comment", cascade="all, delete-orphan")
     
@@ -18,6 +19,7 @@ class Teacher(Base):
 
 class Student(Base):
     __tablename__ = '학생'
+    학생이름 = Column(String(255))
 
     학생_ID = Column(UUID(as_uuid=True), primary_key=True, server_default=func.uuid_generate_v4())
 
