@@ -95,8 +95,6 @@ def login():
             "error": str(e)
         }), 500
         
-        
-
 # 구글로 로그인(보류중) -작동확인 완료
 @bp.route('/login-google', methods=['GET'])
 def signin_with_google():

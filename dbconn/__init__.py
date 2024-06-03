@@ -6,14 +6,13 @@ from .connect import Connector
 from flask_socketio import SocketIO
 import os
 
-db_uri = Connector.read_config(section='postgres')
+db_uri = Connector.read_config(filename='./app.ini', section='postgres')
+# "postgresql://postgres.bbgqkwpyhnlksydowvtp:schoolchatbot1234@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
 conn = Connector(db_uri)
 socketio = SocketIO()
-
 def create_app():
     app = Flask(__name__)
     # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
-    db_uri = Connector.read_config(section='postgres')
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
@@ -32,7 +31,6 @@ def create_app():
     app.register_blueprint(student_main.bp)
     app.register_blueprint(chatbot.bp)
     app.register_blueprint(teacher_main.bp)
-
     return app
     
 """
