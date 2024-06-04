@@ -7,7 +7,6 @@ from flask_socketio import SocketIO
 import os
 
 db_uri = Connector.read_config(filename='./app.ini', section='postgres')
-# "postgresql://postgres.bbgqkwpyhnlksydowvtp:schoolchatbot1234@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
 conn = Connector(db_uri)
 socketio = SocketIO()
 def create_app():

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata,Userinfo
+from models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata,Userinfo
 from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime, date

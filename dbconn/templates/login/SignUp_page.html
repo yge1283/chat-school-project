@@ -88,7 +88,7 @@
                     <div class="row">
                       <div class="mb-4">
                         <div data-mdb-input-init class="form-outline">
-                          <input type="text" id="form3Example1" class="form-control" placeholder="ID or FullName" />
+                          <input type="text" id="form3Example1" class="form-control" placeholder="FullName" />
                         </div>
                       </div>
 
@@ -169,13 +169,13 @@
                       <p>or sign up with:</p>
                       <button type="button" data-mdb-button-init data-mdb-ripple-init
                         class="btn btn-outline-link btn-floating mx-1">
-                        <img class="kakao" src="./Images/kakao.png" alt="kakao">
+                        <img class="kakao" src="{{ url_for('static', filename='./images/kakao.png') }}" alt="kakao">
                         <i class="fab fa-kakao-f"></i>
                       </button>
 
                       <button type="button" data-mdb-button-init data-mdb-ripple-init
                         class="btn btn-outline-link btn-floating mx-1">
-                        <img class="google" src="./Images/google.png" alt="google">
+                        <img class="google" src="{{ url_for('static', filename='./images/google.png') }}" alt="google">
                         <i class="fab fa-twitter"></i>
                       </button>
                     </div>
