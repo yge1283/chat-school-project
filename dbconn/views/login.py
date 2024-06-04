@@ -3,7 +3,7 @@ import asyncio
 from supabase import create_client, Client
 from .. import config  # dbconn 폴더의 config 파일 불러오기
 import logging
-from ..connect import DatabaseConnector
+from ..connect import Connector
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +92,7 @@ def process_timetable(data):
 # 색깔, 과목명, 시간표 반환 JSON
 @bp.route('/dbapi/timetable', methods=['GET'])
 def get_timetable():
-    db_connector = DatabaseConnector()  # DatabaseConnector 클래스 인스턴스 생성
+    db_connector = Connector()  # Connector 클래스 인스턴스 생성
     data = db_connector.fetch_timetable_data()  # 인스턴스를 통해 메서드 호출
     processed_data = process_timetable(data)
     return jsonify(processed_data)
@@ -100,7 +100,7 @@ def get_timetable():
 # 대시보드_key, 선생이름, 과목명 등등 반환
 @bp.route('/dbapi/dashboard', methods=['GET'])
 def get_dashboard():
-    db_connector = DatabaseConnector()  # DatabaseConnector 클래스 인스턴스 생성
+    db_connector = Connector()  # Connector 클래스 인스턴스 생성
     data = db_connector.get_dashboard_infos()  # 인스턴스를 통해 메서드 호출
     return jsonify(data)
 
