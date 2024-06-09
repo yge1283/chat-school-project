@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, jsonify, redirect
+from flask import Blueprint, render_template, request, jsonify, redirect ,session
+from .supabase_client import supabase
 bp = Blueprint('student_main', __name__, url_prefix='/student')
+
 
 """
 bp선언시 위와 같이 작성
@@ -42,6 +44,180 @@ def question():
 
 """
 
+# 1. supabase 작동 되는지 확인하는 코드
+@bp.route('/create_table')
+def student_create_table_page():
+    try:
+        supanova = supabase.auth.get_user()
+        print(f"수파베이스는 괜찮은가요?: {supanova}")
+        print(f"학생쪽 세션은 괜찮은가요?: {session['user']}")
+        result = supabase.table('confirm').insert({"나라": "일본", "수도": "도쿄"}).execute()
+        data = result.data
+        if data:
+            print("데이터가 있습니다.")
+            print(f"data: {data}")
+            return jsonify({'success': True, 'data': data}), 201
+        else:
+            return jsonify({'error': 'Failed to create table'}), 400
+    except Exception as e:
+        print(f"Error inserting into table: {e}")
+        return jsonify({'error': 'Failed to create table'}), 500
+    
+
+# get_keys값
+def student_get_dashboard_key(uid):
+    temp = supabase.table('수강생').select("대시보드_key").eq('학생_ID', uid).execute()
+    keys= [item['대시보드_key'] for item in temp.data]
+    return keys
+
+# 2. 과목정보 본인것만 가져오기
+@bp.route('/get_my_courses')
+def student_get_course_data():
+    try:
+        # 과목정보를 다시 불러온 경우(대시보드 페이지인경우)
+        session['dashboard_key'] = None
+        uid = session['user']['uid']
+        # 함수 값 불러오기
+        keys = student_get_dashboard_key(uid)
+        response = supabase.table('대시보드').select('*, 선생(선생이름)').execute()
+        courses = [item for item in response.data if item['대시보드_key'] in keys]
+        if courses:
+            print("데이터가 있습니다.")
+            print(f"data: {courses}")
+            return jsonify({'success': True, 'data': courses}), 201
+        else:
+            return jsonify({'error': 'Failed to create table'}), 400
+    except Exception as e:
+        print(f"Error inserting into table: {e}")
+        return jsonify({'error': 'Failed to create table'}), 500
+
+#대시보드 선택한 JS값(대시보드 key 1개)에 MAIN에 정보 가져오기
+@bp.route('/get_mainboard', methods=['POST'])
+def student_get_mainboard():
+    # 메인 페이지에서 필요한 데이터 : 질문게시판의 내용, 과제 내용, 학생 메모장
+    # 메인 페이지의 하위페이지 - 질문게시판, 과제게시판 등등
+    # 하위에서 필요한 데이터 : 질문게시판 - 댓글[게시물_ID] , 과제게시판 - 과제제출[과제_ID]
+    try:
+        data = request.get_json()
+        dashboard_key = str(data['key'])
+        # 세션에 대시보드 key 값을 저장했을 경우 (항상 1개의 키값만 저장되어있음.)
+        session['dashboard_key'] = dashboard_key
+
+        # 1. 질문 게시판 내용
+        response1 = supabase.table('게시판').select('*, 학생(학생이름)').eq('대시보드_key', dashboard_key).execute()
+        question_data = response1.data if response1.data else []
+        print(f"게시판: {question_data}")
+        # 2. 과제 내용
+        response2 = supabase.table('과제').select('*').eq('대시보드_key', dashboard_key).execute()
+        homework_data = response2.data if response2.data else []
+        print(f"과제: {homework_data}")
+        # 3. 학생 메모장 내용
+        uid = session['user']['uid']
+        response3 = supabase.table('학생_메모장').select('*,학생(학생이름)').eq('작성자_ID', uid).execute()
+        memo_data = response3.data if response3.data else []
+        print(f"학생 메모장 내용: {memo_data}")
+        # 4. 오늘 업로드 된 파일이 있는지 확인 (선생님이 업로드함)
+        path_to_list = f"subject/{dashboard_key}"
+        print(f"대시보드 키값: {path_to_list}")
+        response4 = supabase.storage.from_("fine").list(path=path_to_list)
+        # 파일 이름 추출
+        file_name = [select['name'] for select in response4 if 'name' in select]
+        print(f"파일이름: {file_name}")
+        return jsonify({
+            'success': True,
+            'question_data': question_data,
+            'homework_data': homework_data,
+            'memo_data': memo_data,
+            'file_name': file_name
+        }), 201
+    except Exception as e:
+        print(f"Error retrieving mainboard data: {e}")
+        return jsonify({'error': 'Failed to retrieve mainboard data'}), 500
+
+# 질문게시판 가져오기
+@bp.route('/get_questions', methods=['GET'])
+def student_get_questions():
+    try:
+        dashboard_key = session.get('dashboard_key')
+        if not dashboard_key:
+            return jsonify({'error': 'No dashboard key in session'}), 400
+
+        response = supabase.table('게시판').select('*, 학생(학생이름)').eq('대시보드_key', dashboard_key).execute()
+        question_data = response.data
+
+        return jsonify({'success': True, 'data': question_data}), 200
+    except Exception as e:
+        print(f"Error retrieving questions data: {e}")
+        return jsonify({'error': 'Failed to retrieve questions data'}), 500
+
+# 과제 가져오기
+@bp.route('/get_homeworks', methods=['GET'])
+def student_get_homeworks():
+    try:
+        dashboard_key = session.get('dashboard_key')
+        if not dashboard_key:
+            return jsonify({'error': 'No dashboard key in session'}), 400
+
+        response = supabase.table('과제').select('*').eq('대시보드_key', dashboard_key).execute()
+        homework_data = response.data
+
+        return jsonify({'success': True, 'data': homework_data}), 200
+    except Exception as e:
+        print(f"Error retrieving homeworks data: {e}")
+        return jsonify({'error': 'Failed to retrieve homeworks data'}), 500
+
+# 댓글 가져오기
+@bp.route('/get_comments', methods=['POST'])
+def student_get_comments():
+    try:
+        data = request.get_json()
+        question_id = data['question_id']
+        
+        response = supabase.table('댓글').select('*').eq('게시물_ID', question_id).execute()
+        comments_data = response.data
+
+        return jsonify({'success': True, 'data': comments_data}), 200
+    except Exception as e:
+        print(f"Error retrieving comments data: {e}")
+        return jsonify({'error': 'Failed to retrieve comments data'}), 500
+
+# 제출물 가져오기
+@bp.route('/get_submissions', methods=['POST'])
+def student_get_submissions():
+    try:
+        data = request.get_json()
+        homework_id = data['homework_id']
+        
+        response = supabase.table('과제제출').select('*').eq('과제_ID', homework_id).execute()
+        submissions_data = response.data
+
+        return jsonify({'success': True, 'data': submissions_data}), 200
+    except Exception as e:
+        print(f"Error retrieving submissions data: {e}")
+        return jsonify({'error': 'Failed to retrieve submissions data'}), 500
+
+# 수강생 데이터에다가 '과목코드'입력해서 넣기 
+@bp.route('/insert_key', methods=['POST'])
+def student_insert_dashboard_key():
+    # JS에서 학생이 추가할 대시보드 키값 받아오기
+    get_data = request.get_json()
+    dashboard_key = get_data['key']
+    print(f"세션상태 : {session}")
+    uid = session['user']['uid']
+    try:
+        # 정상적으로 코랩에서는 작동
+        result = supabase.table('수강생').insert({"대시보드_key": dashboard_key, "학생_ID": uid}).execute()
+        data = result.data
+        if data:
+            print(f"data: {data}")
+            return jsonify({'success': True, 'data': data}), 201
+        else:
+            return jsonify({'error': 'Failed to create table'}), 400
+    except Exception as e:
+        print(f"Error inserting into table: {e}")
+        return jsonify({'error': 'Failed to create table'}), 500
+    
+
 @bp.route('/comment')
 def comment():
     return render_template('./Student_page/Student_question_board_detail/전문1.html')
@@ -64,4 +240,3 @@ def submit():
 def submit_doc_to_chatbot():
     return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
 
-# 같은 함수가 2개 있어서 삭제합니다.
