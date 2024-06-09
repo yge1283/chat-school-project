@@ -162,7 +162,7 @@ class Connector:
             except Exception as e:
                 raise e
 
-    def me_get(self,tb_name, search,memo_ID=None,page=None ):
+    def me_get(self,tb_name, search,memo_ID=None,page=None):
             try:
                 # 메모,게시판만 작동
                 table = globals()[tb_name]
