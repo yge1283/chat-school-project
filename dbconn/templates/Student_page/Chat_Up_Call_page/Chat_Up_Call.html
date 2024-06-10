@@ -17,10 +17,17 @@
     <!-- 알림창 css -->
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!-- 글꼴 부트스트랩 -->
-
+    <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
 
 </head>
 <style>
+    /* 과목 대시보드 불러오는 박스 어딨는지 못찾았어요*/
+    .course-box {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
     /* 버튼, 전체 글꼴 지정 */
     .Button {
         font-family: "Jua", sans-serif;
@@ -166,6 +173,12 @@
 
     <div>
         <p class="text1"><span class="name">홍길동</span>님 환영합니다</p>
+    </div>
+    <!-- 수정할 구역 -->
+    <div>
+        <button type="button" id="createbutton">supa확인버튼</button>
+        <button type="button" id="coursesbutton">과목정보 받아오기</button>
+        <div id="coursesContainer"></div>
     </div>
 
     <!-- 알림창 구역 -->
