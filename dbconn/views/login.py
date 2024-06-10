@@ -310,27 +310,33 @@ def check_email():
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
-    options = {
-        "data": {
-            "name": data['name'],
-            "avatar_url": data.get('avatar_url', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'), # 기본 이미지 제공
-            "phone": data['phone']
+    response = supabase.auth.sign_up({
+        "email": data['email'],
+        "password": data['password'],
+        "options": {
+            "data": {
+                "name": data['name'],
+                "avatar_url": 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', # 기본 이미지 제공
+                "phone": data['phone']
+            }
         }
-    }
-    response = supabase.auth.sign_up(email=data['email'], password=data['password'], options=options)
-
-    if 'user' in response:
-        user_data = {
-            
-            'user_name': data['name'],
-            'birthday': data['birthdate'],
-            'gender': data['gender'],
-            'phone': data['phone'],
-            'address': data['address'],
-            'email': data['email'],
-            'IsT' : data.get['teacher']
-        }
-        supabase.table('userinfo').insert(user_data).execute()
-        return jsonify({'success': True}), 201
-    else:
-        return jsonify({'error': 'Registration failed'}), 400
+    })
+    if response.data:
+        result = supabase.from_('profile').select('id').eq('email', data['email']).execute()
+        profile_id = result.data[0]['id'] if result.data else None
+        if profile_id:
+            user_data = {
+                
+                'user_name': data['name'],
+                'birthday': data['birthdate'],
+                'gender': data['gender'],
+                'phone': data['phone'],
+                'address': data['address'],
+                'email': data['email'],
+                'IsT' : data.get['teacher']
+            }
+            data =supabase.table('userinfo').insert(user_data).execute()
+            if data.data:
+                return jsonify({'success': True}), 201
+        else:
+            return jsonify({'error': 'Registration failed'}), 400

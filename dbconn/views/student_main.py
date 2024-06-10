@@ -28,8 +28,17 @@ def show_student_mainPage() 함수 실행.  # 함수명 복붙하고 그대로 �
 
 위 함수의 경우 render_template으로 html을 반환해주는 기능.(위 url접속시 html페이지가 표시됨)
 """
+
+# 대시보드에서 과목을 눌렀을때 메인페이지로 이동
+@bp.route('/get_key', methods=['POST'])
+def student_get_1dashboard():
+    data = request.get_json()
+    dashboard_key = str(data['key'])
+    session['dashboard_key'] = dashboard_key
+    return jsonify({'success': True}), 201
+
 @bp.route('/main')
-def main():
+def student_main_page():
     return render_template('./Student_page/Main_page/Main_page.html')
 
 """
@@ -91,18 +100,18 @@ def student_get_course_data():
         print(f"Error inserting into table: {e}")
         return jsonify({'error': 'Failed to create table'}), 500
 
+
+
+
 #대시보드 선택한 JS값(대시보드 key 1개)에 MAIN에 정보 가져오기
-@bp.route('/get_mainboard', methods=['POST'])
+@bp.route('/get_mainboard')
 def student_get_mainboard():
+    dashboard_key = session['dashboard_key']
+    print(f"현재 과목 코드 : {dashboard_key}")
     # 메인 페이지에서 필요한 데이터 : 질문게시판의 내용, 과제 내용, 학생 메모장
     # 메인 페이지의 하위페이지 - 질문게시판, 과제게시판 등등
     # 하위에서 필요한 데이터 : 질문게시판 - 댓글[게시물_ID] , 과제게시판 - 과제제출[과제_ID]
     try:
-        data = request.get_json()
-        dashboard_key = str(data['key'])
-        # 세션에 대시보드 key 값을 저장했을 경우 (항상 1개의 키값만 저장되어있음.)
-        session['dashboard_key'] = dashboard_key
-
         # 1. 질문 게시판 내용
         response1 = supabase.table('게시판').select('*, 학생(학생이름)').eq('대시보드_key', dashboard_key).execute()
         question_data = response1.data if response1.data else []
