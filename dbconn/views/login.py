@@ -1,16 +1,16 @@
 from flask import Blueprint, render_template, request, jsonify, redirect,session
 import asyncio
-from supabase import create_client, Client
-from .. import config  # dbconn 폴더의 config 파일 불러오기
+#from supabase import create_client, Client
+#from .. import config  # dbconn 폴더의 config 파일 불러오기
 import logging
 from ..connect import Connector
 
 logger = logging.getLogger(__name__)
+from .supabase_client import supabase
 
-
-url = config.SUPABASE_URL
-key = config.SUPABASE_KEY
-supabase: Client = create_client(url, key)
+#url = config.SUPABASE_URL
+#key = config.SUPABASE_KEY
+#supabase: Client = create_client(url, key)
 
 bp = Blueprint('main', __name__, url_prefix='/login') # /login 페이지 설정
 
@@ -281,10 +281,10 @@ def teacher_main_page():
 # student- callup 페이지 =시간표/대시보드 페이지
 @bp.route('/student/dashboard_page')
 def student_main_page():
-    # testttt = supabase.auth.get_user() (이메일로 로그인하면 유저정보도 있음)
+    testttt = supabase.auth.get_user()
     test2222= supabase.table('userinfo').select('*').execute()
     print(f'현재 세션: {session}')
-    print(f'현재 정보가있나: {test2222}')
+    print(f'현재 정보가있나: {testttt}')
     return render_template('./Student_page/Chat_Up_Call_page/Chat_Up_Call.html')
 
 # 선생인지, 학생인지 알기 전에 userinfo 로 보내기 -아직페이지가 없어서 signup에 보내기

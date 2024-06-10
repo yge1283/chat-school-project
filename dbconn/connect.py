@@ -162,7 +162,7 @@ class Connector:
 
             elif session['role'] == 'student':
                 uid = session['user']['uid']
-                keys_results = self.session.query(Student.대시보드_key).filter(Student.uid == uid).all()
+                keys_results = self.session.query(Attendee.대시보드_key).filter(Attendee.학생_ID  == uid).all()
                 keys = [item.대시보드_key for item in keys_results]
                 results = self.session.query(Dashboard.과목명, Dashboard.시간표).filter(Dashboard.대시보드_key.in_(keys)).all()
 
@@ -186,7 +186,7 @@ class Connector:
                 )
 
             elif role == 'student':
-                keys_results = self.session.query(Student.대시보드_key).filter(Student.uid == uid).all()
+                keys_results = self.session.query(Attendee.대시보드_key).filter(Attendee.학생_ID == uid).all()
                 dashboard_keys = [item.대시보드_key for item in keys_results]
                 results = (
                     self.session.query(Dashboard, Teacher)
