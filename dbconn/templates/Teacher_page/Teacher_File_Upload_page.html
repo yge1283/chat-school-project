@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher_File_Upload_page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./css/Style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+  
+    <!-- 메뉴바 목록 아이콘 색깔떄문에 일단 넣어두었음.  -->
+    
+</head>
+
+<style>
+
+body{
+    font-family: "Jua", sans-serif;
+    font-weight: 100;
+}
+
+
+
+
+ 
+ .total{
+
+     /* 화면의 가로 중앙 */
+
+    position: absolute; /* 절대 위치 설정 */
+    top: 50%; /* 화면의 세로 중앙에 위치하도록 설정 */
+    left: 43%; /* 화면의 가로 중앙에 위치하도록 설정 */
+
+     /* 화면의 가로 중앙에 위치하도록 설정 */
+    transform: translate(-50%, -50%); /* 요소를 화면의 정중앙으로 이동 */
+}
+
+ 
+ 
+ .container1 {
+    display: grid;
+
+    gap: 30px;
+    width: 100%;
+   
+}
+.part{
+    display: grid;
+    grid-template-rows: 200px auto;
+    gap: 30px;
+    margin-top: 35px;
+
+
+}
+
+.box {
+   width: 300px;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+    left: 33%;
+    bottom: 90px;
+}
+
+.box-1, .box-2 {
+  
+   
+   border-radius: 25px;
+   position: relative;
+   
+   
+}
+.box-1{
+    width: 380px;
+    border: 6px solid  #aaf1ff;
+    background-color: white;
+ 
+}
+.box-2{
+    grid-row: span 2;
+    height: 470px;
+    width: 400px;
+   top: 150px;
+}
+.box-3 {
+    grid-column: span 1/2; /* 1번과 2번 정사각형과 동일한 높이를 가지도록 설정 */
+    width: 380px;
+    height: 200px;
+    border-radius: 25px;
+    border: 6px solid  #aaf1ff;
+    padding: 30px 30px;
+  
+
+   background-size: cover;
+
+}
+.submit{
+    width: 150px;
+    height: 50px;
+    position: relative;
+    left:200px;
+    top: -40px;
+    border-radius: 25px;
+    background-color: #77dff7;
+    border: 1px solid white;
+    font-size: 20px;
+    font-weight: 700;
+    
+}
+.Upload_bt{
+    border-radius: 25px;
+    background-color: #77dff7;
+    border: 1px solid white;
+    width: 150px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.problem_view{
+    width: 150px;
+    height: 50px;
+    position: relative;
+    left:90%;
+    top: -40px;
+    border-radius: 25px;
+    background-color: #77dff7;
+    border: 1px solid white;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+input[type="file"]{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    
+ 
+}
+
+
+
+@media only screen and (max-width: 768px) {
+.total{
+   display: flex;
+    margin-top: 150px;
+
+}
+
+
+
+.container1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+    right: 22%;
+}
+
+
+.box-2{
+    position: relative;
+    top: -55px;
+}
+.box-1, .box-2 {
+  
+   
+   border-radius: 25px;
+   
+}
+
+.box {
+
+    min-height: 200px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+    right: 30px;
+ 
+
+}
+
+.submit {
+    width: 150px;
+    height: 50px;
+    position: relative;
+    left: 200px;
+    top: -40px;
+    border-radius: 25px;
+    border: 1px solid white;
+
+}
+
+
+
+}
+
+
+/* 파일 프리뷰 사진 크기 */
+.image-display {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .box.box-3 {
+          
+      
+            overflow: hidden;
+            position: relative;
+        }
+
+
+        #fileContent {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .image-display {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto;
+        }
+
+        .file-item {
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+       
+
+
+
+
+    </style>
+
+
+
+
+
+
+<header>
+
+<!--  -->
+            <header class="p-3 mb-3 border-bottom gradient-background" style="background-color: #aaf1ff;">
+                <div class="container col-lg-12 col-md-12 col-sm-6">
+                    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                        <a href="/"
+                            class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                                <use xlink:href="#bootstrap"></use>
+                            </svg>
+                        </a>
+
+                        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                            <nav class="navbar navbar-light" aria-label="light offcanvas navbar">
+                                <div class="container-fluid">
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                        aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1"
+                                        id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                                        <div class="offcanvas-header">
+                                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">이전 과제 문제 (날짜 빠른순이 위로)
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white"
+                                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body" style="background-color: white;">
+                                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" aria-current="page" href="#">1.이전 과제 문제
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" aria-current="page" href="#">2.이전 과제 문제
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" aria-current="page" href="#">3.이전 과제 문제
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </nav>
+                        
+                        <div class="dropdown text-end">                            
+                          <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                              data-bs-toggle="dropdown" aria-expanded="false">과제
+                          </a>
+                          <ul class="dropdown-menu" data-bs-popper="static">
+                              <li><a class="dropdown-item" href="#">과제 확인</a></li>
+                              <li><a class="dropdown-item" href="#">AI 문제 생성</a></li>
+                          </ul>
+                        </div>
+
+                        <div class="dropdown text-end">                            
+                          <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                              data-bs-toggle="dropdown" aria-expanded="false">학생 관리
+                          </a>
+                          <ul class="dropdown-menu" data-bs-popper="static">
+                              <li><a class="dropdown-item" href="#">학생 감정 현황</a></li>
+                              <li><a class="dropdown-item" href="#">학생 진도 현황</a></li>
+                          </ul>
+                        </div>
+
+                        <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
+
+                        <div class="dropdown text-end">
+                            <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">기타사항
+                            </a>
+                            <ul class="dropdown-menu" data-bs-popper="static">
+                                <li><a class="dropdown-item" href="#">오늘의 학습</a></li>
+                                <li><a class="dropdown-item" href="#">파일 올리기</a></li>
+                                <li><a class="dropdown-item" href="#">메모장</a></li>
+                            </ul>
+                        </div>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" data-toggle="modal" class="px-3" data-target="#logoutModal">로그아웃</a></li>
+                    </ul>
+
+                     <!-- 프로필 버튼 -->
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-body-emphasis text-decoration-none" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas"> <!-- 오프캔버스를 열도록 설정 -->
+                            <img src="https://github.com/mdo.png" alt="프로필 이미지" width="32" height="32"
+                                class="rounded-circle">
+                        </a>
+                    </div>
+                    
+                    <!-- 프로필 오프캔버스 -->
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel"> <!-- 오른쪽 오프캔버스 -->
+                        <div class="offcanvas-header">
+                            <h5 id="profileOffcanvasLabel">프로필</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> <!-- 닫기 버튼 -->
+                        </div>
+                        <div class="offcanvas-body"> <!-- 오프캔버스 내용 -->
+                            <p>프로필 정보가 여기에 표시됩니다.</p> <!-- 예시 내용 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+</header>
+  
+
+<body>
+
+    
+        <div class="total" style="top: 500px;">
+          
+           
+
+            <div class="container1" >
+
+               
+
+                
+
+
+                <!-- 버튼, 파일목록 나오는 칸, 파일 프리뷰 나오는 칸 시작  -->
+                  <div class="part"  >
+                     <!-- <input type="date" id="FileUploadDate" name="date" style="width: 120px;height: 30px;
+                    position: relative;left: 350px; " >  -->
+                    
+                  
+                      <!-- 파일 올리기 버튼 -->
+                       
+                           <input type="file" id="fileInput" 
+                           accept="image/*, text/*, application/pdf" 
+                          multiple style= "position: fixed;
+                          
+                          left: 70px; top: -120px;">
+    
+                  
+                      
+
+                     
+ 
+
+                   
+
+
+
+                         <!-- 파일 목록 나오는 곳 -->
+                       <div class="box box-1" style="min-height: 200px;">
+
+                        <div class="file-list" id="fileList"></div>
+                       
+                       </div>
+
+                      
+    
+                   
+                      
+                       <!-- 파일 프리뷰 나오는 칸  -->
+                       <div class="box box-3">
+    
+                         <div class="preview_img image-display"></div>
+                         
+                         <div class="file-content" id="fileContent"></div>
+                       
+                        </div>
+                  </div>
+                  <!-- 버튼, 파일목록 나오는 칸, 파일 프리뷰 나오는 칸 끝  -->
+
+              
+                 
+
+
+               
+               <div style="display: flex;align-items: center;justify-content: center;position: relative;right: 50px;">
+                <a  href="{{ url_for('teacher_main.show_teacher_aiproblemview') }}">
+                  <button class="problem_view" >문제보기</button></a>
+
+
+                <button id="submitBtn" class="submit" onclick="uploadFile()">제출</button>
+                
+           </div>
+
+
+
+
+
+                     <!-- 본문 내용 시작 -->
+                      <!-- <div class="box box-2">
+                        <div class="card shadow-sm" style="height: 450px; width: 380px;"> 
+                            <div class="d-flex flex-column justify-content-start align-items-center border p-2" style="background-color: rgb(228, 247, 255);"> 
+                                <p class="mb-0" style="font-weight: 100;">
+                                    본문 내용
+                                </p> 
+                            </div>
+                            <textarea id="textContent" style="height: 400px; border: 1px si;"> </textarea>
+                        </div>
+                      </div> -->
+                      <!-- 본문 내용 끝 -->
+
+           
+            </div>
+            
+
+
+                     
+         </div>
+
+
+      
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+
+    <script>
+        const socket = io('https://4105-125-184-48-169.ngrok-free.app',{ //ai서버 주소
+            autoConnect: true,
+            extraHeaders: {
+                "ngrok-skip-browser-warning": true
+            }
+        });
+
+        function uploadFile() {
+            console.log("실행됨")
+            const fileInput = document.getElementById('fileInput'); //파일 입력부분 요소수정 필요시 수정하기
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const arrayBuffer = event.target.result;
+                    const bytes = new Uint8Array(arrayBuffer);
+                    socket.emit('make_q', {filename: file.name, data: bytes});
+                    
+               
+           
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                alert("Please select a file first."); //파일 선택 안된상태로 업로드누를시 경고
+            }
+          
+
+
+           
+        }
+
+        socket.on('upload_response', function(data) { //서버에서 파일 받으면 확인 알림 (나중에 없애도 됨)
+            alert(data.message);
+            alert("서버에서 데이터 받음")
+       
+          
+        //    localStorage.setItem('upload_response', JSON.stringify(data));
+  
+           
+            // 일단 데이터 메세지를 로컬 스토리지에 저장 
+           
+           
+        });
+        socket.on('make_q_result', function(data) { //문제 생성결과 받아옴 data에 들어있음
+            
+        // 데이터가 비어있지 않은 경우에만 처리
+        // 데이터를 로컬 스토리지에 저장
+       
+        localStorage.setItem('make_q_result', JSON.stringify(data))
+        alert("데이터를 받음")
+        console.log("받은 데이터 표시함")
+    
+    
+
+        // 데이터를 HTML에 표시
+    
+ 
+    
+ 
+          
+        });
+        socket.on('connect',function() {
+            console.log("서버 연결됨")
+            
+
+        });
+    </script>
+   <!-- 파일 프리뷰 함수 -->
+    <script>
+  
+
+        const fileInput1 = document.getElementById('fileInput');
+  
+        const fileList = document.getElementById('fileList');
+        const fileContent = document.getElementById('fileContent');
+
+        fileInput1.addEventListener('change', handleFileUpload);
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            Array.from(files).forEach(file => {
+                const listItem = document.createElement('div');
+                listItem.textContent = file.name;
+                listItem.classList.add('file-item');
+                listItem.addEventListener('click', () => displayFileContent(file));
+                fileList.appendChild(listItem);
+            });
+        }
+
+        function displayFileContent(file) {
+            if (file.type.startsWith('image/')) {
+                displayImage(file);
+            } else if (file.type.startsWith('text/')) {
+                displayText(file);
+            } else if (file.type === 'application/pdf') {
+                displayPdf(file);
+            }
+        }
+
+        function displayImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const content = event.target.result;
+                const image = new Image();
+                image.src = content;
+                image.classList.add('image-display');
+                fileContent.innerHTML = ''; // Clear the file content container
+                fileContent.appendChild(image);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayText(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const content = event.target.result;
+                const pre = document.createElement('pre');
+                pre.textContent = content;
+                fileContent.innerHTML = ''; // Clear the file content container
+                fileContent.appendChild(pre);
+            };
+            reader.readAsText(file);
+        }
+
+        function displayPdf(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const content = event.target.result;
+                const pdfjsLib = window['pdfjs-dist/build/pdf'];
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const pdfDoc = pdfjsLib.getDocument(content);
+                pdfDoc.promise.then(pdf => {
+                    pdf.getPage(1).then(page => {
+                        const viewport = page.getViewport({ scale: 1 });
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        page.render(renderContext).promise.then(() => {
+                            const image = new Image();
+                            image.src = canvas.toDataURL();
+                            image.classList.add('image-display');
+                            fileContent.innerHTML = ''; // Clear the file content container
+                            fileContent.appendChild(image);
+                        });
+                    });
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    </script>
+
+    <script>
+
+
+//     document.getElementById('submitBtn').addEventListener('click', function() {
+//     const files = document.getElementById('fileInput').files;
+//     const textContent = document.getElementById('textContent').value;
+//     const selectedDate = document.getElementById('FileUploadDate').value; // 이 부분을 추가하여 선택한 날짜를 가져옵니다.
+//     const formData = new FormData();
+
+//     for (let i = 0; i < files.length; i++) {
+//       formData.append('files', files[i]);
+//     }
+//     formData.append('text', textContent);
+//     formData.append('date', selectedDate);
+
+//     fetch('/upload', {
+//       method: 'POST',
+//       body: formData
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       alert(data.message);
+//       console.log(data);
+//     })
+//     .catch(error => {
+       
+     
+//     });
+//   });
+</script>
+
+
+
+
+
+
+
+
+
+
+    
+              
+          
+        
+    
+
+       
+
+   
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

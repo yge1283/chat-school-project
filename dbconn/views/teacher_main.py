@@ -43,6 +43,17 @@ def show_teacher_memoEditPage():
 def show_teacher_mainPage():
     return render_template('./Teacher_page/Teacher_Main_page/Teacher_Main_page.html')
 
+# 6.10일 추가(양지은): 생성한 AI문제 표시 페이지 라우터 추가
+@bp.route('/teacheraiproblemview')
+def show_teacher_aiproblemview():
+    return render_template('./Teacher_page/Teacher_AI_View_page.html')
+
+# 6.10일 추가(양지은): AI문제를 만들기 위한 파일 업로드 페이지 라우터 추가
+@bp.route('/teacherfileupload')
+def show_teacher_fileupload():
+    return render_template('./Teacher_page/Teacher_File_Upload_page.html')
+
+
 
 
 
