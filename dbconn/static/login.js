@@ -90,13 +90,23 @@ window.onload = function() {
 // SignUP 회원가입 코드
 
 async function registerUser() {
+    const year = document.getElementById('birth-year').value;
+    const month = document.getElementById('birth-month').value;
+    const day = document.getElementById('birth-day').value;
+
+    // 예시로 YYYY-MM-DD 형식으로 날짜를 만듭니다.
+    const birthdate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const isTeacher = document.getElementById('teacher-checkbox').checked;
+    
     const userData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
         phone: document.getElementById('phone').value,
-        birthdate: document.getElementById('birthdate').value,
-        gender: document.getElementById('gender').value,
+        birthdate: birthdate,
+        gender: gender,
         address: document.getElementById('address').value,
         teacher: document.getElementById('teacher').checked // assuming it's a checkbox
     };
