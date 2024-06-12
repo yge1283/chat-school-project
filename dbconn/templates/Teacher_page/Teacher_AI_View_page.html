@@ -190,8 +190,26 @@ body {
       
       
       </div>
+
+
     <!-- 문제를 표시할 컨테이너 요소 -->
     <div id="problemContainer"></div>
+
+
+            <!-- 객관식 문제 구역 -->
+    <div id="problemContainer1"></div>
+    
+            <!-- 객관식 문제 구역 끝-->
+
+
+
+
+
+<!-- 객관식 문제 시작 -->
+
+ <!-- 객관식 문제 끝 -->
+
+
 
     <div class="bottom_button-container">
 
@@ -220,129 +238,205 @@ body {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 
         <!-- AI서버에서 받은 데이터를 html에 받아옴 -->
-    <script>
-
-
-
-
-        // 로컬 저장소에서 데이터를 읽어오기
-        const data1 = localStorage.getItem('make_q_result');
-        console.log(data1)//string
-
-        // JSON 문자열을 JavaScript 객체로 변환
-        if (data1) {
-            const data2 = JSON.parse(data1);
-            console.log(data2)
-           
-
-            // "데이터확인"을 기준으로 문자열을 분할
-            var splitData = data2.split("데이터확인");
-
-             // 분할된 부분들을 각각 저장
-            var question1 = splitData[0]; // "아름다운 사건"
-            var answer1 = splitData[1]; // "그 이름조차 장미와 같이 아름다워"
-            
-            alert(`question: "${question1}", answer: "${answer1}"`);
-            // 저장된 결과 확인
-            console.log("첫 번째 부분:", question1);
-            console.log("두 번째 부분:", answer1);
-
-//          
-
-
-            // console.log(data2)
-
-            
-            // console.log(JSON.stringify(data2));  // 디버깅을 위한 콘솔 출력
-            // alert(JSON.stringify(data2));  // alert로 출력할 때는 객체를 문자열로 변환
-
-            // 문제 추가 함수 입니다.
-            function addProblem(question, correct_answer, index) {
-                // 문제를 표시할 div 요소 생성
-                const problemDiv = document.createElement('div');
-                problemDiv.style.position='relative'
-                problemDiv.style.bottom='50px'
-                problemDiv.className = 'problem_container';
-
-                // 문제를 표시할 div 안에 HTML 추가
-                problemDiv.innerHTML = `
-                    <div class="col-sm-5 box">
-                        <h2 style="font-weight: 700;">${index}.</h2>
-                        <div class="card text-center shadow-sm h-100" style="margin-top: 20px;">
-                            <div style="align-items: center;">
-                            </div>
-                            <div class="card-body" style="margin-top: 60px;">
-                                <p class="text-muted" style="position: relative; bottom: 30px;">${question}</p>
-                                <div class="card-title">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-5 box">
-                        <div class="card text-center shadow-sm h-100" style="margin-top: 20px;">
-                            <div class="card-body">
-                                <input class="text-muted" style="text-align: center; border: 3px solid black; width: 60%; height: 60px;" placeholder="답을 적으세요">
-                            </div>
-                        </div>
-                        <button id="toggleButton${index}">해설 보기</button>
-                        <div id="hiddenDiv${index}" style="display: none;">${correct_answer}</div>
-                    </div>
-                `;
-
-                // 문제 컨테이너에 추가
-                document.getElementById('problemContainer').appendChild(problemDiv);
-
-                // 각 버튼과 답변에 대한 이벤트 처리
-                const toggleButton = document.getElementById(`toggleButton${index}`);
-                const hiddenDiv = document.getElementById(`hiddenDiv${index}`);
-                toggleButton.style.borderRadius = '10px';
-                toggleButton.style.backgroundColor = '#aaf1ff';
-                toggleButton.addEventListener('click', function() {
-                    if (hiddenDiv.style.display === 'none') {
-                        hiddenDiv.style.display = 'block';
-                        toggleButton.textContent = '해설 숨기기';
-                       
-
-                    } else {
-                        hiddenDiv.style.display = 'none';
-                        toggleButton.textContent = '해설 보기';
-                    }
-                });
-            }
-
-            // 데이터를 기반으로 문제를 추가
-            addProblem(question1, answer1, 1);
-
-        } else {
-            console.log('No data found in local storage');
-        }
-    </script>
-
-<!-- 채점 버튼을 누르면 밑에 문구가 나타나도록 하는 함수 -->
-
 <script>
-    const scoreButton = document.querySelector('.bottom_button-container button:first-of-type');
-    const resultMessage = document.querySelector('.result-message');
-    const resultContainer = document.querySelector('.result-container');
+    const data5 = localStorage.getItem('make_q_2_result');
+const data6 = localStorage.getItem('make_q_result');
 
-    let isScored = false;
-    scoreButton.addEventListener('click', () => {
-        if (!isScored) {
-            resultMessage.style.display = 'block';
-            isScored = true;
-            // 문구가 나타날 때 웹페이지가 해당 메시지 위치로 자동으로 스크롤되도록 함
-            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+console.log(data5);
+console.log(data6);
+
+// JSON 문자열을 JavaScript 객체로 변환
+if (data5 !== undefined && data6 !== undefined) {
+    const judata = JSON.parse(data6);
+    const gakdata = JSON.parse(data5);
+
+
+    console.log(judata);
+    console.log(gakdata);
+
+    const juquestion = judata.question;
+    const juanswer = judata.correct_answer;
+    const gakquestion = gakdata.question;
+    const gakanswer = gakdata.correct_answer;
+
+    const opA = gakdata.A;
+    const opB = gakdata.B;
+    const opC = gakdata.C;
+    const opD = gakdata.D;
+
+    console.log(juquestion);
+    console.log(juanswer);
+    console.log(gakquestion);  // 수정된 부분
+    console.log(gakanswer);
+    console.log(opA);
+    console.log(opB);
+    console.log(opC);
+    console.log(opD);
+
+    // 데이터를 기반으로 문제를 추가
+    addProblem(juquestion, juanswer, 1); // 인덱스를 1로 설정 (혹은 필요에 따라 변경)
+    addProblem1(gakquestion, gakanswer, opA, opB, opC, opD, 2); // 인덱스를 2로 설정 (혹은 필요에 따라 변경)
+} else {
+    console.log("데이터가 없음");
+}
+
+// 주관식 문제 표시 함수
+function addProblem(question, answer, index) {
+    const problemDiv = document.createElement('div');
+    problemDiv.style.position = 'relative';
+    problemDiv.style.bottom = '50px';
+    problemDiv.className = 'problem_container';
+   
+
+    problemDiv.innerHTML = `
+        <div class="col-sm-5 box">
+            <h2 style="font-weight: 700;">${index}.</h2>
+            <div class="card text-center shadow-sm h-100" style="margin-top: 20px;">
+                <div style="align-items: center;">
+                </div>
+                <div class="card-body" style="margin-top: 80px;">
+                    <p class="text-muted" style="position: relative; bottom: 30px;">${question}</p>
+                    <div class="card-title">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5 box">
+            <div class="card text-center shadow-sm h-100" style="margin-top: 20px;">
+                <div class="card-body">
+                    <input class="text-muted" style="text-align: center; border: 3px solid black; width: 60%; height: 60px;" placeholder="답을 적으세요">
+                </div>
+            </div>
+            <button id="toggleButton${index}">해설 보기</button>
+            <div id="hiddenDiv${index}" style="display: none;">${answer}</div>
+        </div>
+    `;
+
+    document.getElementById('problemContainer').appendChild(problemDiv);
+  
+
+    const toggleButton = document.getElementById(`toggleButton${index}`);
+    const hiddenDiv = document.getElementById(`hiddenDiv${index}`);
+    toggleButton.style.borderRadius = '10px';
+    toggleButton.style.backgroundColor = '#aaf1ff';
+    toggleButton.addEventListener('click', function() {
+        if (hiddenDiv.style.display === 'none') {
+            hiddenDiv.style.display = 'block';
+            toggleButton.textContent = '해설 숨기기';
         } else {
-            resultMessage.style.display = 'none';
-            isScored = false;
+            hiddenDiv.style.display = 'none';
+            toggleButton.textContent = '해설 보기';
         }
     });
-</script>
+}
+
+
+
+// 객관식 문제 표시 함수
+function addProblem1(question, answer, A, B, C, D, index, num) {
+    const problemDiv1 = document.createElement('div');
+    problemDiv1.style.position = 'relative';
+    problemDiv1.style.bottom = '50px';
+    problemDiv1.className = 'problem_container1';
+    
+     problemDiv1.style.marginTop='60px'
+
+    problemDiv1.innerHTML = ` 
+        <div class="col-sm-5 box">
+            <h2 style="font-weight: 700;">${index}.</h2>
+            <div class="card text-center shadow-sm h-100">
+              
+            
+                <div class="card-body" style="margin-top: 80px;">
+                    <p class="text-muted" style="position: relative; bottom: 25px;">${question}</p>
+                    <div class="card-title">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form>
+            <div class="option-container">
+                <div class="option">
+                    <input type="radio" id="circle1" name="${index}" value="1">
+                    <label class="circle" for="circle1"></label>
+                    <div class="number"> A - ${A}</div>
+                </div>
+                <div class="option">
+                    <input type="radio" id="circle2" name="${index}" value="2">
+                    <label class="circle" for="circle2"></label>
+                    <div class="number">B - ${B}</div>
+                </div>
+                <div class="option">
+                    <input type="radio" id="circle3" name="${index}" value="3">
+                    <label class="circle" for="circle3"></label>
+                    <div class="number"> C - ${C}</div>
+                </div>
+                <div class="option">
+                    <input type="radio" id="circle4" name="${index}" value="4">
+                    <label class="circle" for="circle4"></label>
+                    <div class="number"> D - ${D}</div>
+                       
+                </div>
+               
+            </div>
+            
+        </form>
+
+         <button id="toggleButton${index}">해설 보기</button>
+        <div id="hiddenDiv${index}" style="display: none;">${answer}</div>
+    `;
+
+    document.getElementById('problemContainer1').appendChild(problemDiv1);
+
+    const toggleButton = document.getElementById(`toggleButton${index}`);
+    const hiddenDiv = document.getElementById(`hiddenDiv${index}`);
+    toggleButton.style.borderRadius = '10px';
+    toggleButton.style.backgroundColor = '#aaf1ff';
+    toggleButton.addEventListener('click', function() {
+        if (hiddenDiv.style.display === 'none') {
+            hiddenDiv.style.display = 'block';
+            toggleButton.textContent = '해설 숨기기';
+        } else {
+            hiddenDiv.style.display = 'none';
+            toggleButton.textContent = '해설 보기';
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+     const scoreButton = document.querySelector('.bottom_button-container button:first-of-type');
+     const resultMessage = document.querySelector('.result-message');
+     const resultContainer = document.querySelector('.result-container')
+
+     let isScored = false;
+     scoreButton.addEventListener('click', () => {
+         if (!isScored) {
+             resultMessage.style.display = 'block';
+             isScored = true;
+             // 문구가 나타날 때 웹페이지가 해당 메시지 위치로 자동으로 스크롤되도록 함
+             resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+         } else {
+             resultMessage.style.display = 'none';
+             isScored = false;
+         }
+     });
+    </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-</body>
+    
+    
+    </body>
 </html>
 
