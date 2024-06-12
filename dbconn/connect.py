@@ -5,6 +5,7 @@ from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime, date
 from sqlalchemy.sql import func
+import json
 
 class Connector:
     def __init__(self, config):
@@ -87,7 +88,7 @@ class Connector:
             
             # db_key 조건이 있는 경우
             if db_key is not None:
-                query = query.filter(getattr(table, "대시보드_ID") == db_key)
+                query = query.filter(getattr(table, "대시보드_key") == db_key)
             
             # search와 title 조건이 있는 경우
             if col is not None and search is not None:
@@ -99,19 +100,32 @@ class Connector:
                 query = query.filter(func.date(table.시간) == today)
             
             results = query.all()
-            return results
+
+            return Connector.convert_to_json(results)
         
         except Exception as e:
             raise e
         
-    def tb_get(self,tb_name,col,search):
-            try:
-                table = globals()[tb_name]
-                query = self.session.filter(getattr(table, col)==search).query(table, Userinfo.user_name).join(Userinfo, table.학생_ID == Userinfo.user_id)
-                results = query.get()
-                return results
-            except Exception as e:
-                raise e
+    def tb_get(self, tb_name, col, search, dashboard_key=None):
+        try:
+            table = globals()[tb_name]
+            query = self.session.query(table, Userinfo.user_name).join(Userinfo, table.학생_ID == Userinfo.user_id).filter(getattr(table, col) == search)
+            
+            if dashboard_key:
+                query = query.filter(getattr(table, '대시보드_key') == dashboard_key)
+
+            results = query.all()
+            json_results = []
+            for board, user_name in results:
+                    board_dict = board.to_dict()
+                    board_dict['user_name'] = user_name
+                    json_results.append(board_dict)
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
             
 
     
@@ -158,26 +172,34 @@ class Connector:
                 if page:
                     query=query.offset(int(page)*6)
                 results = query.limit(6).all()
-                return results
+                json_results = []
+                for board, user_name in results:
+                    board_dict = board.to_dict()
+                    board_dict['user_name'] = user_name
+                    json_results.append(board_dict)
+                return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
             except Exception as e:
+                self.session.rollback()
                 raise e
 
-    def me_get(self,tb_name, search,memo_ID=None,page=None):
-            try:
-                # 메모,게시판만 작동
-                table = globals()[tb_name]
-                results = self.session.query(table).filter(getattr(table, "작성자_ID") == search).order_by("작성시간").first()
-                if memo_ID:
-                    results.filter(getattr(table, "메모") == memo_ID)
-                
-                if page:
-                    results=results.order_by("작성시간").offset(int(page)*4).all()
-                else:
-                    results=results.order_by("작성시간").first()
-
-                return results
-            except Exception as e:
-                raise e
+    def me_get(self, tb_name, search, memo_ID=None, page=None):
+        try:
+            table = globals()[tb_name]
+            if memo_ID:
+                # memo_ID가 제공된 경우 해당 메모를 바로 반환
+                results = [self.session.query(table).filter(getattr(table, "메모_ID") == memo_ID).first()]
+                return Connector.convert_to_json(results)
+            
+            results = self.session.query(table).filter(getattr(table, "작성자_ID") == search).order_by(table.작성시간.desc())
+            
+            if page:
+                results = results.offset(int(page) * 4).all()
+            else:
+                results=[results.first()]
+            return Connector.convert_to_json(results)
+        except Exception as e:
+            self.session.rollback()
+            raise e
     
     def sn_persent(self, db_name, ass_id,st_id):
         try:
@@ -188,16 +210,11 @@ class Connector:
         except Exception as e:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
-
     def at_sn_join(self, db_key,search=None, desc=None,page=None):
         try:
             # 쿼리를 통해 과제와 사용자 이름을 가져옵니다.
             results = self.session.query(
-                Assignment.제목, 
-                Assignment.주차, 
-                Assignment.내용, 
-                Assignment.기한, 
-                Assignment.유형, 
+                Assignment,
                 Userinfo.user_name,
                 Submission.작성시간
             ).join(
@@ -214,14 +231,19 @@ class Connector:
             if page:
                 results=results.offset(int(page)*6)
             results=results.limit(6).all()
-
-            return results
+            
+            json_results = []
+            for board, user_name,time in results:
+                board_dict = board.to_dict()
+                board_dict['user_name'] = user_name
+                board_dict['작성시간'] = time
+                json_results.append(board_dict)
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
         except Exception as e:
+            self.session.rollback()
             raise e
         
-    # def te_insert(self,)
-    
-    def table_to_list(self, objects):
+    def convert_to_list(self,objects):
         data_list = []
         for obj in objects:
             # 객체가 SQLAlchemy 결과 행인지 확인합니다.
@@ -231,6 +253,34 @@ class Connector:
                 # 객체가 테이블이 아닌 경우에는 그대로 추가합니다.
                 data_list.append(obj)
         return data_list
+
+    def convert_to_json(self, results):
+        json_results = []
+        for board in results:
+            board_dict = board.to_dict()
+            json_results.append(board_dict)
+        return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+
+
+
+
+    # 과목, 시간표 ORM
+    def fetch_timetable_data(self):
+        try:
+            if session['role'] == 'teacher':
+                uid = session['user']['uid']
+                results = self.session.query(Dashboard.과목명, Dashboard.시간표).filter(Dashboard.담당선생_ID == uid).all()
+
+            elif session['role'] == 'student':
+                uid = session['user']['uid']
+                keys_results = self.session.query(Student.대시보드_key).filter(Student.uid == uid).all()
+                keys = [item.대시보드_key for item in keys_results]
+                results = self.session.query(Dashboard.과목명, Dashboard.시간표).filter(Dashboard.대시보드_key.in_(keys)).all()
+            data = [{'과목명': result.과목명, '시간표': result.시간표} for result in results]
+            return data
+        except Exception as e:
+            raise e
+
 
 
 
