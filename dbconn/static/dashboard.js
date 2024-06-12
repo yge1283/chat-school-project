@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // login페이지 -login 버튼 누를때 실행
     document.getElementById('createbutton').addEventListener('click', createtable);
     document.getElementById('coursesbutton').addEventListener('click', mycourses);
+    document.getElementById('coursecreate').addEventListener('click', insertDashboardKey);
+
 });
 
 // 데이터 넣는 함수
@@ -36,6 +38,14 @@ async function mycourses() {
             const data = await response.json();
             if (data.success) {
                 alert('대시보드에서 과목정보를 불러왔습니다.');
+               
+                //chatupcall 페이지에서 시간표 색칠을 위한 함수 
+                //6.11 (양지은) 코드  추가
+                applyCourseData(data.data);
+                 //6.11 (양지은) 코드 끝
+
+
+
                 // 데이터 가져왔을 때 사각형으로 HTML에 나타내는 함수로 이동
                 displayCourses(data.data);
             } else {
@@ -57,11 +67,24 @@ async function displayCourses(courses) {
     courses.forEach(course => {
         const courseBox = document.createElement('div');
         courseBox.className = 'course-box';
+
+       
+             // 6.10 양지은 대시보드 스타일 코드 추가 
+             courseBox.style.margin='20px auto'
+             courseBox.style.position = 'relative';
+             courseBox.style.right = '60px';
+             courseBox.style.width = '50%';
+             courseBox.style.backgroundColor = ' rgb(228, 247, 255)';
+             courseBox.style.height = '180px';
+             courseBox.style.borderRadius = '15px';
+             courseBox.style.border = 'white';
+             courseBox.style.textAlign='center'
+             //6.10 양지은 대사보드 스타일 코드 끝
+
         courseBox.innerHTML = `
             <h3>${course.과목명}</h3>
             <p>선생님: ${course.선생.선생이름}</p>
-            <p>학년: ${course.학년}</p>
-            <p>학급: ${course.학급}</p>
+            <p>${course.학년}학년${course.학급}반</p>
             <p>시간표: ${course.시간표}</p>
         `;
         courseBox.addEventListener('click', () => {
@@ -70,11 +93,10 @@ async function displayCourses(courses) {
         container.appendChild(courseBox);
     });
 }
-
-// 위 대시보드를 누르면 메인 받아오기
+// 위 대시보드를 누르면 키값 보내고 메인 받아오기
 async function setDashboardKey(dashboardKey) {
     try {
-        const response = await fetch('/student/get_mainboard', {
+        const response = await fetch('/student/get_key', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -85,36 +107,52 @@ async function setDashboardKey(dashboardKey) {
         if (response.ok) {
             const data = await response.json();
             if (data.success) {
-                console.log('Mainboard data retrieved successfully');
-                console.log(data);
-
-                // 메인 페이지에 데이터를 배치하는 로직을 여기에 추가
-                // 예: displayMainboardData(response.data);
-
-                // Example of how to handle memo_data and file_name
-                const questionData = data.question_data || [];
-                const homeworkData = data.homework_data || [];
-                const memoData = data.memo_data || [];
-                const fileName = data.file_name || [];
-
-                // If you need to do something specific with memoData or fileName
-                if (memoData.length === 0) {
-                    console.log('No memo data available');
-                }
-
-                if (fileName.length === 0) {
-                    console.log('No files available');
-                }
-
-                // Add your logic to handle memoData and fileName here
+                // 메인 페이지로 이동
+                window.location.href = '/student/main';
             } else {
-                alert('Failed to retrieve mainboard data');
+                alert('Failed to set dashboard key');
             }
         } else {
-            alert('서버에서 에러가 발생했습니다');
+            alert('Server returned an error');
         }
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while setting dashboard key');
+    }
+}
+
+// 
+// <button id="coursecreate">Create</button>
+// 과목 추가하는 함수
+async function insertDashboardKey() {
+    const dashboardKey = document.getElementById('dashboard').value;
+
+    if (!dashboardKey) {
+        alert('정확한 대시보드 코드를 입력해주세요');
+        return;
+    }
+
+    try {
+        const response = await fetch('/student/insert_key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ key: dashboardKey })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                alert('정상적으로 수강중인 과목이 추가 되었습니다.');
+            } else {
+                alert('정확한 과목 코드가 아닐 수 있습니다.');
+            }
+        } else {
+            alert('Server returned an error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while inserting the dashboard key');
     }
 }
