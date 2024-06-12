@@ -54,6 +54,13 @@ def show_teacher_fileupload():
     return render_template('./Teacher_page/Teacher_File_Upload_page.html')
 
 
+# 6.11일 추가(양지은): AI문제표시 페이지 추가 
+# 파일 업로드 html의 문제보기 버튼 누르면 이동가능
+
+@bp.route('/teacherAIview')
+def viewtest():
+    return render_template('./Teacher_page/Teacher_AI_view_page.html')
+
 
 
 

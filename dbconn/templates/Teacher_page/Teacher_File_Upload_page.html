@@ -437,7 +437,7 @@ input[type="file"]{
 
                
                <div style="display: flex;align-items: center;justify-content: center;position: relative;right: 50px;">
-                <a  href="{{ url_for('teacher_main.show_teacher_aiproblemview') }}">
+                <a  href="{{ url_for('teacher_main.viewtest') }}">
                   <button class="problem_view" >문제보기</button></a>
 
 
@@ -476,7 +476,7 @@ input[type="file"]{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
 
     <script>
-        const socket = io('https://4105-125-184-48-169.ngrok-free.app',{ //ai서버 주소
+        const socket = io('https://7a87-125-184-48-169.ngrok-free.app',{ //ai서버 주소
             autoConnect: true,
             extraHeaders: {
                 "ngrok-skip-browser-warning": true
@@ -494,7 +494,7 @@ input[type="file"]{
                     const arrayBuffer = event.target.result;
                     const bytes = new Uint8Array(arrayBuffer);
                     socket.emit('make_q', {filename: file.name, data: bytes});
-                    
+                    socket.emit('make_q_2', {filename: file.name, data: bytes});
                
            
                 };
@@ -508,41 +508,43 @@ input[type="file"]{
            
         }
 
-        socket.on('upload_response', function(data) { //서버에서 파일 받으면 확인 알림 (나중에 없애도 됨)
-            alert(data.message);
-            alert("서버에서 데이터 받음")
-       
-          
-        //    localStorage.setItem('upload_response', JSON.stringify(data));
-  
-           
-            // 일단 데이터 메세지를 로컬 스토리지에 저장 
-           
-           
-        });
-        socket.on('make_q_result', function(data) { //문제 생성결과 받아옴 data에 들어있음
-            
-        // 데이터가 비어있지 않은 경우에만 처리
-        // 데이터를 로컬 스토리지에 저장
-       
-        localStorage.setItem('make_q_result', JSON.stringify(data))
-        alert("데이터를 받음")
-        console.log("받은 데이터 표시함")
-    
-    
-
-        // 데이터를 HTML에 표시
-    
- 
-    
- 
-          
-        });
         socket.on('connect',function() {
             console.log("서버 연결됨")
             
 
         });
+
+        socket.on('upload_response', function(data) { //서버에서 파일 받으면 확인 알림 (나중에 없애도 됨)
+            alert(data.message);
+            alert("서버에서 데이터 받음")
+       
+ 
+           
+           
+        });
+        socket.on('make_q_result', function(data) { //문제 생성결과 받아옴 data에 들어있음
+            
+   
+       
+        localStorage.setItem('make_q_result', JSON.stringify(data))
+        alert("데이터를 받음")
+        console.log("받은 데이터 표시함")
+
+       
+          
+        });
+        socket.on('make_q_2_result', function(data) { 
+            
+       
+           
+            localStorage.setItem('make_q_2_result',JSON.stringify(data))
+            alert("객관식 데이터를 받음")
+            console.log("받은 객관식 데이터 표시함")
+    
+     
+              
+            });
+
     </script>
    <!-- 파일 프리뷰 함수 -->
     <script>
