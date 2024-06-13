@@ -23,8 +23,6 @@ def create_app():
     migrate.init_app(app, db)
     socketio.init_app(app)
 
-
-    from . import models
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
 
     from .views import student_main, chatbot, teacher_main,login
