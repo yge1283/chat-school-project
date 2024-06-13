@@ -157,30 +157,31 @@ class Connector:
         return 0
 
     def bd_select(self, db_key, col=None, search=None, desc=True,page=None):
-            try:
-                query = self.session.query(Board, Userinfo.user_name).join(Userinfo, Board.학생_ID == Userinfo.user_id)
+        try:
+            
+            query = self.session.query(Board, Student.학생이름).join(Student, Board.학생_ID == Student.학생_ID)
+            print(query.all())
+            if col:
+                query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, col) == search)
+            else:
+                query = query.filter(Board.대시보드_key == db_key)
 
-                if col:
-                    query = query.filter(Board.대시보드_key == db_key)
-                else:
-                    query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, col) == search)
-
-                if desc:
-                    query = query.order_by(Board.작성시간.desc())
-                else:
-                    query = query.order_by(Board.작성시간.asc())
-                if page:
-                    query=query.offset(int(page)*6)
-                results = query.limit(6).all()
-                json_results = []
-                for board, user_name in results:
-                    board_dict = board.to_dict()
-                    board_dict['user_name'] = user_name
-                    json_results.append(board_dict)
-                return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
-            except Exception as e:
-                self.session.rollback()
-                raise e
+            if desc:
+                query = query.order_by(Board.작성시간.desc())
+            else:
+                query = query.order_by(Board.작성시간.asc())
+            if page:
+                query=query.offset(int(page)*6)
+            results = query.limit(6).all()
+            json_results = []
+            for board, user_name in results:
+                board_dict = board.to_dict()
+                board_dict['user_name'] = user_name
+                json_results.append(board_dict)
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+        except Exception as e:
+            self.session.rollback()
+            raise e
 
     def me_get(self, tb_name, search, memo_ID=None, page=None):
         try:

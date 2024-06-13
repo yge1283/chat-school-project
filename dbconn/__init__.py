@@ -16,11 +16,13 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     app.secret_key = os.urandom(24)  # 세션을 위한 시크릿 키 설정
-
+    
     db = SQLAlchemy()
     migrate = Migrate()
     db.init_app(app)
     migrate.init_app(app, db)
+    socketio.init_app(app)
+
 
     from . import models
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
