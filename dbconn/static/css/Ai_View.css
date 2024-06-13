@@ -1,0 +1,183 @@
+
+body {
+  font-family: 'Jua', sans-serif;
+  font-weight: 200;
+}
+.problem_container{
+
+  margin-top: 70px;
+
+
+}
+.option-container {
+  display: flex;
+  flex-direction:column ;
+
+  gap: 8%; /* 간격을 유동적으로 조절 */
+  flex-wrap: wrap;
+  position: relative;
+
+  margin-top: 20px;
+
+  
+}
+
+.option {
+  display: flex;
+  margin: 5px;
+ 
+
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 100%;
+
+  border: 3px solid #000000;
+  /* transition: background-color 0.3s ease; */
+  cursor: pointer;
+}
+
+.circle.red {
+  background-color: #ED4141;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+input[type="radio"]:checked + .circle {
+  background-color: #ED4141;
+
+}
+
+.number {
+  font-size: 20px; /* 글자 크기를 유동적으로 조절 */
+  font-weight: 800;
+  position: relative;
+  left: 10px;
+ 
+}
+.box{
+  margin: 0 auto;
+  width: 60vw;
+}
+.problem_pic{
+  width: 40%;
+  height: 40%;
+}
+
+
+
+
+
+
+
+
+.button_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  bottom: 40px;
+
+}
+
+.left-buttons, .right-buttons {
+  display: flex;
+}
+
+
+.button {
+  background-color: #77dff7;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+
+
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 120px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 12px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* 추가적인 스타일링을 위해 예시 */
+.dropdown button {
+  background-color: #96e5ff;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+
+  font-size: 16px;
+  cursor: pointer;
+
+}
+
+
+
+.bottom_button-container {
+  display: flex;
+  justify-content: center;
+  gap: 100px; /* 버튼 사이의 간격 조절 */
+  margin-top: 30px;
+
+}
+
+.bottom_button {
+  padding: 10px 20px;
+  background-color: #aeefef;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100px;
+  text-align: center;
+}
+
+.bottom_button:hover {
+  background-color: #8ed8d8;
+}
+
+
+
+
+
+
+
+
