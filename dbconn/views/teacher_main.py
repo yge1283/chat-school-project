@@ -61,7 +61,9 @@ def show_teacher_fileupload():
 def viewtest():
     return render_template('./Teacher_page/Teacher_AI_view_page.html')
 
-
+@bp.route('/checkstudentmind')
+def student_mind():
+    return render_template('/Teacher_page/Teacher_Check_Student_Mind_Page.html')
 
 
 
