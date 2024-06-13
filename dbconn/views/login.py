@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect,session
+from flask import Blueprint, render_template, request, jsonify, redirect,session,render_template_string
 import asyncio
 #from supabase import create_client, Client
 #from .. import config  # dbconn 폴더의 config 파일 불러오기
@@ -137,7 +137,7 @@ def login():
 
         if uid:
             # 선생인지 조회
-            userinfo = supabase.table('userinfo').select('IsT, user_name').execute()
+            userinfo = supabase.table('userinfo').select('IsT, user_name').eq("user_id",uid).execute()
             value = userinfo.data[0]['IsT'] if userinfo.data else None
             name = userinfo.data[0]['user_name'] if userinfo.data else None
             print(f'teacher: {value}, {type(value)}')
@@ -180,79 +180,144 @@ def login():
         
         
 
-# 구글로 로그인(보류) - 작동이 갑자기 안됨.
+# 작동완료 6.12
 @bp.route('/login-google', methods=['GET'])
 def signin_with_google():
     try:
         res = supabase.auth.sign_in_with_oauth({
             "provider": "google",
             "options": {
-                "redirect_to": f"{request.host_url}login/callback"  # 수정된 부분
+                "redirect_to": f"{request.host_url}login/callback"
             }
         })
+        print(f'res값 : {res}')
         return jsonify({"redirect_url": res.url})
     except Exception as e:
         print(f"Error during Google sign-in: {e}")
         return jsonify({"error": str(e)}), 500
-
-@bp.route('/callback')
-def oauth_callback():
+    
+# 보류
+@bp.route('/login-kakao', methods=['GET'])
+def signin_with_kakao():
     try:
-        print("Callback route accessed")
-        # OAuth 인증 후 사용자를 확인
-        session_info = supabase.auth.get_user()
-        print(f'구글 세션 {session_info}')
-        uid = session_info.user.id
-        email = session_info.user.email
-        avr = session_info.user.user_metadata['avatar_url']
+        res = supabase.auth.sign_in_with_oauth({
+            "provider": "kakao",
+            "options": {
+                "redirect_to": f"{request.host_url}login/callback"
+            }
+        })
+        print(f'res값 : {res}')
+        return jsonify({"redirect_url": res.url})
+    except Exception as e:
+        print(f"Error during Kakao sign-in: {e}")
+        return jsonify({"error": str(e)}), 500
+    
+@bp.route("/callback", methods=["GET", "POST"])
+def oauth_callback():
+    if request.method == "POST":
+        try:
+            data = request.json
+            token = data.get("access_token")
+            p_token = data.get("provider_token")
+            r_token = data.get("refresh_token")
 
-        if uid:
-            userinfo = supabase.table('userinfo').select('IsT', 'user_name').eq('user_id', uid).execute()
-            value = userinfo.data[0]['IsT'] if userinfo.data else None
-            name = userinfo.data[0]['user_name'] if userinfo.data else None
-            print(f'teacher: {value}, {type(value)}')
+            print(f'토큰: {token}') 
+            res = supabase.auth.get_user(token)
+            User = res.user
+            print(f'세션 교환 결과: {User}')
+            uid = User.id
+            print(f'uid: {uid}')
 
-            if value is None:
-                my_url = "/login/userinfo_page"
+            if uid:
+                userinfo = supabase.table('userinfo').select('IsT').eq('user_id', uid).execute()
+                value = userinfo.data[0]['IsT'] if userinfo.data else None
+                print(f'teacher: {value}, {type(value)}')
+                
+                # 세션에 사용자 정보를 저장합니다.
                 session['user'] = {
                     'uid': uid,
-                    'email': email,
-                    'avr_url': avr,
+                    'email': User.email,
+                    'avr_url' : User.user_metadata['avatar_url'],
+                    'name' : User.user_metadata['full_name']
                 }
+                
+                if value is None:
+                    return jsonify({
+                    "isSuccess": True,
+                    "message": "Login successful",
+                    "uid": uid,
+                    "redirect_url": "/login/signup"
+                })
+                role = 'teacher' if value else 'student'
+                redirect_url = "/login/teacher/dashboard_page" if value else "/login/student/dashboard_page"
+
+                session['role'] = role
+
                 return jsonify({
                     "isSuccess": True,
-                    "message": "Sign in Google, first time",
-                    "redirect_url": my_url
+                    "message": "Login successful",
+                    "uid": uid,
+                    "session": {"role": role},
+                    "redirect_url": redirect_url
+                })
+            else:
+                return jsonify({
+                    "isSuccess": False,
+                    "message": "Login failed",
+                    "redirect_url": "/login"
                 })
 
-            role = 'teacher' if value else 'student'
-            redirect_url = "/login/teacher/dashboard_page" if value else "/login/student/dashboard_page"
+        except Exception as e:
+            print(f"Error during OAuth callback: {e}")
+            return jsonify({'error': str(e)}), 500
+    else:
+        # GET 요청 시 JavaScript를 포함한 간단한 HTML 페이지를 반환
+                return render_template_string('''
+            <!doctype html>
+            <html>
+            <head>
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const hash = window.location.hash.substring(1);
+                        if (hash) {
+                            const params = new URLSearchParams(hash);
 
-            session['user'] = {
-                'uid': uid,
-                'email': email,
-                'role': role,
-                'avr_url': avr,
-                'name': name
-            }
-            session['role'] = role
+                            const accessToken = params.get('access_token');
+                            const providerToken = params.get('provider_token');
+                            const refreshToken = params.get('refresh_token');
 
-            return jsonify({
-                "isSuccess": True,
-                "message": "Login successful",
-                "uid": uid,
-                "session": {"role": role},
-                "redirect_url": redirect_url
-            })
-        else:
-            return jsonify({
-                "isSuccess": False,
-                "message": "Login failed",
-            })
+                            if (accessToken && providerToken && refreshToken) {
+                                fetch('/login/callback', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        access_token: accessToken,
+                                        provider_token: providerToken,
+                                        refresh_token: refreshToken
+                                    })
+                                }).then(response => response.json())
+                                .then(data => {
+                                    console.log(data);
+                                    if (data.redirect_url) {
+                                        window.location.href = data.redirect_url;
+                                    } else {
+                                        alert('OAuth 콜백 처리 중 오류가 발생했습니다.');
+                                    }
+                                });
+                            }
+                        }
+                    });
+                </script>
+            </head>
+            <body>
+                <p>Processing...</p>
+            </body>
+            </html>
+        ''')
 
-    except Exception as e:
-        print(f"Error during OAuth callback: {e}")
-        return jsonify({'error': str(e)}), 500
+
 
 # 로그아웃
 @bp.route('/logout', methods=['POST'])
@@ -310,6 +375,32 @@ def check_email():
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
+    print(f"세션상태 {session}")
+    if session['user']:
+        uid = session['user']['uid']
+        email =session['user']['email']
+        IsT= data.get('isTeacher')
+        session['role'] = 'teacher' if IsT else 'student'
+        redirect_url = "/login/teacher/dashboard_page" if IsT else "/login/student/dashboard_page"
+        # Insert user data into 'userinfo' table
+        user_data = {
+            'user_id': uid,
+            'user_name': data['name'],
+            'birthday': data['birthdate'],
+            'gender': data['gender'],
+            'phone': data['phone'],
+            'address': data['address'],
+            'email': email,
+            'IsT': IsT
+        }
+        insert_response = supabase.table('userinfo').insert(user_data).execute()
+        
+        if insert_response.data:
+            return jsonify({'success': True, "redirect_url": redirect_url}), 201
+        else:
+            return jsonify({'error': '추가 등록 실패'}), 400
+
+    
     response = supabase.auth.sign_up({
         "email": data['email'],
         "password": data['password'],
@@ -321,22 +412,24 @@ def register_user():
             }
         }
     })
-    if response.data:
+
+    if response:
         result = supabase.from_('profile').select('id').eq('email', data['email']).execute()
         profile_id = result.data[0]['id'] if result.data else None
+        print(f"프로필 uid : {profile_id}")
         if profile_id:
             user_data = {
-                
+                'user_id' :profile_id,
                 'user_name': data['name'],
                 'birthday': data['birthdate'],
                 'gender': data['gender'],
                 'phone': data['phone'],
                 'address': data['address'],
                 'email': data['email'],
-                'IsT' : data.get['teacher']
+                'IsT': data.get('isTeacher')
             }
-            data =supabase.table('userinfo').insert(user_data).execute()
-            if data.data:
+            insert_response =supabase.table('userinfo').insert(user_data).execute()
+            if insert_response.data:
                 return jsonify({'success': True}), 201
         else:
             return jsonify({'error': 'Registration failed'}), 400

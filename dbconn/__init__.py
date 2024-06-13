@@ -6,25 +6,23 @@ from .connect import Connector
 from flask_socketio import SocketIO
 import os
 
-db_uri = Connector.read_config(section='postgres')
+db_uri = Connector.read_config(filename='./app.ini', section='postgres')
 conn = Connector(db_uri)
 socketio = SocketIO()
-
 def create_app():
     app = Flask(__name__)
     # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
-    db_uri = Connector.read_config(section='postgres')
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     app.secret_key = os.urandom(24)  # 세션을 위한 시크릿 키 설정
-
+    
     db = SQLAlchemy()
     migrate = Migrate()
     db.init_app(app)
     migrate.init_app(app, db)
+    socketio.init_app(app)
 
-    from . import models
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
 
     from .views import student_main, chatbot, teacher_main,login
@@ -32,7 +30,6 @@ def create_app():
     app.register_blueprint(student_main.bp)
     app.register_blueprint(chatbot.bp)
     app.register_blueprint(teacher_main.bp)
-
     return app
     
 """

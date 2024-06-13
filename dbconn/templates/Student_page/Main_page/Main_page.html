@@ -9,6 +9,22 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/Main.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        .box {
+            border: 1px solid #007bff; /* Border color */
+            border-radius: 10px; /* Rounded corners */
+            padding: 15px; /* Padding inside the box */
+            margin: 10px 0; /* Margin outside the box */
+            background-color: #f8f9fa; /* Background color */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+        }
+        .box p {
+            margin: 5px 0; /* Margin between paragraphs */
+        }
+        .box p strong {
+            color: #007bff; /* Text color for strong elements */
+        }
+    </style>
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
 </head>
 
@@ -64,8 +80,8 @@
                                     </div>
                                 </div>
                             </nav>
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">과제</a></li>
+                            <li><a href="./question" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
+                            <li><a href="./homework" class="nav-link px-3 link-body-emphasis">과제</a></li>
 
                             <div class="dropdown text-end">
                                 <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
@@ -98,9 +114,7 @@
                 <div class="row justify-content-center text-center"> <!-- 행 중앙 정렬 -->
                     <div class="col-sm-4"> <!-- 오늘의 학습 영역 -->
                         <h4>오늘의 학습</h4>
-                        <textarea rows="15" name="editable_text" id="editable_text"
-                            style="width: 100%; height: 550px; resize: vertical;" placeholder="Your text..."
-                            autofocus=""></textarea> <!-- 기준 높이 -->
+                        
                     </div>
 
                     <div class="col-sm-8"> <!-- 최근에 작성한 메모 카드 -->
