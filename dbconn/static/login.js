@@ -1,24 +1,57 @@
-// test.js
-
-
-// 해당 웹페이지에서 버튼이 실행될때, HTTP로 플라스크 서버와 통신
 document.addEventListener('DOMContentLoaded', function() {
-    // 로그인 페이지 처음 실행될 경우
-    // 로그인 상태인지 확인 하기
-
-
-    // login페이지 -login 버튼 누를때 실행
-    document.getElementById('loginButton').addEventListener('click', signInWithEmail);
-    document.getElementById('googlebutton').addEventListener('click', signInWithGoogle);
-
+    // login페이지 - login 버튼 누를때 실행
+    const loginButton = document.getElementById('loginButton');
+    if (loginButton) {
+        loginButton.addEventListener('click', signInWithEmail);
+    }
+    const googleButton = document.getElementById('googlebutton');
+    if (googleButton) {
+        googleButton.addEventListener('click', signInWithGoogle);
+    }
+    const kakaoButton = document.getElementById('kakaobutton');
+    if (kakaoButton) {
+        kakaoButton.addEventListener('click', signInWithKakao);
+    }
     // signup페이지 - Sign up 버튼 누를때 실행
-    document.getElementById('registerForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        registerUser();
-    });
-    
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            registerUser();
+        });
+    }
 
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        const params = new URLSearchParams(hash);
 
+        const accessToken = params.get('access_token');
+        const providerToken = params.get('provider_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (accessToken && providerToken && refreshToken) {
+            fetch('/login/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    access_token: accessToken,
+                    provider_token: providerToken,
+                    refresh_token: refreshToken
+                })
+            }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.redirect_url) {
+                    alert('첫 로그인시 추가 정보를 입력해야합니다.');
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('OAuth 콜백 처리 중 오류가 발생했습니다.');
+                }
+            });
+        }
+    }
 });
 
 async function signInWithEmail() {
@@ -43,6 +76,8 @@ async function signInWithEmail() {
             alert('잘못된 이메일이나 비밀번호를 입력하셨습니다.');
         });
 }
+
+
 async function signInWithGoogle() {
     try {
         const response = await axios.get('/login/login-google');
@@ -60,36 +95,28 @@ async function signInWithGoogle() {
     }
 }
 
-//콜백 함수
-async function handleOAuthCallback() {
+async function signInWithKakao() {
     try {
-        const response = await axios.get('/login/callback');
-        if (response.data.isSuccess) {
-            // 로그인 성공 시 리디렉션
+        const response = await axios.get('/login/login-kakao');
+        if (response.data.redirect_url) {
+            // 리디렉션 URL로 이동
+            alert("카카오 url로 이동중");
+            //콜백으로 이동
             window.location.href = response.data.redirect_url;
         } else {
-            // 로그인 실패 시 처리
-            alert(response.data.message);
-            if (response.data.redirect_url) {
-                window.location.href = response.data.redirect_url;
-            }
+            alert('kakao 로그인 실패');
         }
     } catch (error) {
-        console.error('OAuth 콜백 처리 실패:', error);
-        alert('OAuth 콜백 처리 중 오류가 발생했습니다.');
+        console.error('kakao 로그인 실패:', error);
+        alert('kakao 로그인 중 오류가 발생했습니다.');
     }
 }
 
-// OAuth 콜백이 실행될 때 호출될 함수
-window.onload = function() {
-    if (window.location.pathname === '/login/callback') {
-        handleOAuthCallback();
-    }
-};
 
 // SignUP 회원가입 코드
 
 async function registerUser() {
+    alert("JS 실행중");
     const year = document.getElementById('birth-year').value;
     const month = document.getElementById('birth-month').value;
     const day = document.getElementById('birth-day').value;
@@ -98,8 +125,9 @@ async function registerUser() {
     const birthdate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
     const gender = document.querySelector('input[name="gender"]:checked').value;
-    const isTeacher = document.getElementById('teacher-checkbox').checked;
-    
+    const role = document.querySelector('input[name="role"]:checked').value;
+    const isTeacher = (role === 'teacher');
+
     const userData = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
@@ -108,13 +136,16 @@ async function registerUser() {
         birthdate: birthdate,
         gender: gender,
         address: document.getElementById('address').value,
-        teacher: document.getElementById('teacher').checked // assuming it's a checkbox
+        isTeacher: isTeacher  // 수정: teacher -> isTeacher
     };
 
     try {
         const response = await axios.post('/login/register', userData);
-        if (response.data.success) {
-            alert('Registration successful');
+        if (response.data.redirect_url) {
+            alert("성공적으로 정보가 추가되었습니다.");
+            window.location.href = response.data.redirect_url;
+        } else if (response.data.success) {
+            alert('성공적으로 회원가입이 완료되었습니다.');
             window.location.href = '/login/';
         } else {
             alert('Registration failed: ' + response.data.error);
