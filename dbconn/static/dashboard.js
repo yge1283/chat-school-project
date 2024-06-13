@@ -38,6 +38,14 @@ async function mycourses() {
             const data = await response.json();
             if (data.success) {
                 alert('대시보드에서 과목정보를 불러왔습니다.');
+               
+                //chatupcall 페이지에서 시간표 색칠을 위한 함수 
+                //6.11 (양지은) 코드  추가
+                applyCourseData(data.data);
+                 //6.11 (양지은) 코드 끝
+
+
+
                 // 데이터 가져왔을 때 사각형으로 HTML에 나타내는 함수로 이동
                 displayCourses(data.data);
             } else {
@@ -59,11 +67,24 @@ async function displayCourses(courses) {
     courses.forEach(course => {
         const courseBox = document.createElement('div');
         courseBox.className = 'course-box';
+
+       
+             // 6.10 양지은 대시보드 스타일 코드 추가 
+             courseBox.style.margin='20px auto'
+             courseBox.style.position = 'relative';
+             courseBox.style.right = '60px';
+             courseBox.style.width = '50%';
+             courseBox.style.backgroundColor = ' rgb(228, 247, 255)';
+             courseBox.style.height = '180px';
+             courseBox.style.borderRadius = '15px';
+             courseBox.style.border = 'white';
+             courseBox.style.textAlign='center'
+             //6.10 양지은 대사보드 스타일 코드 끝
+
         courseBox.innerHTML = `
             <h3>${course.과목명}</h3>
             <p>선생님: ${course.선생.선생이름}</p>
-            <p>학년: ${course.학년}</p>
-            <p>학급: ${course.학급}</p>
+            <p>${course.학년}학년${course.학급}반</p>
             <p>시간표: ${course.시간표}</p>
         `;
         courseBox.addEventListener('click', () => {
