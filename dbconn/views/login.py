@@ -137,7 +137,7 @@ def login():
 
         if uid:
             # 선생인지 조회
-            userinfo = supabase.table('userinfo').select('IsT, user_name').execute()
+            userinfo = supabase.table('userinfo').select('IsT, user_name').eq(uid).execute()
             value = userinfo.data[0]['IsT'] if userinfo.data else None
             name = userinfo.data[0]['user_name'] if userinfo.data else None
             print(f'teacher: {value}, {type(value)}')
@@ -180,7 +180,7 @@ def login():
         
         
 
-# 보류
+# 작동완료 6.12
 @bp.route('/login-google', methods=['GET'])
 def signin_with_google():
     try:
@@ -194,6 +194,22 @@ def signin_with_google():
         return jsonify({"redirect_url": res.url})
     except Exception as e:
         print(f"Error during Google sign-in: {e}")
+        return jsonify({"error": str(e)}), 500
+    
+# 보류
+@bp.route('/login-kakao', methods=['GET'])
+def signin_with_kakao():
+    try:
+        res = supabase.auth.sign_in_with_oauth({
+            "provider": "kakao",
+            "options": {
+                "redirect_to": f"{request.host_url}login/callback"
+            }
+        })
+        print(f'res값 : {res}')
+        return jsonify({"redirect_url": res.url})
+    except Exception as e:
+        print(f"Error during Kakao sign-in: {e}")
         return jsonify({"error": str(e)}), 500
     
 @bp.route("/callback", methods=["GET", "POST"])
@@ -359,6 +375,7 @@ def check_email():
 @bp.route('/register', methods=['POST'])
 def register_user():
     data = request.json
+    print(f"세션상태 {session}")
     if session['user']:
         uid = session['user']['uid']
         email =session['user']['email']

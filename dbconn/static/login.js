@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (googleButton) {
         googleButton.addEventListener('click', signInWithGoogle);
     }
+    const kakaoButton = document.getElementById('kakaobutton');
+    if (kakaoButton) {
+        kakaoButton.addEventListener('click', signInWithKakao);
+    }
     // signup페이지 - Sign up 버튼 누를때 실행
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
@@ -40,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 console.log(data);
                 if (data.redirect_url) {
+                    alert('첫 로그인시 추가 정보를 입력해야합니다.');
                     window.location.href = data.redirect_url;
                 } else {
                     alert('OAuth 콜백 처리 중 오류가 발생했습니다.');
@@ -87,6 +92,23 @@ async function signInWithGoogle() {
     } catch (error) {
         console.error('Google 로그인 실패:', error);
         alert('Google 로그인 중 오류가 발생했습니다.');
+    }
+}
+
+async function signInWithKakao() {
+    try {
+        const response = await axios.get('/login/login-kakao');
+        if (response.data.redirect_url) {
+            // 리디렉션 URL로 이동
+            alert("카카오 url로 이동중");
+            //콜백으로 이동
+            window.location.href = response.data.redirect_url;
+        } else {
+            alert('kakao 로그인 실패');
+        }
+    } catch (error) {
+        console.error('kakao 로그인 실패:', error);
+        alert('kakao 로그인 중 오류가 발생했습니다.');
     }
 }
 
