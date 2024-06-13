@@ -137,7 +137,7 @@ def login():
 
         if uid:
             # 선생인지 조회
-            userinfo = supabase.table('userinfo').select('IsT, user_name').eq(uid).execute()
+            userinfo = supabase.table('userinfo').select('IsT, user_name').eq("user_id",uid).execute()
             value = userinfo.data[0]['IsT'] if userinfo.data else None
             name = userinfo.data[0]['user_name'] if userinfo.data else None
             print(f'teacher: {value}, {type(value)}')
