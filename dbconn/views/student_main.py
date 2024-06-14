@@ -298,3 +298,32 @@ def submit():
 """
 
 
+
+
+
+
+# 질문게시판 6.11일 추가 (양지은)
+@bp.route('/studentquestion')
+def show_student_questionmain():
+    return render_template('Student_page/Student_question_board_detail/전문1.html')
+
+# 질문게시판 글쓰기 페이지 이동
+@bp.route('/studentquestionwriting')
+def show_student_question_writing():
+    return render_template('Student_page/Student_question_board_detail/Student_question_board_detail.html')
+
+
+# 과제 6.11일 추가 (양지은)
+@bp.route('/studenthomework')
+def show_student_homeworkmain():
+    return render_template('Student_page/Student_homework_page/Student_Homework_Main_page.html')
+
+# 과제글쓰기 6.11일 추가 (양지은)
+@bp.route('/studenthomeworkwriting')
+def show_student_homework_writing():
+    return render_template('Student_page/Student_homework_page/Student_Homework_Edit_Page.html')
+
+#파일 다운로드 6.11일 추가 (양지은)
+@bp.route('/studentfiledownload')
+def show_student_filedownload():
+    return render_template('Student_page/File_Download_page/File_download_page.html')

@@ -45,6 +45,67 @@ function displayMainboardData(data) {
     console.log('Memos:', memoData);
     console.log('Files:', fileName);
 
+
+      // 6.14  메인페이지에 메모 데이터 추가함수 
+      //본 함수는 html에 있음
+      displayMemoData(memoData)
+
+      // 6.14 메인페이지에 질문게시판 데이터 추가함수 
+      //본함수는 html에 있음. 
+      displayQuestionData(questionData) 
+
+   
+
+
+    //6.14 메인페이지에 파일 목록 3개만 랜덤으로 표시하는 함수 시작
+      function getRandomElements(arr, n) {
+        const shuffled = arr.slice(); // 배열 복사
+        let i = arr.length;
+        const min = Math.max(i - n, 0);
+        let temp, index;
+        while (i-- > min) {
+            index = Math.floor((i + 1) * Math.random());
+            temp = shuffled[index];
+            shuffled[index] = shuffled[i];
+            shuffled[i] = temp;
+        }
+        return shuffled.slice(min);
+    }
+    
+    // 파일 목록을 HTML에 출력하는 함수
+    function displayFileList(files) {
+        const fileListElement = document.getElementById('fileList1');
+        fileListElement.innerHTML = ''; // 기존 목록 초기화
+    
+        files.forEach(file => {
+            const listItem = document.createElement('div');
+            listItem.textContent = file;
+            listItem.style.fontSize = '20px'; // 폰트 크기 설
+            listItem.style.padding = '10px'; // 내부 여백 설정
+            listItem.style.textAlign = 'center'; // 텍스트 가운데 정렬
+            listItem.style.overflow = 'hidden'; // 넘치는 부분 숨기기
+        listItem.style.whiteSpace = 'nowrap'; // 한 줄로만 표시
+        listItem.style.textOverflow = 'ellipsis'; // 넘치는 텍스트에 ... 표시
+            // 첫 번째 요소는 맨 위로 이동
+           
+            fileListElement.appendChild(listItem);
+            fileListElement.style.display = 'flex';
+            fileListElement.style.flexDirection = 'column';
+            fileListElement.style.alignItems = 'center';
+            fileListElement.style.justifyContent = 'center';
+            fileListElement.style.position='relative'
+            fileListElement.style.right='15px'
+    
+        });
+    }
+
+        const randomFiles = getRandomElements(fileName, 3);
+        displayFileList(randomFiles);
+    // 메인 페이지에 랜덤으로 3개 파일 목록만 표시하는 함수 끝 
+
+
+
+
     function addBox(item) {
         const box = document.createElement('div');
         
