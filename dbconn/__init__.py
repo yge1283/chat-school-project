@@ -6,7 +6,7 @@ from .connect import Connector
 from flask_socketio import SocketIO
 import os
 
-db_uri = Connector.read_config(filename='./app.ini', section='postgres')
+db_uri = Connector.read_config(section='postgres')
 conn = Connector(db_uri)
 socketio = SocketIO()
 def create_app():
@@ -14,7 +14,6 @@ def create_app():
     # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
     app.secret_key = os.urandom(24)  # 세션을 위한 시크릿 키 설정
     
     db = SQLAlchemy()
