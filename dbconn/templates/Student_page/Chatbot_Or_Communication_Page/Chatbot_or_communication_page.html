@@ -64,7 +64,7 @@
         }
 
         #chat-container {
-            height: 700px;
+            height: 600px;
             overflow-y: auto;
             border: 1px solid rgb(217, 233, 232);
             padding: 10px;
@@ -176,13 +176,13 @@
         </div>
 
         <!-- chatbot -->
-        <div class="container jua-regular">
+        <div class="container jua-regular" style="margin-top: 10px;">
             <div class="card" id="chat3" style="border-radius: 15px; background-color: rgb(217, 233, 232);">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-12 col-lg-12 col-xl-12">
+                        <div class="col-xl-12 col-lg-12 col-md-12">
                             <div class="pt-3 pe-3" data-mdb-perfect-scrollbar="true"
-                                style="position: relative; height: 690px;">
+                                style="position: relative; height: 590px;">
 
                                 <div id="chat-container">
                                     <!-- Chat messages will be appended here -->
@@ -219,10 +219,7 @@
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
 
-        import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
-
-
-        const socket = io('https://4105-125-184-48-169.ngrok-free.app', {
+        const socket = io('https://7a87-125-184-48-169.ngrok-free.app', {
             autoConnect: true,
             extraHeaders: {
                 "ngrok-skip-browser-warning": true
@@ -256,6 +253,12 @@
 
         });
 
+        socket.on('summary_result', (data) => {
+            console.log('received file data:', data);
+            // Handle the file data
+            appendMessage(data, false);
+        });
+
 
         function appendMessage(message1, isUser) { //입력받은 메세지로 html에 말풍선 생성, 유저 true일경우 오른쪽 false일경우 왼쪽
             var messageDiv = document.createElement('div');
@@ -275,7 +278,7 @@
         }
 
         function sendMessage(message1) {
-            socket.emit('message', message1);  //챗봇서버에 메세지 전송
+            socket.emit('summary_chat', message1);  //챗봇서버에 메세지 전송
             console.log('메세지를 보냈습니다. ' + message1);  //콘솔에 보낸 메세지 출력
         }
 
@@ -294,6 +297,8 @@
             }
         });
     </script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/input_file.js') }}"></script>
 
 </body>
 
