@@ -29,6 +29,7 @@ def create_app():
     app.register_blueprint(student_main.bp)
     app.register_blueprint(chatbot.bp)
     app.register_blueprint(teacher_main.bp)
+    
     return app
     
 """
