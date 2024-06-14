@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect ,session
+from flask import Blueprint, render_template, request, jsonify, redirect ,session, url_for, current_app
 from .supabase_client import supabase
 bp = Blueprint('student_main', __name__, url_prefix='/student')
 from .. import conn, socketio 
@@ -289,7 +289,8 @@ def comment():
 
 @bp.route('/submit')
 def submit():
-    return render_template('./Student_page/Chatbot_choice_page/chatbot_choice_page.html')
+    with current_app.app_context():
+        return redirect(url_for('chatbot.show_chatbot_page')) # chatbot.py 블루프린트 모델로 이동
 """
 클라이언트 쪽에서 https://127.0.0.1:5000/student/korean으로 접속하여 
     {"uuid":"OAQMNCd2D76DCbx34MK"}를 받아왔다면

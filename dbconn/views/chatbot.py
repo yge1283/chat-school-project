@@ -3,7 +3,7 @@ from flask_socketio import emit
 from datetime import datetime
 from .. import conn, socketio  # 여기서는 모듈 간의 의존성을 최소화합니다.
 
-bp = Blueprint('chatbot', __name__, url_prefix='/edu_student')
+bp = Blueprint('chatbot', __name__, url_prefix='/edu_chatbot')
 
 
 @bp.route('/')
