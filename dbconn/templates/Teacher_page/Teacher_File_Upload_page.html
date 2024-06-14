@@ -89,7 +89,7 @@ body{
    top: 150px;
 }
 .box-3 {
-    grid-column: span 1/2; /* 1번과 2번 정사각형과 동일한 높이를 가지도록 설정 */
+     /* 1번과 2번 정사각형과 동일한 높이를 가지도록 설정 */
     width: 380px;
     height: 200px;
     border-radius: 25px;
@@ -106,9 +106,9 @@ body{
     position: relative;
     left:200px;
     top: -40px;
-    border-radius: 25px;
-    background-color: #77dff7;
-    border: 1px solid white;
+  
+    background-color: #ffffff;
+    border: 1px solid rgb(0, 0, 0);
     font-size: 20px;
     font-weight: 700;
     
@@ -129,9 +129,9 @@ body{
     position: relative;
     left:90%;
     top: -40px;
-    border-radius: 25px;
-    background-color: #77dff7;
-    border: 1px solid white;
+  
+    background-color: #ffffff;
+    border: 1px solid rgb(0, 0, 0);
     font-size: 20px;
     font-weight: 700;
 }
@@ -425,7 +425,7 @@ input[type="file"]{
     
                          <div class="preview_img image-display"></div>
                          
-                         <div class="file-content" id="fileContent"></div>
+                         <div class="file-content" id="fileContent" style="overflow: hidden;"></div>
                        
                         </div>
                   </div>
@@ -436,12 +436,19 @@ input[type="file"]{
 
 
                
-               <div style="display: flex;align-items: center;justify-content: center;position: relative;right: 50px;">
+               <div style="display: flex;align-items: center;justify-content: center;position: relative;right: 10px;">
                 <a  href="{{ url_for('teacher_main.viewtest') }}">
-                  <button class="problem_view" >문제보기</button></a>
+                   <button id="writeButton" type="button" class="btn btn-outline-dark problem_view"
+                    >문제보기</button></a>
+
+                  
 
 
-                <button id="submitBtn" class="submit" onclick="uploadFile()">제출</button>
+
+                    <!-- <button id="writeButton submutBtn" type="button" class="btn btn-outline-dark submit" onclick="uploadFile()"
+                    >제출</button> -->
+                    
+                   
                 
            </div>
 
@@ -592,16 +599,55 @@ input[type="file"]{
         }
 
         function displayText(file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const content = event.target.result;
-                const pre = document.createElement('pre');
-                pre.textContent = content;
-                fileContent.innerHTML = ''; // Clear the file content container
-                fileContent.appendChild(pre);
-            };
-            reader.readAsText(file);
-        }
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const content = event.target.result;
+        const pre = document.createElement('pre');
+        pre.textContent = content;
+        pre.style.fontSize = '16px'; // 글씨 크기 조정
+        pre.style.wordWrap = 'break-word'; // 단어 단위로 줄 바꿈 처리
+        pre.style.whiteSpace = 'pre-wrap'; // 줄 바꿈 처리
+        pre.style.overflow = 'hidden'; // 스크롤 바 없애기
+        pre.style.maxHeight = '100%'; // 컨테이너의 높이를 초과하지 않도록 설정
+        fileContent.innerHTML = ''; // Clear the file content container
+        fileContent.appendChild(pre);
+
+        // 텍스트가 모두 표시될 때까지 컨테이너의 크기를 재조정
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                if (entry.target === pre) {
+                    const containerHeight = entry.contentRect.height;
+                    pre.style.maxHeight = `${containerHeight}px`; // 컨테이너의 높이에 맞게 설정
+                }
+            }
+        });
+        resizeObserver.observe(pre);
+    };
+    reader.readAsText(file);
+}
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const content = event.target.result;
+        const pre = document.createElement('pre');
+        const lines = content.split('\n');
+        const containerHeight = fileContent.clientHeight; // 컨테이너의 높이
+        const lineHeight = parseFloat(window.getComputedStyle(pre).lineHeight); // 줄 높이
+        const maxLines = Math.floor(containerHeight / lineHeight); // 컨테이너에 표시 가능한 최대 줄 수
+        const truncatedLines = lines.slice(0, maxLines); // 최대 줄 수만큼 텍스트 자르기
+        pre.textContent = truncatedLines.join('\n');
+        pre.style.fontSize = '16px'; // 글씨 크기 조정
+        pre.style.wordWrap = 'break-word'; // 단어 단위로 줄 바꿈 처리
+        pre.style.whiteSpace = 'pre-wrap'; // 줄 바꿈 처리
+        pre.style.overflow = 'hidden'; // 스크롤 바 없애기
+        pre.style.maxHeight = '100%'; // 컨테이너의 높이를 초과하지 않도록 설정
+        fileContent.innerHTML = ''; // Clear the file content container
+        fileContent.appendChild(pre);
+    };
+    reader.readAsText(file);
+
+
+
 
         function displayPdf(file) {
             const reader = new FileReader();

@@ -2,4 +2,4 @@
 # : config.py
 
 SUPABASE_URL = "https://bbgqkwpyhnlksydowvtp.supabase.co"
-SUPABASE_KEY = ""
+SUPABASE_KEY = "" 
