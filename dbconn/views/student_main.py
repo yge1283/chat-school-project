@@ -296,9 +296,7 @@ def submit():
     서버에서 url의 변수 'korean'과 'uuid'를 사용하여
     학생이 수강하고 있는 korean 과목에 대한 정보를 찾아 전송.
 """
-@bp.route('/submit_doc_to_chatbot')
-def submit_doc_to_chatbot():
-    return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
+
 
 
 
