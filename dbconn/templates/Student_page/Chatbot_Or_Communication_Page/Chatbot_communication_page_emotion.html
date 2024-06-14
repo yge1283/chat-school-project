@@ -253,7 +253,7 @@
 
         });
 
-        socket.on('summary_result', (data) => {
+        socket.on('daily_response', (data) => {
             console.log('received file data:', data);
             // Handle the file data
             appendMessage(data, false);
@@ -278,7 +278,7 @@
         }
 
         function sendMessage(message1) {
-            socket.emit('summary_chat', {"message":message1, "uid":uid});  //챗봇서버에 메세지 전송
+            socket.emit('daily_chat', {"message":message1, "uid":uid});  //챗봇서버에 메세지 전송
             console.log('메세지를 보냈습니다. ' + message1);  //콘솔에 보낸 메세지 출력
         }
 
