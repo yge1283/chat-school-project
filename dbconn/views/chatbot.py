@@ -3,12 +3,16 @@ from flask_socketio import emit
 from datetime import datetime
 from .. import conn, socketio  # 여기서는 모듈 간의 의존성을 최소화합니다.
 
-bp = Blueprint('chatbot', __name__, url_prefix='/edu_student')
+bp = Blueprint('chatbot', __name__, url_prefix='/edu_chatbot')
 
 
-@bp.route('/')
+@bp.route('/choice_file')
 def show_chatbot_page():
     return render_template('./Student_page/Chatbot_choice_page/chatbot_choice_page.html')
+
+@bp.route('/daily_chatbot')
+def show_daily_chat_page():
+    return render_template('./Student_page/Chatbot_Or_Communication_Page/Chatbot_communication_page_emotion.html')
 
 @bp.route('/submit_doc_to_chatbot')
 def submit_doc_to_chatbot():
