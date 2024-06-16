@@ -161,7 +161,7 @@ class Connector:
         try:
             
             query = self.session.query(Board, Student.학생이름).join(Student, Board.학생_ID == Student.학생_ID)
-            print(query.all())
+            
             if col:
                 query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, col) == search)
             else:

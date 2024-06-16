@@ -171,7 +171,7 @@ def student_get_mainboard():
 @bp.route('/question')
 def question():
     return render_template('./Student_page/Student_question_board_detail/Student_question_board_detail.html')
-@socketio.on('connect', namespace='/')
+@socketio.on('connect', namespace='/question')
 def question_start():
     # 기본값 설정
     dashboard_key = 1
@@ -187,12 +187,23 @@ def question_start():
     
     # conn.bd_select 메서드 호출
     try:
-        result = conn.bd_select(db_key=dashboard_key, desc=True,page=0)
+        result = conn.bd_select(db_key=dashboard_key,page=0)
         print(result)
         emit('board', result)
     except Exception as e:
         emit('error', {'message': str(e)})
 
+@socketio.on('board', namespace='/question')
+def question_page(data):
+    dashboard_key=1
+    if 'dashboard_key' in session:
+        dashboard_key = session['dashboard_key']
+        print(dashboard_key)
+        emit('success')
+    else:
+        emit('error', {'message': 'dashboard_key not found in session'})
+    result = conn.bd_select(db_key=dashboard_key, desc=True,page=data)
+    
 
 # 질문게시판 가져오기
 @bp.route('/get_questions', methods=['GET'])
@@ -305,7 +316,7 @@ def submit():
 # 질문게시판 6.11일 추가 (양지은)
 @bp.route('/studentquestion')
 def show_student_questionmain():
-    return render_template('Student_page/Student_question_board_detail/전문1.html')
+    return render_template('./Student_page/Student_question_board_detail/Student_question_board_detail.html')
 
 # 질문게시판 글쓰기 페이지 이동
 @bp.route('/studentquestionwriting')
