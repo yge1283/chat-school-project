@@ -64,7 +64,8 @@
             }
         }
     </style>
-
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='comment.js') }}" defer></script>
 </head>
 
 <body>
@@ -272,62 +273,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
-    <script>
-        let comments = [];
 
-        document.getElementById('postCommentButton').addEventListener('click', function () {
-            const commentText = document.getElementById('textAreaExample').value;
-            if (commentText.trim() !== '') {
-                const newComment = {
-                    text: commentText,
-                    date: new Date().toLocaleString()
-                };
-                comments.push(newComment);
-                document.getElementById('textAreaExample').value = '';
-                displayComments();
-            }
-        });
-
-        function displayComments() {
-            const commentsContainer = document.getElementById('commentsContainer');
-            commentsContainer.innerHTML = comments.map((comment, index) => `
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex flex-start">
-                    <img class="rounded-circle shadow-1-strong me-3"
-                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                        alt="avatar" width="40" height="40" />
-                    <div class="w-100">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="text-primary fw-bold mb-0">
-                                홍길동
-                                <span class="text-body ms-2">${comment.text}</span>
-                            </h6>
-                            <p class="mb-0">${comment.date}</p>
-                        </div>
-                        <button class="btn btn-secondary btn-sm" onclick="editComment(${index})">Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteComment(${index})">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `).join('');
-        }
-
-        function editComment(index) {
-            const comment = comments[index];
-            const newCommentText = prompt("Edit your comment:", comment.text);
-            if (newCommentText !== null && newCommentText.trim() !== '') {
-                comments[index].text = newCommentText;
-                displayComments();
-            }
-        }
-
-        function deleteComment(index) {
-            comments.splice(index, 1);
-            displayComments();
-        }
-    </script>
 </body>
 
 </html>

@@ -25,8 +25,24 @@ def connect():
         uid = session['user']['uid']
     else:
         print('User not found in session')
-    
-    
     data=conn.tb_select('Chat','학생_ID',uid)
     print(data)
     emit('chatting',data)
+
+
+
+@socketio.on('message',namespace='/chatbot')
+def send_message(data):
+    uid = ""
+    if 'user' in session:
+        uid = session['user']['uid']
+    else:
+        print('User not found in session')
+    if uid:
+        message = data['msg']
+        nowdate = datetime.now()
+        aimessage=data['ai']
+        conn.tb_ninsert("Chat",  [(1, uid, nowdate, message, aimessage)])
+        emit('message_sent', {'status': 'success'}, room=request.sid)
+    else:
+        emit('error', {'message': 'User not logged in'}, room=request.sid)

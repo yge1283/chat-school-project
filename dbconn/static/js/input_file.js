@@ -28,10 +28,9 @@ socket.on('disconnect', (reason) => {
 
 socket.on('summary_result', (data) => {
     console.log('Received file data:', data);
-    fsocket.emit('file_data', data);
     // Handle the file data
     appendMessage(data, false);
-
+    fsocket.emit('message',{'msg':user-input.value,'ai':data});
 });
 fsocket.on('chatting',(data)=>{
     console.log("connected")
@@ -67,8 +66,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     fsocket.emit('connect')
-
-    
-
 });
 

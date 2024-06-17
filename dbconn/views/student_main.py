@@ -198,11 +198,34 @@ def question_page(data):
     dashboard_key=1
     if 'dashboard_key' in session:
         dashboard_key = session['dashboard_key']
-        print(dashboard_key)
+        
         emit('success')
     else:
         emit('error', {'message': 'dashboard_key not found in session'})
+    print(data)
     result = conn.bd_select(db_key=dashboard_key, desc=True,page=data)
+    emit('board', result)
+
+@socketio.on('question', namespace='/question')
+def qes_com_get(data):
+    bd_id=int(data)
+    emit('question',conn.tb_select("Question","게시물_ID",bd_id))
+
+@socketio.on('comment', namespace='/question')
+def qes_com_get(data):
+    bd_id=int(data)
+    emit('comment',conn.tb_select("Comment","게시물_ID",bd_id))
+    
+@socketio.on('comment_num', namespace='/question')
+def qes_com_get(data):
+    bd_id = int(data)
+    try:
+        comment_count = conn.tb_len("Comment", "게시물_ID", bd_id)
+        print(comment_count)
+        emit('comment_num', {'게시물_ID': bd_id, 'comment_count': comment_count})
+    except Exception as e:
+        emit('error', {'message': str(e)})
+
     
 
 # 질문게시판 가져오기
