@@ -209,7 +209,7 @@ def question_page(data):
 @socketio.on('question', namespace='/question')
 def qes_com_get(data):
     bd_id=int(data)
-    emit('question',conn.tb_select("Question","게시물_ID",bd_id))
+    emit('question',conn.tb_select("Board","게시물_ID",bd_id))
 
 @socketio.on('comment', namespace='/question')
 def qes_com_get(data):

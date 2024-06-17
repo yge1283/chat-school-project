@@ -1,5 +1,5 @@
 var socket = io.connect('/question');
-socket(namespace)
+
 const prevButton = document.getElementById('qprev');
 const nextButton = document.getElementById('qnext');
 const currentPageElement = document.getElementById('currentPage');

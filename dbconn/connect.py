@@ -85,7 +85,7 @@ class Connector:
             try:
                 # 테이블 클래스를 가져옵니다.
                 table = globals()[tb_name]
-                query = session.query(table)
+                query = self.session.query(table, Student.학생이름).join(Student, table.학생_ID == Student.학생_ID).filter(getattr(table, col) == search)
                 
                 # db_key 조건이 있는 경우
                 if db_key is not None:
@@ -100,9 +100,14 @@ class Connector:
                     today = date.today()
                     query = query.filter(func.date(table.시간) == today)
                 
+                json_results = []
                 results = query.all()
-
-                return self.convert_to_json(results)
+                for board, user_name in results:
+                    board_dict = board.to_dict()
+                    board_dict['user_name'] = user_name
+                    json_results.append(board_dict)
+                return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+                
             
             except Exception as e:
                 raise e
@@ -110,7 +115,7 @@ class Connector:
     def tb_get(self, tb_name, col, search, dashboard_key=None):
         try:
             table = globals()[tb_name]
-            query = self.session.query(table, Userinfo.user_name).join(Userinfo, table.학생_ID == Userinfo.user_id).filter(getattr(table, col) == search)
+            query = self.session.query(table, Student.user_name).join(Student, table.학생_ID == Student.user_id).filter(getattr(table, col) == search)
             
             if dashboard_key:
                 query = query.filter(getattr(table, '대시보드_key') == dashboard_key)

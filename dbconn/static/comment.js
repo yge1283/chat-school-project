@@ -1,12 +1,22 @@
 let comments = [];
-socket.io
+var socket = io.connect('/question');
+const urlParams = new URLSearchParams(window.location.search);
+const 게시물_ID = urlParams.get('게시물_ID');
+socket.on('question', function(data) {
+  questionpage(data)
+}
+);
 
-
-
+socket.on('comment_num', function(data) {
+  console.log(data)
+  const text4 = document.getElementById('text4');
+  const { 게시물_ID, comment_count } = data;
+  text4.value = comment_count;
+});
 
 document.getElementById('postCommentButton').addEventListener('click', function () {
     const commentText = document.getElementById('textAreaExample').value;
-    if (commentText.trim() !== '') {
+  if (commentText.trim() !== '') {
         const newComment = {
             text: commentText,
             date: new Date().toLocaleString()
@@ -15,10 +25,12 @@ document.getElementById('postCommentButton').addEventListener('click', function 
         document.getElementById('textAreaExample').value = '';
         displayComments();
     }
+
 });
 
 function displayComments() {
     const commentsContainer = document.getElementById('commentsContainer');
+
     commentsContainer.innerHTML = comments.map((comment, index) => `
 <div class="card mb-3">
     <div class="card-body">
@@ -55,4 +67,32 @@ function editComment(index) {
 function deleteComment(index) {
     comments.splice(index, 1);
     displayComments();
+}
+document.addEventListener('DOMContentLoaded', function() {
+  socket.emit('question',게시물_ID);
+  socket.emit('comment_num',게시물_ID);
+});
+
+function questionpage(data){
+  const questionData = JSON.parse(data)[0];
+  console.log(questionData);
+
+  // DOM 요소 찾기
+  const text1 = document.getElementById('text1');
+  const text2 = document.getElementById('text2');
+  const text3 = document.getElementById('text3');
+  const text5 = document.getElementById('text5');
+  // DOM 요소가 존재하는지 확인 후 값 설정
+  if (text1) {
+      text1.value = questionData.제목;
+  }
+  if (text2) {
+      text2.value = questionData.user_name;
+  }
+  if (text3) {
+      text3.value = questionData.작성시간;
+  }
+  if (text5) {
+    text5.value = questionData.작성내용;
+  }
 }
