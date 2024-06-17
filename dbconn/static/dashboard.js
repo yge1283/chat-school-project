@@ -156,3 +156,5 @@ async function insertDashboardKey() {
         alert('An error occurred while inserting the dashboard key');
     }
 }
+
+/// 선생님용 코드 학생용과 거의 엔드포인트 이름 빼고 똑같습니다.
