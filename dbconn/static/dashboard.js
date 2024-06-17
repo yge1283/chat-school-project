@@ -87,6 +87,21 @@ async function displayCourses(courses) {
             <p>${course.학년}학년${course.학급}반</p>
             <p>시간표: ${course.시간표}</p>
         `;
+
+
+               // 6.17 삭제 버튼 넣기 시작
+        const closeButton = document.createElement('button');
+        closeButton.className = 'close-btn';
+        closeButton.textContent = 'X';
+        closeButton.onclick = function() {
+            courseBox.remove();
+            event.stopPropagation(); // 이벤트 전파를 중지하여 다른 이벤트가 실행되지 않도록 함
+        };
+
+        courseBox.appendChild(closeButton);
+        //6. 17 삭제 버튼 끝 
+
+
         courseBox.addEventListener('click', () => {
             setDashboardKey(course.대시보드_key);
         });
