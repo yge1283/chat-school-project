@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, sessio
 from flask_socketio import emit
 from datetime import datetime
 from .. import conn, socketio  # 여기서는 모듈 간의 의존성을 최소화합니다.
+from .. ai_server_config import AI_SERVER_URL # config.py에 저장된 ai 서버 주소 가져옴
 
 bp = Blueprint('chatbot', __name__, url_prefix='/edu_chatbot')
 
@@ -26,7 +27,7 @@ def connect():
     else:
         print('User not found in session')
     
-    
-    data=conn.tb_select('Chat','학생_ID',uid)
+    data={"ai_url":AI_SERVER_URL, "uid":""}
+    data["uid"]=conn.tb_select('Chat','학생_ID',uid)
     print(data)
     emit('chatting',data)
