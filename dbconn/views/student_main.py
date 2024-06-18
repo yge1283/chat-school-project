@@ -283,7 +283,7 @@ def student_insert_dashboard_key():
         return jsonify({'error': 'Failed to create table'}), 500
     
 
-# 수강생 데이터에다가 '과목코드'입력해서 넣기 
+# x 버튼 누르면 자동으로 키값 받고, 수강생 데이터 행 삭제
 @bp.route('/delete_key', methods=['POST'])
 def student_delete_dashboard_key():
     # JS에서 학생이 추가할 대시보드 키값 받아오기
