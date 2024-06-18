@@ -5,6 +5,7 @@ from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
 from datetime import datetime, date
 from sqlalchemy.sql import func
+from sqlalchemy.exc import PendingRollbackError, SQLAlchemyError
 import json
 
 class Connector:
@@ -81,36 +82,43 @@ class Connector:
 
 
     def tb_select(self, tb_name, col=None, search=None, db_key=None, today_only=None):
-            session = self.session
-            try:
-                # 테이블 클래스를 가져옵니다.
-                table = globals()[tb_name]
-                query = self.session.query(table, Student.학생이름).join(Student, table.학생_ID == Student.학생_ID).filter(getattr(table, col) == search)
-                
-                # db_key 조건이 있는 경우
-                if db_key is not None:
-                    query = query.filter(getattr(table, "대시보드_key") == db_key)
-                
-                # search와 title 조건이 있는 경우
-                if col is not None and search is not None:
-                    query = query.filter(getattr(table, col) == search)
-                
-                # 오늘 날짜 조건 추가
-                if today_only:
-                    today = date.today()
-                    query = query.filter(func.date(table.시간) == today)
-                
-                json_results = []
-                results = query.all()
-                for board, user_name in results:
-                    board_dict = board.to_dict()
-                    board_dict['user_name'] = user_name
-                    json_results.append(board_dict)
-                return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
-                
+        try:
+            # 테이블 클래스를 가져옵니다.
+            table = globals()[tb_name]
+            query = self.session.query(table, Student.학생이름).join(Student, table.학생_ID == Student.학생_ID)
+
+            # db_key 조건이 있는 경우
+            if db_key is not None:
+                query = query.filter(getattr(table, "대시보드_key") == db_key)
             
-            except Exception as e:
-                raise e
+            # search와 title 조건이 있는 경우
+            if col is not None and search is not None:
+                query = query.filter(getattr(table, col) == search)
+            
+            # 오늘 날짜 조건 추가
+            if today_only:
+                today = date.today()
+                query = query.filter(func.date(table.시간) == today)
+            
+            json_results = []
+            results = query.all()
+            for board, user_name in results:
+                board_dict = board.to_dict()
+                board_dict['user_name'] = user_name
+                json_results.append(board_dict)
+            
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+        
+        except PendingRollbackError:
+            self.session.rollback()
+            return self.tb_select(tb_name, col, search, db_key, today_only)
+        
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            raise e
+        
+        except Exception as e:
+            raise e
         
     def tb_get(self, tb_name, col, search, dashboard_key=None):
         try:
