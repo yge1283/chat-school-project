@@ -4,23 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher_Question_board_answer_page</title>
+    <title>Teacher Check Student Mind Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='./css/Style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-</head>
 
-<style>
-    .arrow-left {
-        position: relative;
-        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
-    }
-    .arrow-right {
-        position: relative;
-        top: 225px; /* 질문 내용 높이에 맞춰 조정 */
-    }
-</style>
+    <style>
+        .emoji {
+            font-size: 1.7em; /* 이모지 크기 조정 */
+        }
+
+        table {
+            width: 100%; /* 테이블 너비 설정 */
+            border-collapse: collapse; /* 테이블 테두리 병합 */
+        }   
+    
+        td, th {
+            padding: 8px; /* 셀 안쪽 여백 설정 */
+            border: 1px solid #ddd; /* 셀 테두리 스타일 설정 */
+            text-align: center; /* 텍스트 가로 중앙 정렬 */
+            vertical-align: middle; /* 텍스트 세로 중앙 정렬 */
+        }
+    </style>    
+
+</head>
 
 <body>
     <div class="d-flex flex-column">
@@ -88,7 +96,7 @@
 
                     <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_teacher_questionPage') }}">질문 게시판</a></li>
                     <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_student_mind') }}">감정 분석</a></li>
-                    <div class="dropdown text-end"> 
+                    <div class="dropdown text-end">
                         <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
                             data-bs-toggle="dropdown" aria-expanded="false">기타사항
                         </a>
@@ -127,107 +135,155 @@
 
         <div class="container mt-3"> <!-- 메인 컨테이너 -->
             <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
-                <div class="col-auto arrow-left"> <!-- 왼쪽 화살표 -->
-                    <p class="mb-0"><<<</p>
-                </div>
-                <div class="col-sm-8"> <!-- 추가 콘텐츠 영역 -->
-                    <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
-                        <div class="col-sm-12"> <!-- 12개의 열로 확장 -->
-                            <div class="col-sm-12"> <!-- 최근에 작성한 메모 카드 -->
-                                <div class="card text-center shadow-sm"> <!-- 카드 높이 자동 조정 -->
-                                    <div class="d-flex justify-content-start align-items-center border p-2" style="background: #f8f9fa;"> <!-- 줄어든 패딩 -->
-                                        <p class="col-auto me-2 mb-0">제목</p>
-                                        <input type="text" id="searchdata" placeholder="질문1: 국어 34p 3번 문제에 대해서" class="form-control">
-                                    </div>
-                                </div>                                
-        
-                                <div class="card text-center shadow-sm mb-3"> <!-- 카드 -->
-                                    <div class="d-flex justify-content-start border p-2" style="background: #f8f9fa; gap: 30px;"> <!-- 플렉스와 gap 적용 -->
-                                        
-                                        <!-- 첫 번째 세트: 작성자와 이름 -->
-                                        <div class="d-flex align-items-center flex-fill"> <!-- 세트 1 -->
-                                            <p class="me-2 mb-0" style="min-width: 60px;">작성자</p> <!-- 작성자 레이블 -->
-                                            <input type="text" id="searchdata" placeholder="홍길동" class="form-control">
-                                        </div>
-                                        
-                                        <!-- 두 번째 세트: 작성 날짜와 날짜 -->
-                                        <div class="d-flex align-items-center flex-fill"> <!-- 세트 2 -->
-                                            <p class="me-2 mb-0" style="min-width: 80px;">작성 날짜</p> <!-- 작성자 레이블 -->
-                                            <input type="text" id="searchdata" placeholder="2024-04-15 16:18:00" class="form-control">
-                                        </div>
-                                
-                                        <!-- 세 번째 세트: 댓글 수와 개수 -->
-                                        <div class="d-flex align-items-center flex-fill"> <!-- 세트 3 -->
-                                            <p class="me-2 mb-0" style="min-width: 60px;">댓글 수</p> <!-- 작성자 레이블 -->
-                                            <input type="text" id="searchdata" placeholder="3" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-4"> <!-- 상단 마진 추가 -->
-                                    <div class="card shadow-sm" style="height: 200px;"> <!-- 고정된 높이 설정 -->
-                                        <div class="d-flex flex-column justify-content-start align-items-center border p-2" style="background: #f8f9fa;"> <!-- 줄어든 패딩 -->
-                                            <p class="mb-0">질문 내용</p> <!-- 기본 텍스트 -->
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-3"> <!-- 간격을 주기 위해 상단 마진 추가 -->
-                                    <div class="card shadow-sm"> <!-- 질문 내용 카드 -->
-                                        <div class="d-flex justify-content-between border p-2" style="background: #f8f9fa;"> <!-- 양쪽 정렬 -->
-                                            <!-- 첫 번째 그룹 -->
-                                            <div class="d-flex"> <!-- 요소 그룹 -->
-                                                <p class="me-3 mb-0">이미지</p> <!-- 텍스트 -->
-                                                <span class="text-muted me-3">OOO 선생님</span> <!-- 선생님 이름 -->
-                                                <span class="text-muted">답은 000입니다.</span> <!-- 답 내용 -->
-                                            </div>
-                                    
-                                            <!-- 두 번째 그룹 (오른쪽 끝) -->
-                                            <span class="text-muted">2024-04-15 17:58:23</span> <!-- 날짜 -->
-                                        </div>
-                                    </div>
-                                </div>
-        
-                                <div class="mt-1"> <!-- 간격을 주기 위해 상단 마진 추가 -->
-                                    <div class="card shadow-sm"> <!-- 질문 내용 카드 -->
-                                        <div class="d-flex justify-content-between border p-2" style="background: #f8f9fa;"> <!-- 양쪽 정렬 -->
-                                            <!-- 첫 번째 그룹 -->
-                                            <div class="d-flex"> <!-- 요소 그룹 -->
-                                                <p class="me-3 mb-0">이미지</p> <!-- 텍스트 -->
-                                                <span class="text-muted me-3">OOO 선생님</span> <!-- 선생님 이름 -->
-                                                <span class="text-muted">답은 000입니다.</span> <!-- 답 내용 -->
-                                            </div>
-                                    
-                                            <!-- 두 번째 그룹 (오른쪽 끝) -->
-                                            <span class="text-muted">2024-04-15 17:58:23</span> <!-- 날짜 -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-sm-10"> <!-- 추가 콘텐츠 영역 -->                   
+                    <div class="container mt-3 mb-3"> <!-- 메인 컨테이너 -->
+                        <div class="row"> <!-- 행 시작 -->
+                            <div class="col-sm-12 d-flex justify-content-end align-items-center"> <!-- 우측 정렬 -->
+                                <!-- <input type="date" id="datepicker">  -->
+                                <!-- 달력 위젯 -->
+                                <button onclick="emo_analyze()"
+                                style="margin: 20px;" class="btn btn-outline-dark button">분석하기</button>
+         
+                            </div>                                                                             
                         </div>
-        
-                        <div class="row justify-content-center mb-4 mt-4"> <!-- 업로드된 파일 및 메모 카드 중앙 정렬 -->
-        
-                            <div class="mt-1"> <!-- 간격을 주기 위해 상단 마진 추가 -->
-                                <div class="input-group">
-                                    <textarea id="searchdata" placeholder="댓글 입력창" class="form-control" style="resize: both;"></textarea>
-                                    <button type="button" class="btn btn-outline-dark">등록</button>
-                                </div>                                
-                            </div>
-        
-                        </div>
-        
                     </div>
-                </div>
-                <div class="col-auto arrow-right"> <!-- 오른쪽 화살표 -->
-                    <p class="mb-0">>>></p>
+
+
+                    <table id="emotionTable">
+
+                        <table class="table table-hover" style="width: 100%;">
+                          <thead style="background-color: #4CAF50; color: white;"> 
+                          <thead>
+                              <tr>
+                                  <th style="width: 80px;">학생 이름</th>
+                                  <th style="width: 30px;">6/17</th>
+                                  <th style="width: 30px;">6/18</th>
+                                  <th style="width: 30px;">6/19</th>
+                                  <th style="width: 30px;">6/20</th>
+                                  <th style="width: 30px;">6/21</th>
+                              </tr>
+                              </thead>
+                          <tbody id="tableBody">
+                         
+                          </tbody>
+                      </table>
+
+
+                                       
+                   
                 </div>
             </div>
         </div>
-        
-        
     </div>
 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script> 
+
+ <script>
+
+
+        const socket = io('https://7a87-125-184-48-169.ngrok-free.app',{ //ai서버 주소
+            autoConnect: true,
+            extraHeaders: {
+                "ngrok-skip-browser-warning": true
+            }
+        });
+
+       
+        function emo_analyze(){
+
+
+          socket.emit('analyze_emotion', {"uid":"asd"})
+          alert('서버로 데이터 보냄')
+
+
+           socket.on('emotion_analyze_result', (data) => {
+          alert('서버로 데이터 받음')
+        
+          
+         
+           localStorage.setItem('emotion_analyze_result',JSON.stringify(data))
+            alert("감정 데이터를 받음")
+            console.log("감정 데이터 표시함")
+            console.log(data)
+            populateTable(data)
+
+
+
+         });
+
+        
+
+
+
+
+        }
+        
+    
+
+        socket.on('connect',function() {
+            console.log("서버 연결됨")
+            
+
+        });
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            localStorage.removeItem('emotion_analyze_result');
+        });
+
+
+        
+    
+        
+   
+
+
+
+</script> 
+
+
+<script>
+
+
+
+
+
+ const allowedEmotions = ["분노", "슬픔", "기쁨", "중립", "불안", "걱정", "당황", "상처"];
+
+// 테이블 몸체에 데이터 추가하는 함수
+function populateTable() {
+    const tableBody = document.getElementById('tableBody');
+            const data = localStorage.getItem('emotion_analyze_result');
+         
+
+            const emo_data = JSON.parse(data);
+            let tableRows = '';
+
+    emo_data.result.forEach(item => {
+        if (allowedEmotions.includes(item.emotion)) {
+            tableRows += '<tr>';
+            tableRows += `<td>${item.uid}</td>`
+            tableRows += `<td>${item.emotion}</td>` // 4/1 칸
+            tableRows += `<td></td>`// 4/2 칸
+            tableRows += `<td></td>` // 4/3 칸
+            tableRows += `<td></td>` // 4/4 칸
+            tableRows += `<td></td>` // 4/5 칸
+            tableRows += '</tr>'
+        }
+    });
+
+    tableBody.innerHTML = tableRows;
+}
+
+
+
+</script>
+ 
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> <!-- jQuery UI -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
