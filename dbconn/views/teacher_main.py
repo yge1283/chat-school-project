@@ -118,6 +118,13 @@ def teacher_create_table_page():
         print(f"Error inserting into table: {e}")
         return jsonify({'error': 'Failed to create table'}), 500
     
+# 대시보드에서 과목을 눌렀을때 session에 키 값 저장 후  메인페이지로 이동
+@bp.route('/get_key', methods=['POST'])
+def student_get_1dashboard():
+    data = request.get_json()
+    dashboard_key = str(data['key'])
+    session['dashboard_key'] = dashboard_key
+    return jsonify({'success': True}), 201
 
 # get_keys값
 def teacher_get_dashboard_key(uid):
@@ -132,8 +139,12 @@ def teacher_get_course_data():
         # 과목정보를 다시 불러온 경우(대시보드 페이지인경우)
         session['dashboard_key'] = None
         uid = session['user']['uid']
+        print(f"uid 가 없나요? {uid}")
         # 함수 값 불러오기
         keys = teacher_get_dashboard_key(uid)
+        if not keys:  # keys가 None이거나 빈 리스트일 경우
+            return jsonify({'success': False, 'message': '담당 과목이 현재 없습니다'}), 200
+        
         print(keys)
         response = supabase.table('대시보드').select('*, 선생(선생이름)').execute()
         courses = [item for item in response.data if item['대시보드_key'] in keys]
@@ -171,7 +182,7 @@ def teacher_get_mainboard():
         uid = session['user']['uid']
         response3 = supabase.table('선생_메모장').select('*,선생(선생이름)').eq('작성자_ID', uid).execute()
         memo_data = response3.data if response3.data else []
-        print(f"학생 메모장 내용: {memo_data}")
+        print(f"선생 메모장 내용: {memo_data}")
         # 4. 오늘 업로드 된 파일이 있는지 확인 (선생님이 업로드함)
         path_to_list = f"subject/{dashboard_key}"
         print(f"대시보드 키값: {path_to_list}")
@@ -189,3 +200,66 @@ def teacher_get_mainboard():
     except Exception as e:
         print(f"Error retrieving mainboard data: {e}")
         return jsonify({'error': 'Failed to retrieve mainboard data'}), 500
+    
+# 과목 추가 
+@bp.route('/insert_subject', methods=['POST'])
+def teacher_make_dashboard_key():
+    try:
+        data = request.get_json()
+
+        uid = session['user']['uid']
+        dashboard_id = data.get('dashboardId')
+        subject_name = data.get('subjectName')
+        timetable = data.get('timetable')
+        class_year = data.get('classYear')
+        class_name = data.get('className')
+
+        temp = supabase.table('대시보드').select("대시보드_key").execute()
+        temp_keys = [item['대시보드_key'] for item in temp.data]
+        if int(dashboard_id) in temp_keys: 
+            return jsonify({'success': False, 'message': '중복된 대시보드 ID '}), 400
+
+        result = supabase.table('대시보드').insert({
+            "대시보드_key": dashboard_id,
+            "담당선생_ID": uid,
+            "과목명": subject_name,
+            "학년": class_year,
+            "학급": class_name,
+            "시간표": timetable
+        }).execute()
+        
+        if result.data:
+            return jsonify({'success': True, 'message': '과목이 성공적으로 추가되었습니다.'})
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'success': False, 'message': '과목을 추가하는 중에 오류가 발생하였습니다.'}), 500
+    
+
+# 과목 삭제 : x 버튼 누르면 자동으로 키값 받고, 대시보드 데이터 행 삭제
+@bp.route('/delete_key', methods=['POST'])
+def teacher_delete_dashboard_key():
+    get_data = request.get_json()
+    key = get_data['key']
+    dashboard_key = int(key) # int로 고쳐야함
+    # 수강 중인 key 가 맞는 경우
+    print(f"대시보드키값 받아왔나요? {dashboard_key} , {type(dashboard_key)}")
+    uid = session['user']['uid']
+    keys = teacher_get_dashboard_key(uid)
+    if dashboard_key in keys:
+        try:
+            print(f"실행중인가요?")
+            # 수강생 테이블에서 해당 행 삭제
+            result = supabase.table('대시보드').delete().match({"대시보드_key": dashboard_key, "담당선생_ID": uid}).execute()
+            data = result.data
+            print(f"제대로 삭제 되었나요?")
+            if data:
+                print(f"Deleted data: {data}")
+                return jsonify({'success': True, 'data': data}), 200
+            else:
+                return jsonify({'error': 'Failed to delete entry'}), 400
+        except Exception as e:
+            print(f"Error deleting from table: {e}")
+            return jsonify({'error': 'Failed to delete entry'}), 500
+    else:
+        return jsonify({'error': '수강중인 과목이 아닙니다.'}), 400
