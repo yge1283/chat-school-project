@@ -164,7 +164,7 @@ async function insertDashboardKey() {
                 alert('정확한 과목 코드가 아닐 수 있습니다.');
             }
         } else {
-            alert('Server returned an error');
+            alert('이미 수강중인 과목 코드를 입력하였습니다.');
         }
     } catch (error) {
         console.error('Error:', error);
