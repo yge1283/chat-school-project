@@ -48,7 +48,9 @@ async function mycourses() {
             if (data.success) {
                 alert('대시보드에서 과목정보를 불러왔습니다.');
 
+
                 //chatupcall 페이지에서 시간표 색칠을 위한 함수 
+                //6.11 (양지은) 코드  추가
                 applyCourseData(data.data);
                  //6.11 (양지은) 코드 끝
 
@@ -97,7 +99,8 @@ async function displayCourses(courses) {
             <p>${course.학년}학년${course.학급}반</p>
             <p>시간표: ${course.시간표}</p>
         `;
-
+        
+        // 삭제 버튼 추가 6.18
         courseBox.querySelector('.delete-btn').addEventListener('click', (event) => {
             event.stopPropagation();
             currentDashboardKey = event.target.getAttribute('data-key');

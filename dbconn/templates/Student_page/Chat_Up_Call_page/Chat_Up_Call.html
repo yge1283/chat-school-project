@@ -177,33 +177,25 @@
             position: relative;
             left: 5%;
         }
-/* 삭제 버튼 스타일 */
-        .course-box {
-            margin: 20px auto;
-            position: relative;
-            right: 60px;
-            width: 50%;
-            background-color: rgb(228, 247, 255);
-            height: 180px;
-            border-radius: 15px;
-            border: white;
-            text-align: center;
-            padding: 20px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            font-size: 16px;
-            border-radius: 5px;
-        }
+    /* 삭제 확인 안내 팝업  */
+        .delete-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
 
-   
+    .delete-popup-content {
+        text-align: center;
+    }
+
+    .delete-popup-content button {
+        margin: 5px;
+    }
 
 </style>
 
