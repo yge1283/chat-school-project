@@ -113,6 +113,7 @@ class Board(Base):
     제목 = Column(String(255))
     작성내용 = Column(String(255))
     작성시간 = Column(DateTime)
+    조회수=Column(Integer)
 
     student = relationship("Student", back_populates="boards", overlaps="boards")
     dashboard = relationship("Dashboard")
