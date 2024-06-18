@@ -159,3 +159,21 @@ grid-template-columns: 1fr 43vw;
  }
     
 }
+
+/* 모달 스타일 */
+.modal {
+    display: none; /* 초기에는 숨김 */
+    position: absolute; /* 부모 요소를 기준으로 위치 */
+    z-index: 1;
+}
+
+/* 모달 컨텐츠 */
+.modal-content {
+    background-color: white; /* 배경 흰색 */
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px; /* 고정된 너비 */
+    max-width: 20%; /* 최대 너비 */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+    box-sizing: border-box; /* 패딩과 경계 포함 */
+}
