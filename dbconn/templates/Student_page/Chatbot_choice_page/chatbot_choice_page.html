@@ -264,6 +264,35 @@
     </div>
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/input_file.js') }}"></script>
+    <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            const submitButton = document.getElementById('submitButton');
+            const fileInput = document.getElementById('fileInput');
+
+            if (submitButton && fileInput) {
+                submitButton.addEventListener('click', uploadFile);
+
+                function uploadFile() {
+                    console.log("실행됨");
+                    const file = fileInput.files[0];
+
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (event) {
+                            const arrayBuffer = event.target.result;
+                            const bytes = new Uint8Array(arrayBuffer);
+                            socket.emit('make_summary', { filename: file.name, data: bytes, uid: uid });
+                        };
+                        reader.readAsArrayBuffer(file);
+                    } else {
+                        alert("Please select a file first."); // 파일 선택 안된상태로 업로드누를시 경고
+                    }
+                }
+            }
+            // fsocket.emit('first_connect')
+
+        });
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
