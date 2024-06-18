@@ -18,16 +18,17 @@ def show_daily_chat_page():
 @bp.route('/submit_doc_to_chatbot')
 def submit_doc_to_chatbot():
     return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
-@socketio.on('connect', namespace='/chatbot')
+@socketio.on('first_connect', namespace='/chatbot')
 def connect():
     print('Client chatbot connected')
+    emit('get_url',AI_SERVER_URL)
     uid="082d8640-9287-4284-9a73-47543b255309"
     if 'user' in session:
         uid = session['user']['uid']
     else:
         print('User not found in session')
     
-    data={"ai_url":AI_SERVER_URL, "uid":""}
-    data["uid"]=conn.tb_select('Chat','학생_ID',uid)
+    data=conn.tb_select('Chat','학생_ID',uid)
     print(data)
     emit('chatting',data)
+    
