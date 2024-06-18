@@ -319,18 +319,10 @@ input[type="file"]{
                           </ul>
                         </div>
 
-                        <div class="dropdown text-end">                            
-                          <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
-                              data-bs-toggle="dropdown" aria-expanded="false">학생 관리
-                          </a>
-                          <ul class="dropdown-menu" data-bs-popper="static">
-                              <li><a class="dropdown-item" href="#">학생 감정 현황</a></li>
-                              <li><a class="dropdown-item" href="#">학생 진도 현황</a></li>
-                          </ul>
-                        </div>
+                        
 
                         <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
-
+                        <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_student_mind') }}">감정 분석</a></li>
                         <div class="dropdown text-end">
                             <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
                                 data-bs-toggle="dropdown" aria-expanded="false">기타사항

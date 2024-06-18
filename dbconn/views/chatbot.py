@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, sessio
 from flask_socketio import emit
 from datetime import datetime
 from .. import conn, socketio  # 여기서는 모듈 간의 의존성을 최소화합니다.
+from .. ai_server_config import AI_SERVER_URL # config.py에 저장된 ai 서버 주소 가져옴
 
 bp = Blueprint('chatbot', __name__, url_prefix='/edu_chatbot')
 
@@ -17,9 +18,11 @@ def show_daily_chat_page():
 @bp.route('/submit_doc_to_chatbot')
 def submit_doc_to_chatbot():
     return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
-@socketio.on('connect', namespace='/chatbot')
+
+@socketio.on('first_connect', namespace='/chatbot')
 def connect():
     print('Client chatbot connected')
+    emit('get_url',AI_SERVER_URL)
     uid="082d8640-9287-4284-9a73-47543b255309"
     if 'user' in session:
         uid = session['user']['uid']
@@ -47,3 +50,6 @@ def send_message(data):
         emit('message_sent', {'status': 'success'}, room=request.sid)
     else:
         emit('error', {'message': 'User not logged in'}, room=request.sid)
+    
+
+    

@@ -17,7 +17,7 @@ def show_teacher_homeworkPage():
 # 과제 게시판 페이지를 위한 라우트 추가
 @bp.route('/makeHomeworkWithAIpage')
 def show_teacher_homeworkMakeWithAIPage():
-    return render_template('./Teacher_page/Teacher_Homework_page/Teacher_Homework_Make_with_AI.html')
+    return render_template('./Teacher_page/Teacher_Homework_page/Teacher_Homework_Make_with_AI1.html')
 
 @bp.route('/questionpage')
 def show_teacher_questionPage():
@@ -62,8 +62,8 @@ def viewtest():
     return render_template('./Teacher_page/Teacher_AI_view_page.html')
 
 @bp.route('/checkstudentmind')
-def student_mind():
-    return render_template('/Teacher_page/Teacher_Check_Student_Mind_Page.html')
+def show_student_mind():
+    return render_template('/Teacher_page/Teacher_Check_Student_Mind_Page1.html')
 
 
 
