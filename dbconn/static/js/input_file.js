@@ -32,6 +32,9 @@ socket.on('summary_result', (data) => {
     appendMessage(data, false);
     fsocket.emit('message',{'msg':user-input.value,'ai':data});
 });
+fsocket.on('connect',(data)=>{
+    uid=data
+})
 fsocket.on('chatting',(data)=>{
     console.log("connected")
     setchat(JSON.parse(data))
@@ -39,6 +42,10 @@ fsocket.on('chatting',(data)=>{
         console.log(data)
         uid=data.학생_ID
     }
+})
+fsocket.on('message',(data)=>{
+    console.log(data)
+    appendMessage(data,false)
 })
 
 document.addEventListener('DOMContentLoaded', () => {

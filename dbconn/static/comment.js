@@ -14,6 +14,11 @@ socket.on('comment_num', function(data) {
   text4.value = comment_count;
 });
 
+socket.on('comment',function(data){
+    
+  comment(data)
+});
+
 document.getElementById('postCommentButton').addEventListener('click', function () {
     const commentText = document.getElementById('textAreaExample').value;
   if (commentText.trim() !== '') {
@@ -28,7 +33,7 @@ document.getElementById('postCommentButton').addEventListener('click', function 
 
 });
 
-function displayComments() {
+function displayComments(data) {
     const commentsContainer = document.getElementById('commentsContainer');
 
     commentsContainer.innerHTML = comments.map((comment, index) => `
@@ -95,4 +100,10 @@ function questionpage(data){
   if (text5) {
     text5.value = questionData.작성내용;
   }
+}
+
+function comment(data){
+  const comment = JSON.parse(data)
+  
+
 }

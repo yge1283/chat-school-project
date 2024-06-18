@@ -28,6 +28,7 @@ def connect():
     data=conn.tb_select('Chat','학생_ID',uid)
     print(data)
     emit('chatting',data)
+    emit('connect',uid)
 
 
 
