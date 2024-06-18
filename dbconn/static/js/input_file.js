@@ -4,15 +4,6 @@ uid="asd"
 ai_url = ""
 fsocket.emit('first_connect')
 
-// fsocket.on('chatting',(data)=>{
-//     console.log("웹서버 connected")
-//     setchat(JSON.parse(data))
-//     function setchat(data){
-//         console.log("uid가져옴>>>>"+data)
-//         uid=data.학생_ID
-//     }
-// })
-
 
 function waitForUrl(fsock) {
     return new Promise((resolve) => {
