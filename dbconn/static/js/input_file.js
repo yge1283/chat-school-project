@@ -1,17 +1,8 @@
 
 const fsocket=io.connect('/chatbot');
-uid="asd"
-ai_url = ""
-fsocket.emit('first_connect')
+uid="asd";
+ai_url = "";
 
-// fsocket.on('chatting',(data)=>{
-//     console.log("웹서버 connected")
-//     setchat(JSON.parse(data))
-//     function setchat(data){
-//         console.log("uid가져옴>>>>"+data)
-//         uid=data.학생_ID
-//     }
-// })
 
 
 function waitForUrl(fsock) {
@@ -23,6 +14,28 @@ function waitForUrl(fsock) {
         });
     });
 }
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded');
+    fsocket.emit('first_connect');
+});
+fsocket.on('connect',(data)=>{
+    uid=data;
+    console.log("uid");
+});
+fsocket.on('chatting',(data)=>{
+    console.log("connected");
+    JSON.parse(data).forEach(element => {
+        appendMessage2(element.질문, true);
+        appendMessage2(element.챗봇응답,false);
+    });
+});
+socket.on('summary_result', (data) => {
+    console.log('Received file data:', data);
+    // Handle the file data
+    appendMessage(data, false);
+    fsocket.emit('message',{'msg':user-input2.value,'ai':data});
+});
+
 
 // socket = io(ai_url, { // ai서버 주소
 //     autoConnect: true,
@@ -66,7 +79,7 @@ let socket;
     
     socket.on('summary_result', (data) => {
         console.log('Received file data:', data);
-        fsocket.emit('file_data', data);
+        fsocket.emit('message',{'msg':user-input2.value,'ai':data});
         // Handle the file data
         appendMessage2(data, false);
     
@@ -126,3 +139,5 @@ function appendMessage2(message1, isUser) { //교육용 챗봇용
     chatContainer2.appendChild(messageDiv);
     chatContainer2.scrollTop = chatContainer2.scrollHeight;
 }
+
+

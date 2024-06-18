@@ -268,10 +268,11 @@
             document.addEventListener('DOMContentLoaded', () => {
             const submitButton = document.getElementById('submitButton');
             const fileInput = document.getElementById('fileInput');
-
+            fsocket.emit('first_connect')
+            
             if (submitButton && fileInput) {
                 submitButton.addEventListener('click', uploadFile);
-
+                
                 function uploadFile() {
                     console.log("실행됨");
                     const file = fileInput.files[0];
@@ -292,6 +293,10 @@
             // fsocket.emit('first_connect')
 
         });
+        fsocket.on('connect',(data)=>{
+            uid=data
+            console.log("uid")
+        })
     </script>
 
 

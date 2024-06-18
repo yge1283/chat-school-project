@@ -64,7 +64,8 @@
             }
         }
     </style>
-
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='comment.js') }}" defer></script>
 </head>
 
 <body>
@@ -184,8 +185,8 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
                     </div>
-                    <input type="text" class="form-control" aria-label="Default"
-                        aria-describedby="inputGroup-sizing-default" placeholder="전문1: 국어 34p 3번 문제에 대해서"
+                    <input type="text" id="text1" class="form-control" aria-label="Default"
+                        aria-describedby="inputGroup-sizing-default" placeholder="전문1: test"
                         style="color: rgb(0, 0, 0);" readonly>
                 </div>
 
@@ -193,14 +194,14 @@
                     <div class="input-group-prepend ">
                         <span class="input-group-text" id="inputGroup-sizing-default">작성자</span>
                     </div>
-                    <input type="text" class="form-control" style="text-align: center;" aria-label="Default"
+                    <input type="text" id="text2" class="form-control" style="text-align: center;" aria-label="Default"
                         aria-describedby="inputGroup-sizing-default" placeholder="홍길동" style="color: rgb(0, 0, 0);"
                         readonly>
 
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">작성 날짜</span>
                     </div>
-                    <input type="text" id="dateTimeField" class="form-control" style="text-align: center;"
+                    <input type="text" id="text3" id="dateTimeField" class="form-control" style="text-align: center;"
                         aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="날짜 및 시간 입력"
                         style="color: rgb(0, 0, 0);" readonly>
 
@@ -221,7 +222,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">댓글수</span>
                     </div>
-                    <input type="text" class="form-control" style="text-align: center;" aria-label="Default"
+                    <input type="text" id="text4" class="form-control" style="text-align: center;" aria-label="Default"
                         aria-describedby="inputGroup-sizing-default" placeholder="3" style="color: rgb(0, 0, 0);"
                         readonly>
                 </div>
@@ -229,7 +230,7 @@
 
             <div class="container jua-regular">
                 <div class="memo note">
-                    <textarea class="form-control text-center" style="align-content: center;" id="memoArea" rows="10"
+                    <textarea class="form-control text-center" id=text5 style="align-content: center;" id="memoArea" rows="10"
                         placeholder="질문 내용" readonly></textarea>
                 </div>
             </div>
@@ -272,62 +273,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
-    <script>
-        let comments = [];
 
-        document.getElementById('postCommentButton').addEventListener('click', function () {
-            const commentText = document.getElementById('textAreaExample').value;
-            if (commentText.trim() !== '') {
-                const newComment = {
-                    text: commentText,
-                    date: new Date().toLocaleString()
-                };
-                comments.push(newComment);
-                document.getElementById('textAreaExample').value = '';
-                displayComments();
-            }
-        });
-
-        function displayComments() {
-            const commentsContainer = document.getElementById('commentsContainer');
-            commentsContainer.innerHTML = comments.map((comment, index) => `
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="d-flex flex-start">
-                    <img class="rounded-circle shadow-1-strong me-3"
-                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                        alt="avatar" width="40" height="40" />
-                    <div class="w-100">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="text-primary fw-bold mb-0">
-                                홍길동
-                                <span class="text-body ms-2">${comment.text}</span>
-                            </h6>
-                            <p class="mb-0">${comment.date}</p>
-                        </div>
-                        <button class="btn btn-secondary btn-sm" onclick="editComment(${index})">Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteComment(${index})">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `).join('');
-        }
-
-        function editComment(index) {
-            const comment = comments[index];
-            const newCommentText = prompt("Edit your comment:", comment.text);
-            if (newCommentText !== null && newCommentText.trim() !== '') {
-                comments[index].text = newCommentText;
-                displayComments();
-            }
-        }
-
-        function deleteComment(index) {
-            comments.splice(index, 1);
-            displayComments();
-        }
-    </script>
 </body>
 
 </html>
