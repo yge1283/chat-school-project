@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect ,session
+from flask import Blueprint, render_template, request, jsonify, redirect ,session, url_for, current_app
 from .supabase_client import supabase
 bp = Blueprint('student_main', __name__, url_prefix='/student')
 from .. import conn, socketio 
@@ -287,18 +287,22 @@ def comment():
 #     #학생정보 불러와 해당 과목{subject_id}의 정보 전송
 #     return render_template('./Student_page/Main_page/Main_page.html')
 
-@bp.route('/submit')
+@bp.route('/submit') #교육용 챗봇 누를 때
 def submit():
-    return render_template('./Student_page/Chatbot_choice_page/chatbot_choice_page.html')
+    with current_app.app_context():
+        return redirect(url_for('chatbot.show_chatbot_page')) # chatbot.py 블루프린트 모델로 이동
+    
+@bp.route('/daily_chat') #심리상담 챗봇 누를 때
+def go_daily_chat_page():
+    with current_app.app_context():
+        return redirect(url_for('chatbot.show_daily_chat_page')) # chatbot.py 블루프린트 모델로 이동
 """
 클라이언트 쪽에서 https://127.0.0.1:5000/student/korean으로 접속하여 
     {"uuid":"OAQMNCd2D76DCbx34MK"}를 받아왔다면
     서버에서 url의 변수 'korean'과 'uuid'를 사용하여
     학생이 수강하고 있는 korean 과목에 대한 정보를 찾아 전송.
 """
-@bp.route('/submit_doc_to_chatbot')
-def submit_doc_to_chatbot():
-    return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
+
 
 
 

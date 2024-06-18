@@ -8,6 +8,8 @@ const socket = io('https://7a87-125-184-48-169.ngrok-free.app', { // ai서버 �
     allowEIO3: true
 });
 
+const fsocket=io.connect('/chatbot');
+uid=""
 socket.on('connect', () => {
     console.log('Connected to WebSocket server.');
 });
@@ -26,9 +28,19 @@ socket.on('disconnect', (reason) => {
 
 socket.on('summary_result', (data) => {
     console.log('Received file data:', data);
+    fsocket.emit('file_data', data);
     // Handle the file data
-    appendMessage(data, false, { filename: data.filename, message: 'Summary created' });
+    appendMessage(data, false);
+
 });
+fsocket.on('chatting',(data)=>{
+    console.log("connected")
+    setchat(JSON.parse(data))
+    function setchat(data){
+        console.log(data)
+        uid=data.학생_ID
+    }
+})
 
 document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submitButton');
@@ -46,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reader.onload = function (event) {
                     const arrayBuffer = event.target.result;
                     const bytes = new Uint8Array(arrayBuffer);
-                    socket.emit('make_summary', { filename: file.name, data: bytes, uid: "asd" });
+                    socket.emit('make_summary', { filename: file.name, data: bytes, uid: uid });
                 };
                 reader.readAsArrayBuffer(file);
             } else {
@@ -54,4 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+    fsocket.emit('connect')
+
+    
+
 });
+

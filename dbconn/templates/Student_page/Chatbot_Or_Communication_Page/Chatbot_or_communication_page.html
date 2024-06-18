@@ -278,7 +278,7 @@
         }
 
         function sendMessage(message1) {
-            socket.emit('summary_chat', message1);  //챗봇서버에 메세지 전송
+            socket.emit('summary_chat', {"message":message1, "uid":uid});  //챗봇서버에 메세지 전송
             console.log('메세지를 보냈습니다. ' + message1);  //콘솔에 보낸 메세지 출력
         }
 

@@ -14,7 +14,6 @@ def create_app():
     # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    
     app.secret_key = os.urandom(24)  # 세션을 위한 시크릿 키 설정
     
     db = SQLAlchemy()
@@ -30,6 +29,7 @@ def create_app():
     app.register_blueprint(student_main.bp)
     app.register_blueprint(chatbot.bp)
     app.register_blueprint(teacher_main.bp)
+    
     return app
     
 """

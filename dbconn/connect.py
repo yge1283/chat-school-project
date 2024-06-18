@@ -101,9 +101,10 @@ class Connector:
             
             results = query.all()
 
-            return Connector.convert_to_json(results)
+            return Connector.convert_to_json(1,results)
         
         except Exception as e:
+            self.session.rollback()
             raise e
         
     def tb_get(self, tb_name, col, search, dashboard_key=None):

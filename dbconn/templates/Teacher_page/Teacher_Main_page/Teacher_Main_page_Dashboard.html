@@ -230,14 +230,19 @@
     <div>
         <button type="button" class="bu" id="createbutton">supa확인버튼</button>
         <button type="button" class="bu" id="coursesbutton" >과목정보 받아오기</button>
-        <button type="button" class="bu" id="addbutton">추가버튼</button>
+        <button type="button" class="bu" id="addbutton" onclick="openModal()">추가</button>
 
-                
-        <input type="text" id="dashboard" placeholder="Enter Dashboard Key"
-        style="position: relative;left: 160px">
-        <button id="coursecreate" style="background-color: #aaf1ff;border-radius: 15px; 
-        border: white; position: relative;left: 170px;">추가</button>
-        
+        <!-- 모달 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <input type="text" id="dashboardId" placeholder="대시보드 ID"><br>
+                <input type="text" id="subjectName" placeholder="과목명"><br>
+                <input type="text" id="timetable" placeholder="시간표"><br>
+                <input type="text" id="classYear" placeholder="학년"><br>
+                <input type="text" id="className" placeholder="반"><br>
+                <button type="button" class="bu" onclick="addButton()">확인</button>
+            </div>
+        </div>
       
         <div id="coursesContainer"></div>
     </div>
@@ -450,6 +455,66 @@
     // 페이지 로드 시 mycourses 함수 호출
  
 </script>
+
+
+<script>
+    function openModal() {
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("addbutton");
+
+        // 버튼의 위치와 크기 정보를 가져옴
+        var rect = btn.getBoundingClientRect();
+
+        // 모달을 버튼 아래로 위치시킴
+        modal.style.top = (rect.bottom + window.scrollY) + "px";
+        modal.style.left = (rect.left + window.scrollX) + "px";
+
+        modal.style.display = "block";
+    }
+
+    // 모달 외부를 클릭하면 모달을 닫음
+    window.onclick = function(event) {
+        var modal = document.getElementById("myModal");
+        var addButton = document.getElementById("addbutton");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // 모달 내부를 클릭해도 모달이 닫히지 않도록 이벤트 전파 막기
+    var modalContent = document.querySelector(".modal-content");
+    modalContent.onclick = function(event) {
+        event.stopPropagation(); // 이벤트 전파 막기
+    }
+
+
+    // 모달 확인 버튼 클릭 시 실행되는 함수
+    function addButton() {
+        
+        // 입력된 정보 가져오기
+        var dashboardId = document.getElementById("dashboardId").value;
+        var subjectName = document.getElementById("subjectName").value;
+        var timetable = document.getElementById("timetable").value;
+        var classYear = document.getElementById("classYear").value;
+        var className = document.getElementById("className").value;
+
+        // 여기 쪽에다가 데이터 베이스 쪽으로 올리는 함수 넣어주시면 될 것 같습니다!
+        // 일단 잘 들어가지는 확인을 위해 메시지 출력 형식으로 넣어놨습니다.
+         
+        var message = "대시보드 ID: " + dashboardId + "\n" +
+                  "과목명: " + subjectName + "\n" +
+                  "시간표: " + timetable + "\n" +
+                  "학년: " + classYear + "\n" +
+                  "반: " + className;
+
+        alert(message); // 메시지로 출력 (alert 창)
+        
+        // 모달 닫기
+        closeModal();
+        }
+        
+</script>
+  
   
 
  
