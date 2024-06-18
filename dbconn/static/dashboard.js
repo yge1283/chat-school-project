@@ -1,11 +1,22 @@
+let currentDashboardKey = null;
 document.addEventListener('DOMContentLoaded', function() {
-    // login페이지 -login 버튼 누를때 실행
-    document.getElementById('createbutton').addEventListener('click', createtable);
-    document.getElementById('coursesbutton').addEventListener('click', mycourses);
-    document.getElementById('coursecreate').addEventListener('click', insertDashboardKey);
 
+document.getElementById('coursecreate').addEventListener('click', insertDashboardKey);
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+        if (currentDashboardKey) {
+            deleteDashboardKey(currentDashboardKey);
+            document.getElementById('deletePopup').style.display = 'none';
+        }
+    });
+
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+        document.getElementById('deletePopup').style.display = 'none';
+    });
+
+    // Call displayCourses to render the initial courses
+    mycourses();
 });
-
 // 데이터 넣는 함수
 async function createtable() {
     alert("JS 실행중");
@@ -30,15 +41,14 @@ async function createtable() {
 
 // 과목데이터 가져오는 함수
 async function mycourses() {
-    alert("JS 실행중");
-
     try {
         const response = await fetch('/student/get_my_courses');
         if (response.ok) {
             const data = await response.json();
             if (data.success) {
                 alert('대시보드에서 과목정보를 불러왔습니다.');
-               
+
+
                 //chatupcall 페이지에서 시간표 색칠을 위한 함수 
                 //6.11 (양지은) 코드  추가
                 applyCourseData(data.data);
@@ -68,8 +78,7 @@ async function displayCourses(courses) {
         const courseBox = document.createElement('div');
         courseBox.className = 'course-box';
 
-       
-             // 6.10 양지은 대시보드 스타일 코드 추가 
+             // 대시보드 스타일 코드 추가 
              courseBox.style.margin='20px auto'
              courseBox.style.position = 'relative';
              courseBox.style.right = '60px';
@@ -79,32 +88,29 @@ async function displayCourses(courses) {
              courseBox.style.borderRadius = '15px';
              courseBox.style.border = 'white';
              courseBox.style.textAlign='center'
-             //6.10 양지은 대사보드 스타일 코드 끝
+             //대사보드 스타일 코드 끝
 
         courseBox.innerHTML = `
-            <h3>${course.과목명}</h3>
+            <div class="course-header">
+                <h3>${course.과목명}</h3>
+                <button class="delete-btn" data-key="${course.대시보드_key}" style="position: absolute; top: 10px; right: 10px;">x</button>
+            </div>
             <p>선생님: ${course.선생.선생이름}</p>
             <p>${course.학년}학년${course.학급}반</p>
             <p>시간표: ${course.시간표}</p>
         `;
-
-
-               // 6.17 삭제 버튼 넣기 시작
-        const closeButton = document.createElement('button');
-        closeButton.className = 'close-btn';
-        closeButton.textContent = 'X';
-        closeButton.onclick = function() {
-            courseBox.remove();
-            event.stopPropagation(); // 이벤트 전파를 중지하여 다른 이벤트가 실행되지 않도록 함
-        };
-
-        courseBox.appendChild(closeButton);
-        //6. 17 삭제 버튼 끝 
-
+        
+        // 삭제 버튼 추가 6.18
+        courseBox.querySelector('.delete-btn').addEventListener('click', (event) => {
+            event.stopPropagation();
+            currentDashboardKey = event.target.getAttribute('data-key');
+            document.getElementById('deletePopup').style.display = 'block';
+        });
 
         courseBox.addEventListener('click', () => {
             setDashboardKey(course.대시보드_key);
         });
+
         container.appendChild(courseBox);
     });
 }
@@ -160,6 +166,8 @@ async function insertDashboardKey() {
             const data = await response.json();
             if (data.success) {
                 alert('정상적으로 수강중인 과목이 추가 되었습니다.');
+                // 필요에 따라 페이지 리로드 또는 UI 업데이트
+                location.reload(); // 페이지 리로드하여 변경 사항 반영
             } else {
                 alert('정확한 과목 코드가 아닐 수 있습니다.');
             }
@@ -169,5 +177,28 @@ async function insertDashboardKey() {
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred while inserting the dashboard key');
+    }
+}
+async function deleteDashboardKey(dashboardKey) {
+    try {
+        const response = await fetch('/student/delete_key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ key: dashboardKey })
+        });
+
+        const data = await response.json();
+        if (response.ok && data.success) {
+            alert('성공적으로 수강 과목을 삭제하였습니다.');
+            // 필요에 따라 페이지 리로드 또는 UI 업데이트
+            location.reload(); // 페이지 리로드하여 변경 사항 반영
+        } else {
+            alert('삭제 실패: ' + data.error);
+        }
+    } catch (error) {
+        console.error('Error deleting dashboard key:', error); //198 번째줄
+        alert('삭제 실패: ' + error.message);
     }
 }

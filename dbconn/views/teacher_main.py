@@ -134,6 +134,7 @@ def teacher_get_course_data():
         uid = session['user']['uid']
         # 함수 값 불러오기
         keys = teacher_get_dashboard_key(uid)
+        print(keys)
         response = supabase.table('대시보드').select('*, 선생(선생이름)').execute()
         courses = [item for item in response.data if item['대시보드_key'] in keys]
         if courses:
