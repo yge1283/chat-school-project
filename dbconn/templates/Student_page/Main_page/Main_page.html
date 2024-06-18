@@ -7,15 +7,43 @@
     <title>Main Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
 </head>
 
+
+<style>
+
+body {
+            font-family: "Jua", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1.2rem;
+        }
+    .box {
+        border: 1px solid #007bff; /* Border color */
+        border-radius: 10px; /* Rounded corners */
+        padding: 15px; /* Padding inside the box */
+        margin: 10px 0; /* Margin outside the box */
+        background-color: #f8f9fa; /* Background color */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for depth */
+    }
+    .box p {
+        margin: 5px 0; /* Margin between paragraphs */
+    }
+    .box p strong {
+        color: #007bff; /* Text color for strong elements */
+    }
+</style>
+
 <body>
+
+
+    
     <div class="d-flex flex-column">
-        <div class="form jua-regular">
-            <header class="p-3 mb-3 border-bottom gradient-background">
+        <div class="form jua-regular" >
+            <header class="p-3 mb-3 border-bottom gradient-background" >
                 <div class="container col-lg-12 col-md-12 col-sm-6">
                     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                         <a href="/"
@@ -64,16 +92,16 @@
                                     </div>
                                 </div>
                             </nav>
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">과제</a></li>
+                            <li><a href="{{ url_for('student_main.show_student_questionmain') }}" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
+                            <li><a href="{{ url_for('student_main.show_student_homeworkmain') }}" class="nav-link px-3 link-body-emphasis">과제</a></li>
 
                             <div class="dropdown text-end">
-                                <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                                <a href="{{ url_for('teacher_main.show_teacher_DashboardPage') }}" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false">챗봇과의 대화
                                 </a>
                                 <ul class="dropdown-menu" data-bs-popper="static">
                                     <li><a class="dropdown-item" href="./submit">교육용 챗봇</a></li>
-                                    <li><a class="dropdown-item" href="#">심리상담 챗봇</a></li>
+                                    <li><a class="dropdown-item" href="./daily_chat">심리상담 챗봇</a></li>
                                 </ul>
                             </div>
 
@@ -85,11 +113,43 @@
                                 </a>
                                 <ul class="dropdown-menu" data-bs-popper="static">
                                     <li><a class="dropdown-item" href="#">오늘의 학습</a></li>
-                                    <li><a class="dropdown-item" href="#">파일 다운로드</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('student_main.show_student_filedownload') }}">파일 다운로드</a></li>
                                     <li><a class="dropdown-item" href="#">메모장</a></li>
                                 </ul>
                             </div>
                         </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#" data-toggle="modal" class="px-3" data-target="#logoutModal">로그아웃</a></li>
+                        </ul>
+
+                        <div class="dropdown text-end">
+                            <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                    class="rounded-circle">
+                            </a>
+                            <ul class="dropdown-menu text-small">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+
+
+
+
+
+
+
+
                     </div>
                 </div>
             </header>
@@ -97,36 +157,38 @@
             <div class="container mt-3 "> <!-- 메인 컨테이너 -->
                 <div class="row justify-content-center text-center"> <!-- 행 중앙 정렬 -->
                     <div class="col-sm-4"> <!-- 오늘의 학습 영역 -->
-                        <h4>오늘의 학습</h4>
-                        <textarea rows="15" name="editable_text" id="editable_text"
-                            style="width: 100%; height: 550px; resize: vertical;" placeholder="Your text..."
-                            autofocus=""></textarea> <!-- 기준 높이 -->
+                        <h4>오늘의 과제</h4>
+                       <!-- 기준 높이 -->
                     </div>
 
                     <div class="col-sm-8"> <!-- 최근에 작성한 메모 카드 -->
+
+
+
+
                         <div class="card text-center shadow-sm mt-1"> <!-- 카드 높이 맞추기 -->
                             <div class="card-header">
                                 <h4>최근에 작성한 질문</h4> <!-- 카드 제목 -->
                             </div>
-                            <div class="card-body" style="justify-content: center; margin: 30px;">
-                                <div class="row mb-3">
-                                    <div class="col-7">
-                                        <p><a class="link-opacity-100" href="./question">질문1:
-                                                국어 34p 3번
-                                                문제에
-                                                대해서</a></p>
-                                    </div>
-                                    <div class="col-5">
-                                        <h4>홍길동</h4>
-                                    </div>
-                                </div>
 
-                                <div class="input-group">
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                                        placeholder="국어 문법을 모르겠다."></textarea>
-                                </div>
+
+                            <div class="card-body" style="justify-content: center; margin: 30px;">
+                                <div id="questions"></div>
+                                
+
+                             
                             </div>
+
+
+
+
+                            
                         </div>
+
+
+
+
+
 
                         <div class="mt-2"></div>
 
@@ -137,8 +199,15 @@
                                         <h4>오늘 업로드 된 파일</h4> <!-- 카드 제목 -->
                                     </div>
                                     <div class="card-body" style="margin-top: 40px;">
-                                        <h1 class="card-title">3</h1> <!-- 업로드된 파일 갯수 -->
-                                        <p class="text-muted">(오늘은 업로드된 파일이 없습니다.)</p> <!-- 메시지 -->
+                                        <h1 class="card-title">
+
+                                            <ul id="fileList1" class="file-list1"></ul>
+                                             
+                                            <div id="fileList2" class="file-list1"></ul>
+
+
+                                        </h1> <!-- 업로드된 파일 갯수 -->
+                                        <p class="text-muted"></p> <!-- 메시지 -->
                                     </div>
                                 </div>
                             </div>
@@ -161,12 +230,17 @@
                                         </div>
 
                                         <div class="input-group">
-                                            <textarea class="form-control" id="exampleFormControlTextarea1"
-                                                rows="3"></textarea>
+                                            <div class="form-control" id="exampleFormControlTextarea1"
+                                                rows="3"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -177,14 +251,156 @@
     <div class="footer gradient-background">
         <div
             class="row d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-3 px-4 px-xl-5">
-            <!-- footer 내용 -->
+           
             <div class="text-start text-white mb-3 mb-md-0 mt-1">
                 © 2024. Busan Academy.
             </div>
+
+
+      
+            
         </div>
     </div>
 
+   <script>
 
+
+
+
+// 메인화면에 메모 데이터 적용하기 시작
+function displayMemoData(data) {
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        console.error("표시할 데이터가 없습니다.");
+        return;
+    }
+
+    // 최근에 작성된 메모 찾기
+    const recentMemo = data.find(memo => new Date(memo.작성시간) >= new Date('2024-05-16T00:00:00'));
+
+    if (!recentMemo) {
+        console.error("최근에 작성된 메모가 없습니다.");
+        return;
+    }
+
+    // DOM 요소들 가져오기
+    const memoTitleInput = document.querySelector('.col-7 input[type="text"]');
+    const memoDateInput = document.querySelector('.col-5 input[type="date"]');
+    const memoContentDiv = document.querySelector('#exampleFormControlTextarea1');
+
+    // 최근 메모 데이터를 입력 요소에 설정
+    memoTitleInput.value = recentMemo.제목 || '';
+    memoDateInput.value = recentMemo.작성시간.slice(0, 10); // 'YYYY-MM-DD' 형식으로 표시
+    memoContentDiv.textContent = recentMemo.내용 || '';
+
+    // 스타일 설정
+    memoContentDiv.style.textAlign = 'left'; // 왼쪽 정렬
+    memoContentDiv.style.width = '100%'; // 카드 너비의 100%
+    memoContentDiv.style.height= '100px'; // 카드 너비의 100%
+    memoContentDiv.style.minHeight = '3em'; // 최소 높이 설정
+    memoContentDiv.style.overflow = 'hidden'; // 넘치는 부분 숨김
+    memoContentDiv.style.textOverflow = 'ellipsis'; // 넘침 처리시 점으로 표시
+    memoContentDiv.style.whiteSpace = 'nowrap'; // 줄 바꿈 방지
+    memoContentDiv.style.padding = '10px'; // 패딩 추가
+    memoContentDiv.style.border = '1px solid #ddd'; // 경계선 추가
+    memoContentDiv.style.borderRadius = '5px'; // 테두리 둥글게 설정
+    memoContentDiv.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+}
+// 메인화면에 메모 데이터 적용하기 끝 
+
+
+
+
+
+// 질문내용 메인 페이지에 표시하기 
+function displayQuestionData(data) {
+    if (!data || !Array.isArray(data)) {
+        console.error("표시할 데이터가 없습니다.");
+        return;
+    }
+
+  
+    const recentQuestion = data.reduce((recent, current) => {
+        return new Date(current.작성시간) > new Date(recent.작성시간) ? current : recent;
+    }, data[0]);
+
+    const questionsContainer = document.getElementById('questions');
+    questionsContainer.innerHTML = '';
+
+    const cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+    cardBody.style.justifyContent = 'center';
+    // cardBody.style.margin = '30px';
+
+    const row = document.createElement('div');
+    row.classList.add('row', 'mb-3');
+
+    const col7 = document.createElement('div');
+    col7.classList.add('col-7');
+
+    const questionLink = document.createElement('a');
+    questionLink.classList.add('link-opacity-100');
+    questionLink.href = './studentquestion';
+    questionLink.style.textDecoration='none'
+    questionLink.textContent = `제목: ${recentQuestion.제목}`;
+    questionLink.style.display = 'block';
+    questionLink.style.whiteSpace = 'nowrap';
+    questionLink.style.overflow = 'hidden';
+    questionLink.style.textOverflow = 'ellipsis';
+    questionLink.style.position='relative'
+    questionLink.style.right='50px'
+    const questionText = document.createElement('p');
+    questionText.appendChild(questionLink);
+
+    col7.appendChild(questionText);
+
+    const col5 = document.createElement('div');
+    col5.classList.add('col-5');
+
+    const studentName = document.createElement('h4');
+     
+    studentName.textContent = `${recentQuestion.학생.학생이름}`;
+
+    col5.appendChild(studentName);
+
+    row.appendChild(col7);
+    row.appendChild(col5);
+
+    const inputGroup = document.createElement('div');
+    inputGroup.classList.add('input-group');
+
+    const contentDiv = document.createElement('div');
+    contentDiv.classList.add('form-control');
+    contentDiv.id = 'exampleFormControlTextarea1';
+    contentDiv.style.height = '200px';
+    contentDiv.style.minHeight = '3em';
+    contentDiv.textContent = recentQuestion.작성내용;
+    contentDiv.style.textAlign = 'left'; // 왼쪽 정렬 추가
+    contentDiv.style.width = '300px'; // 카
+    contentDiv.style.height = '5vw'; // 카
+    contentDiv.style.whiteSpace = 'nowrap';
+    contentDiv.style.overflow = 'hidden';
+    contentDiv.style.textOverflow = 'ellipsis';
+  
+   
+    inputGroup.appendChild(contentDiv);
+
+    cardBody.appendChild(row);
+    cardBody.appendChild(inputGroup);
+
+    questionsContainer.appendChild(cardBody);
+}
+//질문내용 메인페이지에 표시하기 끝 
+
+
+
+
+
+
+
+
+
+
+   </script>
 
 
 

@@ -50,7 +50,7 @@ async function mycourses() {
 
                 //chatupcall 페이지에서 시간표 색칠을 위한 함수 
                 applyCourseData(data.data);
--
+                 //6.11 (양지은) 코드 끝
 
 
 

@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, jsonify, redirect ,session
+from flask import Blueprint, render_template, request, jsonify, redirect ,session, url_for, current_app
 from .supabase_client import supabase
 bp = Blueprint('student_main', __name__, url_prefix='/student')
+from .. import conn, socketio 
+from flask_socketio import emit
 
 
 """
@@ -40,6 +42,26 @@ def student_get_1dashboard():
 @bp.route('/main')
 def student_main_page():
     return render_template('./Student_page/Main_page/Main_page.html')
+
+@socketio.on('request_main_data')
+def handle_main_data_request(data):
+    # user = session['user']
+    # board = session['board']
+    # uid = user['uid']
+    # key = board['key']  # Assuming 'key' is the key to access board ID
+    uid="082d8640-9287-4284-9a73-47543b255309"
+    key=1
+    assignment_data = conn.tb_select("Assignment", key)
+    board_data = conn.tb_get("Board", "작성자", uid, dashboard_key=key)
+    class_data_list = conn.tb_select("Classdata", db_key=key, today_only=True)
+    class_data_count = len(class_data_list)  # 리스트의 길이로 카운트
+    memo_data = conn.me_get("S_memo", uid)
+
+    emit('assignment_data', assignment_data)
+    emit('board_data', board_data)
+    emit('class_data_count', class_data_count)
+    emit('memo_data', memo_data)
+
 
 """
 @bp.route('/')
@@ -139,9 +161,38 @@ def student_get_mainboard():
             'memo_data': memo_data,
             'file_name': file_name
         }), 201
+        
+
     except Exception as e:
         print(f"Error retrieving mainboard data: {e}")
         return jsonify({'error': 'Failed to retrieve mainboard data'}), 500
+
+
+@bp.route('/question')
+def question():
+    return render_template('./Student_page/Student_question_board_detail/Student_question_board_detail.html')
+@socketio.on('connect', namespace='/')
+def question_start():
+    # 기본값 설정
+    dashboard_key = 1
+    # 세션에 'dashboard_key'가 있는지 확인
+    if 'dashboard_key' in session:
+        dashboard_key = session['dashboard_key']
+        emit('success')
+    else:
+        emit('error', {'message': 'dashboard_key not found in session'})
+    
+    # dashboard_key 출력
+    print(dashboard_key)
+    
+    # conn.bd_select 메서드 호출
+    try:
+        result = conn.bd_select(db_key=dashboard_key, desc=True,page=0)
+        print(result)
+        emit('board', result)
+    except Exception as e:
+        emit('error', {'message': str(e)})
+
 
 # 질문게시판 가져오기
 @bp.route('/get_questions', methods=['GET'])
@@ -270,16 +321,49 @@ def comment():
 #     #학생정보 불러와 해당 과목{subject_id}의 정보 전송
 #     return render_template('./Student_page/Main_page/Main_page.html')
 
-@bp.route('/submit')
+@bp.route('/submit') #교육용 챗봇 누를 때
 def submit():
-    return render_template('./Student_page/Chatbot_choice_page/chatbot_choice_page.html')
+    with current_app.app_context():
+        return redirect(url_for('chatbot.show_chatbot_page')) # chatbot.py 블루프린트 모델로 이동
+    
+@bp.route('/daily_chat') #심리상담 챗봇 누를 때
+def go_daily_chat_page():
+    with current_app.app_context():
+        return redirect(url_for('chatbot.show_daily_chat_page')) # chatbot.py 블루프린트 모델로 이동
 """
 클라이언트 쪽에서 https://127.0.0.1:5000/student/korean으로 접속하여 
     {"uuid":"OAQMNCd2D76DCbx34MK"}를 받아왔다면
     서버에서 url의 변수 'korean'과 'uuid'를 사용하여
     학생이 수강하고 있는 korean 과목에 대한 정보를 찾아 전송.
 """
-@bp.route('/submit_doc_to_chatbot')
-def submit_doc_to_chatbot():
-    return render_template('Student_page/Chatbot_Or_Communication_Page/Chatbot_or_communication_page.html')
 
+
+
+
+
+
+# 질문게시판 6.11일 추가 (양지은)
+@bp.route('/studentquestion')
+def show_student_questionmain():
+    return render_template('Student_page/Student_question_board_detail/전문1.html')
+
+# 질문게시판 글쓰기 페이지 이동
+@bp.route('/studentquestionwriting')
+def show_student_question_writing():
+    return render_template('Student_page/Student_question_board_detail/Student_question_board_detail.html')
+
+
+# 과제 6.11일 추가 (양지은)
+@bp.route('/studenthomework')
+def show_student_homeworkmain():
+    return render_template('Student_page/Student_homework_page/Student_Homework_Main_page.html')
+
+# 과제글쓰기 6.11일 추가 (양지은)
+@bp.route('/studenthomeworkwriting')
+def show_student_homework_writing():
+    return render_template('Student_page/Student_homework_page/Student_Homework_Edit_Page.html')
+
+#파일 다운로드 6.11일 추가 (양지은)
+@bp.route('/studentfiledownload')
+def show_student_filedownload():
+    return render_template('Student_page/File_Download_page/File_download_page.html')

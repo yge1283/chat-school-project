@@ -1,9 +1,11 @@
 from sqlalchemy.orm import sessionmaker
 from configparser import ConfigParser, ExtendedInterpolation
-from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata
+from .models import Base,Student, Board, Dashboard, Comment, Teacher, Chat, Attachment, Choice,Short_answer,Long_answer, Test,Emotion, Attendee, S_memo, T_memo, Assignment,Assignment_attachment,Submission,Submission_attachment ,Chatbot,Classdata,Userinfo
 from sqlalchemy import create_engine,text
 from sqlalchemy_utils import database_exists, create_database
-from sqlalchemy.inspection import inspect
+from datetime import datetime, date
+from sqlalchemy.sql import func
+import json
 
 class Connector:
     def __init__(self, config):
@@ -42,6 +44,7 @@ class Connector:
             connection.close()
         except Exception as e:
             print(f'연결에 실패했습니다: {e}')
+
     def tb_insert(self, tb_name, data):
         try:
             table = globals()[tb_name]
@@ -77,24 +80,62 @@ class Connector:
 
 
 
-    def tb_select(self,tb_name, search, title,db_name_name= -1 ):
+    def tb_select(self, tb_name, col=None, search=None, db_key=None, today_only=None):
         try:
             # 테이블 클래스를 가져옵니다.
             table = globals()[tb_name]
-            results = None
-            if db_name_name != -1:
-                results=self.session.query(table).filter(getattr(table, search)==db_name_name).filter(getattr(table, search) == title).all()
-            else:
-                results = self.session.query(table).filter(getattr(table, search) == title).all()
-            return results
+            query = self.session.query(table)
+            
+            # db_key 조건이 있는 경우
+            if db_key is not None:
+                query = query.filter(getattr(table, "대시보드_key") == db_key)
+            
+            # search와 title 조건이 있는 경우
+            if col is not None and search is not None:
+                query = query.filter(getattr(table, col) == search)
+            
+            # 오늘 날짜 조건 추가
+            if today_only:
+                today = date.today()
+                query = query.filter(func.date(table.시간) == today)
+            
+            results = query.all()
+
+            return Connector.convert_to_json(1,results)
+        
         except Exception as e:
+            self.session.rollback()
+            raise e
+        
+    def tb_get(self, tb_name, col, search, dashboard_key=None):
+        try:
+            table = globals()[tb_name]
+            query = self.session.query(table, Userinfo.user_name).join(Userinfo, table.학생_ID == Userinfo.user_id).filter(getattr(table, col) == search)
+            
+            if dashboard_key:
+                query = query.filter(getattr(table, '대시보드_key') == dashboard_key)
+
+            results = query.all()
+            json_results = []
+            for board, user_name in results:
+                    board_dict = board.to_dict()
+                    board_dict['user_name'] = user_name
+                    json_results.append(board_dict)
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+
+        except Exception as e:
+            self.session.rollback()
             raise e
 
-    def tb_delete(self, tb_name, column, title):
+            
+
+    
+
+    def tb_delete(self, tb_name, col, search):
         try:
             table = globals()[tb_name]
             # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
-            self.session.query(table).filter(getattr(table, column) == title).delete()
+            self.session.query(table).filter(getattr(table, col) == search).delete()
             # 변경사항을 커밋합니다.
             self.session.commit()
         except Exception as e:
@@ -103,11 +144,11 @@ class Connector:
             raise e
         return 0
 
-    def tb_update(self,tb_name,search,title,student_new):
+    def tb_update(self,tb_name,col,search,student_new):
         try:
             # 테이블에서 조건을 만족하는 데이터를 필터링합니다.
             table = globals()[tb_name]
-            self.session.query(table).filter(getattr(table, search) == title).update(student_new)
+            self.session.query(table).filter(getattr(table, col) == search).update(student_new)
             # 변경사항을 커밋합니다.
             self.session.commit()
         except Exception as e:
@@ -116,25 +157,50 @@ class Connector:
             raise e
         return 0
 
-    def bd_select(self, db_name,search=None, title=None, desc=True):
+    def bd_select(self, db_key, col=None, search=None, desc=True,page=None):
         try:
-            if search==None:
-                query = self.session.query(Board).filter(Board.대시보드_key==db_name)
-            # 검색 조건(search)에 해당하는 열을 사용하여 데이터베이스에서 게시글을 검색합니다.
+            
+            query = self.session.query(Board, Student.학생이름).join(Student, Board.학생_ID == Student.학생_ID)
+            print(query.all())
+            if col:
+                query = query.filter(Board.대시보드_key == db_key).filter(getattr(Board, col) == search)
             else:
-                query = self.session.query(Board).filter(Board.대시보드_key==db_name).filter(getattr(Board, search) == title)
-            # 정렬 방식을 설정합니다.
+                query = query.filter(Board.대시보드_key == db_key)
+
             if desc:
-                # 내림차순으로 정렬합니다.
                 query = query.order_by(Board.작성시간.desc())
             else:
-                # 오름차순으로 정렬합니다.
                 query = query.order_by(Board.작성시간.asc())
-            # 정렬된 결과를 리스트로 반환합니다.
-            results = query.all()
-            return results
+            if page:
+                query=query.offset(int(page)*6)
+            results = query.limit(6).all()
+            json_results = []
+            for board, user_name in results:
+                board_dict = board.to_dict()
+                board_dict['user_name'] = user_name
+                json_results.append(board_dict)
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
         except Exception as e:
-            # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
+            self.session.rollback()
+            raise e
+
+    def me_get(self, tb_name, search, memo_ID=None, page=None):
+        try:
+            table = globals()[tb_name]
+            if memo_ID:
+                # memo_ID가 제공된 경우 해당 메모를 바로 반환
+                results = [self.session.query(table).filter(getattr(table, "메모_ID") == memo_ID).first()]
+                return Connector.convert_to_json(results)
+            
+            results = self.session.query(table).filter(getattr(table, "작성자_ID") == search).order_by(table.작성시간.desc())
+            
+            if page:
+                results = results.offset(int(page) * 4).all()
+            else:
+                results=[results.first()]
+            return Connector.convert_to_json(results)
+        except Exception as e:
+            self.session.rollback()
             raise e
     
     def sn_persent(self, db_name, ass_id,st_id):
@@ -146,12 +212,59 @@ class Connector:
         except Exception as e:
             # 검색 과정에서 예외가 발생하면 예외를 다시 발생시킵니다.
             raise e
-
-    def convert_to_list(objects):
+    def at_sn_join(self, db_key,search=None, desc=None,page=None):
+        try:
+            # 쿼리를 통해 과제와 사용자 이름을 가져옵니다.
+            results = self.session.query(
+                Assignment,
+                Userinfo.user_name,
+                Submission.작성시간
+            ).join(
+                Submission, Assignment.과제_ID == Submission.과제_ID
+            ).join(
+                Userinfo, Submission.제출자_ID == Userinfo.user_id
+            ).filter(
+                Assignment.대시보드_key == db_key
+            )
+            if search:
+                results=results.filter(Assignment.제목==f'%{search}%')
+            if desc:
+                results = results.order_by(Board.작성시간.desc())
+            if page:
+                results=results.offset(int(page)*6)
+            results=results.limit(6).all()
+            
+            json_results = []
+            for board, user_name,time in results:
+                board_dict = board.to_dict()
+                board_dict['user_name'] = user_name
+                board_dict['작성시간'] = time
+                json_results.append(board_dict)
+            return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        
+    def convert_to_list(self,objects):
         data_list = []
         for obj in objects:
-            data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
+            # 객체가 SQLAlchemy 결과 행인지 확인합니다.
+            if hasattr(obj, '__table__'):
+                data_list.append([getattr(obj, column.name) for column in obj.__table__.columns])
+            else:
+                # 객체가 테이블이 아닌 경우에는 그대로 추가합니다.
+                data_list.append(obj)
         return data_list
+
+    def convert_to_json(self, results):
+        json_results = []
+        for board in results:
+            board_dict = board.to_dict()
+            json_results.append(board_dict)
+        return json.dumps(json_results, ensure_ascii=False, indent=4, default=str)
+
+
+
 
     # 과목, 시간표 ORM
     def fetch_timetable_data(self):
@@ -162,57 +275,13 @@ class Connector:
 
             elif session['role'] == 'student':
                 uid = session['user']['uid']
-                keys_results = self.session.query(Attendee.대시보드_key).filter(Attendee.학생_ID  == uid).all()
+                keys_results = self.session.query(Student.대시보드_key).filter(Student.uid == uid).all()
                 keys = [item.대시보드_key for item in keys_results]
                 results = self.session.query(Dashboard.과목명, Dashboard.시간표).filter(Dashboard.대시보드_key.in_(keys)).all()
-
             data = [{'과목명': result.과목명, '시간표': result.시간표} for result in results]
             return data
         except Exception as e:
             raise e
-
-    # uid과 role에 따라서 
-    def get_dashboard_infos(self):
-        try:
-            uid = session['user']['uid']
-            role = session['role']
-
-            if role == 'teacher':
-                results = (
-                    self.session.query(Dashboard, Teacher)
-                    .join(Teacher, Dashboard.담당선생_ID == Teacher.선생_ID)
-                    .filter(Dashboard.담당선생_ID == uid)
-                    .all()
-                )
-
-            elif role == 'student':
-                keys_results = self.session.query(Attendee.대시보드_key).filter(Attendee.학생_ID == uid).all()
-                dashboard_keys = [item.대시보드_key for item in keys_results]
-                results = (
-                    self.session.query(Dashboard, Teacher)
-                    .join(Teacher, Dashboard.담당선생_ID == Teacher.선생_ID)
-                    .filter(Dashboard.대시보드_key.in_(dashboard_keys))
-                    .all()
-                )
-
-            else:
-                raise Exception("Invalid role")
-
-            teacher_info_list = []
-            for dashboard, teacher in results:
-                # Convert the Dashboard and Teacher objects to dictionaries
-                dashboard_dict = {c.key: getattr(dashboard, c.key) for c in inspect(Dashboard).mapper.column_attrs}
-                teacher_dict = {c.key: getattr(teacher, c.key) for c in inspect(Teacher).mapper.column_attrs}
-
-                # Combine the dictionaries
-                info_dict = {**dashboard_dict, **teacher_dict}
-
-                teacher_info_list.append(info_dict)
-
-            return teacher_info_list
-        except Exception as e:
-            raise e
-        
 
 
 

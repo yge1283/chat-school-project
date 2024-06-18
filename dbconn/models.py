@@ -1,10 +1,21 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, Text, Float, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, Text, Float, ForeignKey,Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID,VARCHAR,DATE,TIMESTAMP
 from sqlalchemy import func
+from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
-Base = declarative_base()
+@as_declarative()
+class Base:
+    @declared_attr
+    def __tablename__(cls):
+        return cls.__name__.lower()
+
+    def to_dict(self):
+        return {
+            column.name: getattr(self, column.name)
+            for column in self.__table__.columns
+        }
 
 class Teacher(Base):
     __tablename__ = '선생'
@@ -16,7 +27,12 @@ class Teacher(Base):
     comment = relationship("Comment", cascade="all, delete-orphan")
     
     t_memo= relationship("T_memo", cascade="all, delete-orphan")
-
+    def to_dict(self):
+        return {
+            '선생_ID': str(self.선생_ID),
+            '선생이름': self.선생이름,
+            # 다른 속성들을 필요에 따라 추가하세요
+        }
 class Student(Base):
     __tablename__ = '학생'
     학생이름 = Column(String(255))
@@ -239,8 +255,20 @@ class Classdata(Base):
     __tablename__ = '수업자료'
 
     파일_ID = Column(Integer, primary_key=True, autoincrement=True)
-    대시보드_ID = Column(Integer, ForeignKey('대시보드.대시보드_key'))
+    대시보드_key = Column(Integer, ForeignKey('대시보드.대시보드_key'))
     주차=Column(Integer)
     파일명 = Column(String(255))
     파일경로 = Column(String(255))
     시간 = Column(DateTime)
+
+class Userinfo(Base):
+    __tablename__ = 'userinfo'
+
+    user_id=Column(UUID, primary_key=True)
+    gender=Column(VARCHAR)
+    birthday=Column(DATE)
+    phone=Column(VARCHAR)
+    address=Column(Text)
+    user_name=Column(VARCHAR)
+    email=Column(Text)
+    IsT=Column(Boolean)

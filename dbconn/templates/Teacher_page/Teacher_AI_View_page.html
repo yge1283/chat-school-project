@@ -98,7 +98,7 @@ body {
             </div>
 
             <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_teacher_questionPage') }}">질문 게시판</a></li>
-
+            <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_student_mind') }}">감정 분석</a></li>
             <div class="dropdown text-end">
                 <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
                     data-bs-toggle="dropdown" aria-expanded="false">기타사항
@@ -176,7 +176,8 @@ body {
           
 
           <div class="dropdown">
-            <button class="button">+</button>
+            <button id="writeButton" type="button" class="btn btn-outline-dark button"
+            >+</button>
             <div class="dropdown-content">
               <a href="#">객관식 문제</a>
               <a href="#">주관식 문제</a>
@@ -192,8 +193,9 @@ body {
       </div>
 
 
-    <!-- 문제를 표시할 컨테이너 요소 -->
+    <!-- 주관식 컨테이너 요소 -->
     <div id="problemContainer"></div>
+    <!-- 주관식 컨테이너 요소 끝 -->
 
 
             <!-- 객관식 문제 구역 -->
@@ -205,9 +207,7 @@ body {
 
 
 
-<!-- 객관식 문제 시작 -->
 
- <!-- 객관식 문제 끝 -->
 
 
 
@@ -215,12 +215,16 @@ body {
 
 
             
-        <button class="bottom_button">채점</button>
+        <!-- <button class="bottom_button">채점</button> -->
+        <button id="writeButton" type="button" class="btn btn-outline-dark"
+        style="width: 100px;">채점</button>
         
 
        
     
-        <button class="bottom_button">제출</button>
+        <!-- <button class="bottom_button">제출</button> -->
+        <button id="writeButton" type="button" class="btn btn-outline-dark"
+        style="width: 100px;">제출</button>
        
     </div>
 
@@ -274,11 +278,13 @@ if (data5 !== undefined && data6 !== undefined) {
     console.log(opD);
 
     // 데이터를 기반으로 문제를 추가
-    addProblem(juquestion, juanswer, 1); // 인덱스를 1로 설정 (혹은 필요에 따라 변경)
-    addProblem1(gakquestion, gakanswer, opA, opB, opC, opD, 2); // 인덱스를 2로 설정 (혹은 필요에 따라 변경)
+    addProblem(juquestion, juanswer, 1);
+    addProblem1(gakquestion, gakanswer, opA, opB, opC, opD, 2); 
 } else {
     console.log("데이터가 없음");
 }
+
+
 
 // 주관식 문제 표시 함수
 function addProblem(question, answer, index) {
@@ -376,15 +382,20 @@ function addProblem1(question, answer, A, B, C, D, index, num) {
                     <input type="radio" id="circle4" name="${index}" value="4">
                     <label class="circle" for="circle4"></label>
                     <div class="number"> D - ${D}</div>
+                      
                        
                 </div>
-               
+                 
             </div>
+           
+               
             
         </form>
 
          <button id="toggleButton${index}">해설 보기</button>
-        <div id="hiddenDiv${index}" style="display: none;">${answer}</div>
+         <div id="hiddenDiv${index}" style="display: none;">${answer}</div>
+
+       
     `;
 
     document.getElementById('problemContainer1').appendChild(problemDiv1);
@@ -393,9 +404,13 @@ function addProblem1(question, answer, A, B, C, D, index, num) {
     const hiddenDiv = document.getElementById(`hiddenDiv${index}`);
     toggleButton.style.borderRadius = '10px';
     toggleButton.style.backgroundColor = '#aaf1ff';
+    toggleButton.style.position='relative'
+    toggleButton.style.left='12vw'
     toggleButton.addEventListener('click', function() {
         if (hiddenDiv.style.display === 'none') {
             hiddenDiv.style.display = 'block';
+            hiddenDiv.style.position='relative'
+            hiddenDiv.style.right='5px'
             toggleButton.textContent = '해설 숨기기';
         } else {
             hiddenDiv.style.display = 'none';
@@ -413,7 +428,7 @@ function addProblem1(question, answer, A, B, C, D, index, num) {
 
 
 
-
+// 채점 버튼 누르면 문구가 표시되도록 하는 함수. 
      const scoreButton = document.querySelector('.bottom_button-container button:first-of-type');
      const resultMessage = document.querySelector('.result-message');
      const resultContainer = document.querySelector('.result-container')
