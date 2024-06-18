@@ -264,6 +264,9 @@ def student_insert_dashboard_key():
     dashboard_key = get_data['key']
     print(f"세션상태 : {session}")
     uid = session['user']['uid']
+    keys = student_get_dashboard_key(uid)
+    if dashboard_key in keys:
+        return jsonify({'error': '이미 수강중인 과목입니다.'})
     try:
         # 정상적으로 코랩에서는 작동
         result = supabase.table('수강생').insert({"대시보드_key": dashboard_key, "학생_ID": uid}).execute()
