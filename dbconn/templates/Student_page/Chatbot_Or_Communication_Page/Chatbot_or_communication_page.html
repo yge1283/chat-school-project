@@ -134,8 +134,8 @@
                                 <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false">챗봇과의 대화</a>
                                 <ul class="dropdown-menu" data-bs-popper="static">
-                                    <li><a class="dropdown-item" href="./submit">교육용 챗봇</a></li>
-                                    <li><a class="dropdown-item" href="#">심리상담 챗봇</a></li>
+                                    <li><a class="dropdown-item" href="/choice_file">교육용 챗봇</a></li>
+                                    <li><a class="dropdown-item" href="/daily_chatbot">심리상담 챗봇</a></li>
                                 </ul>
                             </div>
 
@@ -214,91 +214,92 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+        const chatContainer2 = document.getElementById('chat-container');
+        const userInput2 = document.getElementById('user-input');
+        const sendBtn2 = document.getElementById('send-btn'); //전역변수는 우선 선언후 input_file.js불러오기!
+    </script>
+    <script src="{{ url_for('static', filename='js/input_file.js') }}"></script> 
     <script type="module">
-        const chatContainer = document.getElementById('chat-container');
-        const userInput = document.getElementById('user-input');
-        const sendBtn = document.getElementById('send-btn');
+        
 
-        const socket = io('https://7a87-125-184-48-169.ngrok-free.app', {
-            autoConnect: true,
-            extraHeaders: {
-                "ngrok-skip-browser-warning": true
-            }
-        });
+
+        // const socket = io('https://7a87-125-184-48-169.ngrok-free.app', {
+        //     autoConnect: true,
+        //     extraHeaders: {
+        //         "ngrok-skip-browser-warning": true
+        //     }
+        // });
 
 
         // socket.connect('https://4105-125-184-48-169.ngrok-free.app');
-        console.log(socket.connected);
+        // console.log(socket.connected);
 
-        socket.on("connect", () => {
-            console.log('연결되었습니다.');
-        });
+        // socket.on("connect", () => {
+        //     console.log('연결되었습니다.');
+        // });
 
-        socket.on("connect_error", (error) => {
-            if (socket.active) {
-                // temporary failure, the socket will automatically try to reconnect
-            } else {
-                // the connection was denied by the server
-                // in that case, `socket.connect()` must be manually called in order to reconnect
-                console.log(error.message);
-                // some additional description, for example the status code of the initial HTTP response
-                console.log(err.description);
-                // some additional context, for example the XMLHttpRequest object
-                console.log(err.context);
-            }
-        });
+        // socket.on("connect_error", (error) => {
+        //     if (socket.active) {
+        //         // temporary failure, the socket will automatically try to reconnect
+        //     } else {
+        //         // the connection was denied by the server
+        //         // in that case, `socket.connect()` must be manually called in order to reconnect
+        //         console.log(error.message);
+        //         // some additional description, for example the status code of the initial HTTP response
+        //         console.log(err.description);
+        //         // some additional context, for example the XMLHttpRequest object
+        //         console.log(err.context);
+        //     }
+        // });
 
-        socket.on('bot_response', function (data) { //서버로부터 응답 받을 때
-            appendMessage(data, false);  //받은 데이터로 appendMessage함수 실행
-
-        });
-
-        socket.on('summary_result', (data) => {
-            console.log('received file data:', data);
-            // Handle the file data
-            appendMessage(data, false);
-        });
+        // socket.on('summary_result', (data) => {
+        //     console.log('received file data:', data);
+        //     // Handle the file data
+        //     appendMessage(data, false);
+        // });
 
 
-        function appendMessage(message1, isUser) { //입력받은 메세지로 html에 말풍선 생성, 유저 true일경우 오른쪽 false일경우 왼쪽
-            var messageDiv = document.createElement('div');
-            messageDiv.className = `d-flex flex-row justify-content-${isUser ? 'end' : 'start'}`;
-            messageDiv.innerHTML = `
-                        <div>
-                            <p class="p-2 ${isUser ? 'me-3' : 'ms-3'} mb-1 ${isUser ? 'text-white bg-primary' : ''}" style="border-radius: 15px; background-color: ${isUser ? '' : '#f5f6f7'};">
-                                ${message1}
-                            </p>
-                            <p class="${isUser ? 'me-3' : 'ms-3'} mb-3 text-muted" style="font-size: 12px;">
-                                ${new Date().toLocaleTimeString()}
-                            </p>
-                        </div>
-                    `;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
+        // function appendMessage(message1, isUser) { //입력받은 메세지로 html에 말풍선 생성, 유저 true일경우 오른쪽 false일경우 왼쪽
+        //     var messageDiv = document.createElement('div');
+        //     messageDiv.className = `d-flex flex-row justify-content-${isUser ? 'end' : 'start'}`;
+        //     messageDiv.innerHTML = `
+        //                 <div>
+        //                     <p class="p-2 ${isUser ? 'me-3' : 'ms-3'} mb-1 ${isUser ? 'text-white bg-primary' : ''}" style="border-radius: 15px; background-color: ${isUser ? '' : '#f5f6f7'};">
+        //                         ${message1}
+        //                     </p>
+        //                     <p class="${isUser ? 'me-3' : 'ms-3'} mb-3 text-muted" style="font-size: 12px;">
+        //                         ${new Date().toLocaleTimeString()}
+        //                     </p>
+        //                 </div>
+        //             `;
+        //     chatContainer.appendChild(messageDiv);
+        //     chatContainer.scrollTop = chatContainer.scrollHeight;
+        // }
 
-        function sendMessage(message1) {
-            socket.emit('summary_chat', {"message":message1, "uid":uid});  //챗봇서버에 메세지 전송
-            console.log('메세지를 보냈습니다. ' + message1);  //콘솔에 보낸 메세지 출력
-        }
+        // function sendMessage(message1) {
+        //     socket.emit('summary_chat', {"message":message1, "uid":uid});  //챗봇서버에 메세지 전송
+        //     console.log('메세지를 보냈습니다. ' + message1);  //콘솔에 보낸 메세지 출력
+        // }
 
-        sendBtn.addEventListener('click', () => { //버튼 클릭시
-            const message1 = userInput.value;  //채팅 입력창 text를 message1에 저장
+        sendBtn2.addEventListener('click', () => { //버튼 클릭시
+            const message1 = userInput2.value;  //채팅 입력창 text를 message1에 저장
             if (!message1) return; //아무것도 없을경우 종료
 
-            appendMessage(message1, true);  //채팅창에 말풍선 생성
-            userInput.value = '';  //입력창 비우기
-            sendMessage(message1);  // 챗봇서버에 메세지 보내는 함수
+            appendMessage2(message1, true);  //채팅창에 말풍선 생성
+            userInput2.value = '';  //입력창 비우기
+            sendMessage2(message1);  // 챗봇서버에 메세지 보내는 함수
         });
 
-        userInput.addEventListener('keypress', (e) => {  //채팅을 엔터로 입력시 동일
+        userInput2.addEventListener('keypress', (e) => {  //채팅을 엔터로 입력시 동일
             if (e.key === 'Enter') {
-                sendBtn.click();
+                sendBtn2.click();
             }
         });
+        
     </script>
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='js/input_file.js') }}"></script>
+    
 
 </body>
 

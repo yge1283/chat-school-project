@@ -171,7 +171,7 @@ def student_get_mainboard():
 @bp.route('/question')
 def question():
     return render_template('./Student_page/Student_question_board_detail/Student_question_board_detail.html')
-@socketio.on('connect', namespace='/')
+@socketio.on('connect', namespace='/question')
 def question_start():
     # 기본값 설정
     dashboard_key = 1
@@ -187,12 +187,46 @@ def question_start():
     
     # conn.bd_select 메서드 호출
     try:
-        result = conn.bd_select(db_key=dashboard_key, desc=True,page=0)
+        result = conn.bd_select(db_key=dashboard_key,page=0)
         print(result)
         emit('board', result)
     except Exception as e:
         emit('error', {'message': str(e)})
 
+@socketio.on('board', namespace='/question')
+def question_page(data):
+    dashboard_key=1
+    if 'dashboard_key' in session:
+        dashboard_key = session['dashboard_key']
+        
+        emit('success')
+    else:
+        emit('error', {'message': 'dashboard_key not found in session'})
+    print(data)
+    result = conn.bd_select(db_key=dashboard_key, desc=True,page=data)
+    emit('board', result)
+
+@socketio.on('question', namespace='/question')
+def qes_com_get(data):
+    bd_id=int(data)
+    emit('question',conn.tb_select("Board","게시물_ID",bd_id))
+
+@socketio.on('comment', namespace='/question')
+def qes_com_get(data):
+    bd_id=int(data)
+    emit('comment',conn.tb_select("Comment","게시물_ID",bd_id))
+    
+@socketio.on('comment_num', namespace='/question')
+def qes_com_get(data):
+    bd_id = int(data)
+    try:
+        comment_count = conn.tb_len("Comment", "게시물_ID", bd_id)
+        print(comment_count)
+        emit('comment_num', {'게시물_ID': bd_id, 'comment_count': comment_count})
+    except Exception as e:
+        emit('error', {'message': str(e)})
+
+    
 
 # 질문게시판 가져오기
 @bp.route('/get_questions', methods=['GET'])
@@ -256,14 +290,19 @@ def student_get_submissions():
         print(f"Error retrieving submissions data: {e}")
         return jsonify({'error': 'Failed to retrieve submissions data'}), 500
 
+
+
 # 수강생 데이터에다가 '과목코드'입력해서 넣기 
 @bp.route('/insert_key', methods=['POST'])
 def student_insert_dashboard_key():
     # JS에서 학생이 추가할 대시보드 키값 받아오기
     get_data = request.get_json()
     dashboard_key = get_data['key']
-    print(f"세션상태 : {session}")
+    # 수강중인 과목인지 확인하기
     uid = session['user']['uid']
+    keys = student_get_dashboard_key(uid)
+    if dashboard_key in keys:
+        return jsonify({'error': '이미 수강중인 과목입니다.'})
     try:
         # 정상적으로 코랩에서는 작동
         result = supabase.table('수강생').insert({"대시보드_key": dashboard_key, "학생_ID": uid}).execute()
@@ -277,6 +316,35 @@ def student_insert_dashboard_key():
         print(f"Error inserting into table: {e}")
         return jsonify({'error': 'Failed to create table'}), 500
     
+
+# 수강생 데이터에다가 '과목코드'입력해서 넣기 
+@bp.route('/delete_key', methods=['POST'])
+def student_delete_dashboard_key():
+    # JS에서 학생이 추가할 대시보드 키값 받아오기
+    get_data = request.get_json()
+    key = get_data['key']
+    dashboard_key = int(key) # int로 고쳐야함
+    # 수강 중인 key 가 맞는 경우
+    print(f"대시보드키값 받아왔나요? {dashboard_key} , {type(dashboard_key)}")
+    uid = session['user']['uid']
+    keys = student_get_dashboard_key(uid)
+    if dashboard_key in keys:
+        try:
+            print(f"실행중인가요?")
+            # 수강생 테이블에서 해당 행 삭제
+            result = supabase.table('수강생').delete().match({"대시보드_key": dashboard_key, "학생_ID": uid}).execute()
+            data = result.data
+            print(f"제대로 삭제 되었나요?")
+            if data:
+                print(f"Deleted data: {data}")
+                return jsonify({'success': True, 'data': data}), 200
+            else:
+                return jsonify({'error': 'Failed to delete entry'}), 400
+        except Exception as e:
+            print(f"Error deleting from table: {e}")
+            return jsonify({'error': 'Failed to delete entry'}), 500
+    else:
+        return jsonify({'error': '수강중인 과목이 아닙니다.'}), 400
 
 @bp.route('/comment')
 def comment():
@@ -311,7 +379,7 @@ def go_daily_chat_page():
 # 질문게시판 6.11일 추가 (양지은)
 @bp.route('/studentquestion')
 def show_student_questionmain():
-    return render_template('Student_page/Student_question_board_detail/전문1.html')
+    return render_template('./Student_page/Student_question_board_detail/Student_question_board_detail.html')
 
 # 질문게시판 글쓰기 페이지 이동
 @bp.route('/studentquestionwriting')
