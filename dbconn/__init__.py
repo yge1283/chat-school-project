@@ -24,11 +24,12 @@ def create_app():
 
     # views에 Blueprint 만든 후 꼭 연결해주기!!!!!!!!!!!!!!!!
 
-    from .views import student_main, chatbot, teacher_main,login
+    from .views import student_main, chatbot, teacher_main,login, index
     app.register_blueprint(login.bp)
     app.register_blueprint(student_main.bp)
     app.register_blueprint(chatbot.bp)
     app.register_blueprint(teacher_main.bp)
+    app.register_blueprint(index.bp)
     
     return app
     
