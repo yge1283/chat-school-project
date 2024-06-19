@@ -6,11 +6,20 @@ from .connect import Connector
 from flask_socketio import SocketIO
 import os
 
-db_uri = Connector.read_config(section='postgres')
-conn = Connector(db_uri)
-socketio = SocketIO()
-def create_app():
+# db_uri = Connector.read_config(section='postgres')
+# conn = Connector(db_uri)
+# socketio = SocketIO()
+def create_app(config_object=None): #config_object >> gunicorn 사용시 인자 처리
+    global db_uri, conn, socketio 
+
+    db_uri = Connector.read_config(section='postgres')
+    conn = Connector(db_uri)
+    socketio = SocketIO()
+
     app = Flask(__name__)
+    if config_object:
+        app.config.from_object(config_object)
+
     # read_config 함수를 호출하여 데이터베이스 URI를 가져옴
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
