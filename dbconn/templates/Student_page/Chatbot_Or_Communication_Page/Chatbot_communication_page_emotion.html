@@ -126,9 +126,9 @@
                                     </div>
                                 </div>
                             </nav>
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
+                            <li><a href="{{ url_for('student_main.show_student_questionmain') }}" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
 
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">과제</a></li>
+                            <li><a href="{{ url_for('student_main.show_student_homeworkmain') }}" class="nav-link px-3 link-body-emphasis">과제</a></li>
 
                             <div class="dropdown text-end">
                                 <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
