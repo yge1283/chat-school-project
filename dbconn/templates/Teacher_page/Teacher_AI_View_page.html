@@ -405,12 +405,14 @@ function addProblem1(question, answer, A, B, C, D, index, num) {
     toggleButton.style.borderRadius = '10px';
     toggleButton.style.backgroundColor = '#aaf1ff';
     toggleButton.style.position='relative'
-    toggleButton.style.left='12vw'
+    toggleButton.style.left='11vw'
+    toggleButton.style.marginTop='20px'
+
     toggleButton.addEventListener('click', function() {
         if (hiddenDiv.style.display === 'none') {
             hiddenDiv.style.display = 'block';
             hiddenDiv.style.position='relative'
-            hiddenDiv.style.right='5px'
+            hiddenDiv.style.left='11vw'
             toggleButton.textContent = '해설 숨기기';
         } else {
             hiddenDiv.style.display = 'none';

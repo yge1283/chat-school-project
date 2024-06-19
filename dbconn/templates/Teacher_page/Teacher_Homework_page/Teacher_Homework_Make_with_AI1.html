@@ -453,12 +453,69 @@
 
 
 <script>
-    const socket = io('https://7a87-125-184-48-169.ngrok-free.app',{ //ai서버 주소
+
+
+const fsocket=io.connect('/chatbot');
+
+fsocket.emit('first_connect')
+
+
+function waitForUrl(fsock) {
+    return new Promise((resolve) => {
+        fsocket.on('get_url',(data) => {
+            ai_url = data;
+            console.log("ai url 가져옴>> "+ai_url);
+            resolve(ai_url);
+        });
+    });
+}
+
+
+let socket;
+
+(async () => {
+
+    socket = io(await waitForUrl(fsocket), { //받아온 주소로 ai서버연결
         autoConnect: true,
         extraHeaders: {
             "ngrok-skip-browser-warning": true
-        }
+        },
+        path: '/socket.io',
+        transports: ['websocket', 'polling'],
+        allowEIO3: true
     });
+
+    socket.on('connect', () => {
+        console.log('AI서버 Connected .');
+    });
+    
+    socket.on('connect_error', (error) => {
+        console.error('Connection Error:', error);
+    });
+    
+    socket.on('error', (error) => {
+        console.error('WebSocket Error:', error);
+    });
+    
+    socket.on('disconnect', (reason) => {
+        console.log('Disconnected:', reason);
+    });
+})();
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function uploadFile() {
         console.log("실행됨")
@@ -483,13 +540,13 @@
 
 
        
-    }
+    
 
-    socket.on('connect',function() {
+      socket.on('connect',function() {
         console.log("서버 연결됨")
         
 
-    });
+       });
 
     socket.on('upload_response', function(data) { //서버에서 파일 받으면 확인 알림 (나중에 없애도 됨)
         alert(data.message);
@@ -510,6 +567,8 @@
    
       
     });
+
+
     socket.on('make_q_2_result', function(data) { 
         
    
@@ -521,7 +580,7 @@
  
           
         });
-
+    }
 
   
 

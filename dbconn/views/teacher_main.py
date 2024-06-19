@@ -61,11 +61,52 @@ def show_teacher_fileupload():
 def viewtest():
     return render_template('./Teacher_page/Teacher_AI_view_page.html')
 
-@bp.route('/checkstudentmind')
+
+# 감정 데이터 표시 시작
+@bp.route('/checkstudentmind', methods=['POST'])
+def check_student_mind():
+    print('함수가 실행됨')
+    if request.method == 'POST':
+        data = request.json  # JSON 데이터를 받음
+        print('클라이언트로부터 받은 데이터:', data)
+
+        uids = [item.get('uid') for item in data.get('result', [])]
+       
+
+        # Supabase에서 모든 학생의 학생_ID와 학생이름을 조회합니다
+        student_info = []
+        try:
+            response = supabase.table('학생').select('학생_ID', '학생이름').execute()
+            students = response.data
+         
+            
+            for student in students:
+                if student['학생_ID'] in uids:
+                 
+                  student_info.append({
+                    'student_name': student['학생이름'],
+                    'emotion': next((item.get('emotion') for item in data.get('result', []) if item.get('uid') == student['학생_ID']), None)
+                 })
+                  
+                 
+        except Exception as e:
+            print(f"학생 조회 중 오류 발생: {e}")
+            return jsonify({'error': '학생 정보를 가져오는 데 실패했습니다'})
+        print('함수 실행 끝')
+        
+        # 일치하는 학생 이름을 포함한 JSON 응답을 반환합니다
+        return jsonify({'student_info': student_info})
+        
+    else:
+        return jsonify({'message': '이 엔드포인트는 POST 요청만 허용됩니다'})
+        
+     
+
+@bp.route('/checkstudentmind1')
 def show_student_mind():
-    return render_template('/Teacher_page/Teacher_Check_Student_Mind_Page1.html')
+    return render_template('/Teacher_page/Teacher_Check_Student_Mind_Page2.html')
 
-
+# 감정 데이터 표시 끝
 
 
 # 허용된 확장자 목록
