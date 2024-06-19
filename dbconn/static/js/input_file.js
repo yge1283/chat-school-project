@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 fsocket.on('connect',(data)=>{
     uid=data;
-    console.log("uid");
+    console.log("연결된 uid:"+uid);
 });
 fsocket.on('chatting',(data)=>{
     console.log("connected");
@@ -29,12 +29,12 @@ fsocket.on('chatting',(data)=>{
         appendMessage2(element.챗봇응답,false);
     });
 });
-socket.on('summary_result', (data) => {
-    console.log('Received file data:', data);
-    // Handle the file data
-    appendMessage(data, false);
-    fsocket.emit('message',{'msg':user-input2.value,'ai':data});
-});
+fsocket.on('get_url',(data) => {
+    ai_url = data;
+    console.log("ai url 가져옴>> "+ai_url)});
+
+
+
 
 
 // socket = io(ai_url, { // ai서버 주소
