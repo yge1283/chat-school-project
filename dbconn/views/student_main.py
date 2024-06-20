@@ -110,6 +110,8 @@ def student_get_course_data():
         uid = session['user']['uid']
         # 함수 값 불러오기
         keys = student_get_dashboard_key(uid)
+        if not keys:  # keys가 None이거나 빈 리스트일 경우
+            return jsonify({'success': False, 'message':  '수강중인 과목이 현재 없습니다'}), 200
         response = supabase.table('대시보드').select('*, 선생(선생이름)').execute()
         courses = [item for item in response.data if item['대시보드_key'] in keys]
         if courses:
@@ -266,6 +268,7 @@ def student_get_comments():
     try:
         data = request.get_json()
         question_id = data['question_id']
+        
         
         response = supabase.table('댓글').select('*').eq('게시물_ID', question_id).execute()
         comments_data = response.data
