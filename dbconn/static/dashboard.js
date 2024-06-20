@@ -122,7 +122,7 @@ async function displayCourses(courses) {
 // 과목이 0개일때 해당 문자 display
 function displayNoCoursesMessage() {
     const container = document.getElementById('coursesContainer');
-    container.innerHTML = '<div>담당 과목이 현재 없습니다. 과목을 추가해주세요</div>';
+    container.innerHTML = '<div>수강중인 과목이 현재 없습니다. 과목을 추가해주세요</div>';
 }
 
 // 위 대시보드를 누르면 키값 보내고 메인 받아오기
