@@ -59,7 +59,7 @@ async function mycourses() {
                 // 데이터 가져왔을 때 사각형으로 HTML에 나타내는 함수로 이동
                 displayCourses(data.data);
             } else {
-                alert('유저 정보가 정확하지 않습니다.');
+                displayNoCoursesMessage();
             }
         } else {
             alert('서버에서 에러가 발생했습니다');
@@ -74,6 +74,10 @@ async function displayCourses(courses) {
     const container = document.getElementById('coursesContainer');
     container.innerHTML = '';
 
+    if (courses.length === 0) {
+        displayNoCoursesMessage();
+        return;
+    }
     courses.forEach(course => {
         const courseBox = document.createElement('div');
         courseBox.className = 'course-box';
@@ -114,6 +118,13 @@ async function displayCourses(courses) {
         container.appendChild(courseBox);
     });
 }
+
+// 과목이 0개일때 해당 문자 display
+function displayNoCoursesMessage() {
+    const container = document.getElementById('coursesContainer');
+    container.innerHTML = '<div>수강중인 과목이 현재 없습니다. 과목을 추가해주세요</div>';
+}
+
 // 위 대시보드를 누르면 키값 보내고 메인 받아오기
 async function setDashboardKey(dashboardKey) {
     try {
