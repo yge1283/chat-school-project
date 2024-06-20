@@ -5,7 +5,7 @@
 
 
 ## 프로젝트 포스터
-    ![pp](./readme_images/챗업스쿨_포스터_6_13.jpg)
+![pp](./readme_images/챗업스쿨_포스터_6_13.jpg)
 
 ## 프로젝트 계획
  1. 주제 선정
@@ -36,6 +36,9 @@
     5. 질문 게시글 관리  
     6. 학생 감정분석 기록 조회  
   
+## 기술 구상도
+![pp](./readme_images/diagram1.png)
+
 ## llama3 모델과 파인튜닝
  1. 문제 생성과 대화를 위한 한국어 llm 선택  
     https://huggingface.co/allganize/Llama-3-Alpha-Ko-8B-Instruct  
@@ -64,5 +67,9 @@
 ## 웹 서버 구축
 - python, Flask, socketio 로 api 제작
 
-
+## 결과
+![web1](./readme_images/web1_login.png)
+![web1](./readme_images/web2_main.png)
+![web1](./readme_images/web3_quiz.png)
+![web1](./readme_images/web4_chatbot.png)
 
