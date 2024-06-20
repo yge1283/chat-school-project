@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect,session,render_template_string
+from flask import Blueprint, render_template, request, jsonify, redirect,session,render_template_string, current_app, url_for
 import asyncio
 #from supabase import create_client, Client
 #from .. import config  # dbconn 폴더의 config 파일 불러오기
@@ -350,7 +350,9 @@ def student_main_page():
     test2222= supabase.table('userinfo').select('*').execute()
     print(f'현재 세션: {session}')
     print(f'현재 정보가있나: {testttt}')
-    return render_template('./Student_page/Chat_Up_Call_page/Chat_Up_Call.html')
+    with current_app.app_context():
+        return redirect(url_for('student_main.chat_up_call'))
+    #return render_template('./Student_page/Chat_Up_Call_page/Chat_Up_Call.html')
 
 # 선생인지, 학생인지 알기 전에 userinfo 로 보내기 -아직페이지가 없어서 signup에 보내기
 @bp.route('/userinfo_page')

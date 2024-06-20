@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Check Student Mind Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/Style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <style>
+        .emoji {
+           font-size: 40px;/* 이모지 크기 조정 */
+        }
+
+        table {
+            width: 100%; /* 테이블 너비 설정 */
+            border-collapse: collapse; /* 테이블 테두리 병합 */
+        }   
+    
+        td, th {
+            padding: 8px; /* 셀 안쪽 여백 설정 */
+            border: 1px solid #ddd; /* 셀 테두리 스타일 설정 */
+            text-align: center; /* 텍스트 가로 중앙 정렬 */
+            vertical-align: middle; /* 텍스트 세로 중앙 정렬 */
+        }
+
+    </style>    
+
+</head>
+
+<body>
+    <div class="d-flex flex-column">
+        <div class="form jua-regular">
+            <header class="p-3 mb-3 border-bottom gradient-background">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a href="/"
+                        class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+                        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                            <use xlink:href="#bootstrap"></use>
+                        </svg>
+                    </a>
+
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <nav class="navbar navbar-light" aria-label="light offcanvas navbar">
+                            <div class="container-fluid">
+                                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                    aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <div class="offcanvas offcanvas-start text-bg-dark" tabindex="-1"
+                                    id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                                    <div class="offcanvas-header">
+                                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">이전 과제 문제 (날짜 빠른순이 위로)
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white"
+                                            data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body" style="background-color: white;">
+                                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">1.이전 과제 문제
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">2.이전 과제 문제
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">3.이전 과제 문제
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    
+                    <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_teacher_DashboardPage') }}">홈</a></li>
+
+                    <div class="dropdown text-end">                            
+                      <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                          data-bs-toggle="dropdown" aria-expanded="false">과제
+                      </a>
+                      <ul class="dropdown-menu" data-bs-popper="static">
+                            <li><a class="dropdown-item" href="{{ url_for('teacher_main.show_teacher_homeworkPage') }}">과제 확인</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('teacher_main.show_teacher_homeworkMakeWithAIPage') }}">AI 문제 생성</a></li>
+                      </ul>
+                    </div>
+
+                    <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_teacher_questionPage') }}">질문 게시판</a></li>
+                    <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_student_mind') }}">감정 분석</a></li>
+                    <div class="dropdown text-end">
+                        <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
+                            data-bs-toggle="dropdown" aria-expanded="false">기타사항
+                        </a>
+                        <ul class="dropdown-menu" data-bs-popper="static">
+                            <li><a class="dropdown-item" href="#">오늘의 학습</a></li>
+                            <li><a class="dropdown-item" href="#">파일 올리기</a></li>
+                            <li><a class="nav-link px-3 link-body-emphasis" href="{{ url_for('teacher_main.show_teacher_memoPage') }}">메모장</a></li>
+                        </ul>
+                    </div>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" class="px-3">로그아웃</a></li>
+                </ul>
+
+                 <!-- 프로필 버튼 -->
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none" data-bs-toggle="offcanvas" data-bs-target="#profileOffcanvas" aria-controls="profileOffcanvas"> <!-- 오프캔버스를 열도록 설정 -->
+                        <img src="https://github.com/mdo.png" alt="프로필 이미지" width="32" height="32"
+                            class="rounded-circle">
+                    </a>
+                </div>
+                
+                <!-- 프로필 오프캔버스 -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="profileOffcanvas" aria-labelledby="profileOffcanvasLabel"> <!-- 오른쪽 오프캔버스 -->
+                    <div class="offcanvas-header">
+                        <h5 id="profileOffcanvasLabel">프로필</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> <!-- 닫기 버튼 -->
+                    </div>
+                    <div class="offcanvas-body"> <!-- 오프캔버스 내용 -->
+                        <p>프로필 정보가 여기에 표시됩니다.</p> <!-- 예시 내용 -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container mt-3"> <!-- 메인 컨테이너 -->
+            <div class="row justify-content-center"> <!-- 행 중앙 정렬 -->
+                <div class="col-sm-10"> <!-- 추가 콘텐츠 영역 -->                   
+                    <div class="container mt-3 mb-3"> <!-- 메인 컨테이너 -->
+                        <div class="row"> <!-- 행 시작 -->
+                            <div class="col-sm-12 d-flex justify-content-end align-items-center" style="margin-top: 30px;"> <!-- 우측 정렬 -->
+                                <!-- <input type="date" id="datepicker">  -->
+                                <!-- 달력 위젯 -->
+                                <button onclick="emo_analyze()"
+                                style="margin: -10px;" class="btn btn-outline-dark button">분석하기</button>
+         
+                            </div>                                                                             
+                        </div>
+                    </div>
+
+
+                    <table id="emotionTable">
+
+                        <div id="serverResponse"></div> 
+
+                        <table class="table table-hover"id="studentTable" style="width: 100%; margin-top: 20px;">
+                          <thead style="background-color: #4CAF50; color: white;"> 
+                          <thead>
+                              <tr>
+                                  <th style="width: 80px;">학생 이름</th>
+                                  <th style="width: 0px;">6/17</th>
+                                  <th style="width: 0px;">6/18</th>
+                                  <th style="width: 0px;">6/19</th>
+                                  <th style="width: 0px;">6/20</th>
+                                  <th style="width: 0px;">6/21</th>
+                              </tr>
+                              </thead>
+                          <tbody id="tableBody">
+                         
+                          </tbody>
+                      </table>
+
+                 
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+                                       
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script> 
+
+ <script>
+
+
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+            localStorage.removeItem('emotion_analyze_result');
+        });
+
+
+
+const fsocket=io.connect('/chatbot');
+
+fsocket.emit('first_connect')
+
+
+function waitForUrl(fsock) {
+    return new Promise((resolve) => {
+        fsocket.on('get_url',(data) => {
+            ai_url = data;
+            console.log("ai url 가져옴>> "+ai_url);
+            resolve(ai_url);
+        });
+    });
+}
+
+
+let socket;
+
+(async () => {
+
+    socket = io(await waitForUrl(fsocket), { //받아온 주소로 ai서버연결
+        autoConnect: true,
+        extraHeaders: {
+            "ngrok-skip-browser-warning": true
+        },
+        path: '/socket.io',
+        transports: ['websocket', 'polling'],
+        allowEIO3: true
+    });
+
+    socket.on('connect', () => {
+        console.log('AI서버 Connected .');
+    });
+    
+    socket.on('connect_error', (error) => {
+        console.error('Connection Error:', error);
+    });
+    
+    socket.on('error', (error) => {
+        console.error('WebSocket Error:', error);
+    });
+    
+    socket.on('disconnect', (reason) => {
+        console.log('Disconnected:', reason);
+    });
+})();
+
+      
+      
+
+     
+
+        
+        
+   
+      
+   
+        
+
+
+     
+
+    
+
+//소켓 io를 통해 data를 받아옴
+
+//     const data = {
+// "result": [
+// {"conclusion": "대화내용요약1", "emotion": "분노", "uid": "082d8640-9287-4284-9a73-47543b255309"},
+// {"conclusion": "대화내용요약2", "emotion": "중립", "uid": "2da832ee-c0eb-45da-92c4-0e75bdf93ff0"},
+// {"conclusion": "대화내용요약3", "emotion": "슬픔", "uid": "0c70194c-24f2-4a92-96b0-4f1bba115c15"},
+// {"conclusion": "대화내용요약1", "emotion": "불안", "uid": "20f7493b-f6ed-4c94-8f6c-23501fc6e10f"},
+
+//     ]
+// };
+
+
+
+
+
+</script>
+<script src="{{ url_for('static', filename='AI_emotion_page_view.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+
+        
+</body>
+
+</html>

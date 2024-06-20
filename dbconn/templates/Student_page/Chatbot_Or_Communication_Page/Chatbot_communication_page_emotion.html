@@ -126,16 +126,16 @@
                                     </div>
                                 </div>
                             </nav>
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
+                            <li><a href="{{ url_for('student_main.show_student_questionmain') }}" class="nav-link px-3 link-body-emphasis">질문 게시판</a></li>
 
-                            <li><a href="#" class="nav-link px-3 link-body-emphasis">과제</a></li>
+                            <li><a href="{{ url_for('student_main.show_student_homeworkmain') }}" class="nav-link px-3 link-body-emphasis">과제</a></li>
 
                             <div class="dropdown text-end">
                                 <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
                                     data-bs-toggle="dropdown" aria-expanded="false">챗봇과의 대화</a>
                                 <ul class="dropdown-menu" data-bs-popper="static">
                                     <li><a class="dropdown-item" href="./choice_file">교육용 챗봇</a></li>
-                                    <li><a class="dropdown-item" href="#">심리상담 챗봇</a></li>
+                                    <li><a class="dropdown-item" href="./daily_chatbot">심리상담 챗봇</a></li>
                                 </ul>
                             </div>
 
