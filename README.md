@@ -1,6 +1,6 @@
 # 챗업스쿨
 
-프로젝트 기간 : 4/1~6/20
+프로젝트 기간 : 4/1~6/20  
 디지털 스마트 부산 AI 프로젝트
 
 
@@ -63,13 +63,16 @@
 
 ## 웹 페이지 디자인
 - Figma, Bootstrap을 활용하여 학생용/선생님용 ui 제작  
+https://www.figma.com/design/bZpRwLJrjpONQQbI9MDv5C/Education-Ai-Chatbot-for-Desktop?node-id=0-1  
   
 ## 웹 서버 구축
 - python, Flask, socketio 로 api 제작
 
 ## 결과
-![web1](./readme_images/web1_login.png)
-![web1](./readme_images/web2_main.png)
-![web1](./readme_images/web3_quiz.png)
-![web1](./readme_images/web4_chatbot.png)
+![web_login](./readme_images/web1_login.png)
+![web_dashboard](./readme_images/web2-1.png)
+![web_course_main](./readme_images/web2_main.png)
+![web_qna](./readme_images/web2-2.png)
+![web_generate_quiz](./readme_images/web3_quiz.png)
+![web_chatbot](./readme_images/web4_chatbot.png)
 
