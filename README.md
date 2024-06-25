@@ -1,30 +1,78 @@
-# chat-school-back
-챗업스쿨 프로젝트  4/1~
+# 챗업스쿨
 
-- 가능한 객체(클래스)단위로 작성하기  (추후 플라스크 사용위해)
-- 생성AI는 Docker에서 각개로 실행될 것임(로컬 구동시)  
-- 이외 기능 main.py에 작성  
-
-## Open Ai GPT
-- API키는 개인이 각자 사용  
-- 미완  
-
-## koGPT2 로컬 구동 LM
-- https://github.com/MrBananaHuman/KorGPT2Tutorial.git 하드포크 된것임  
-- 테스트용으로 추후 수정/삭제 될수 있음  
-- model은 용량이 커서 위 링크에서 제공되는 파일 별도 다운하여 'models'에 넣기
-- 취소되거나 변경될수 있음
+프로젝트 기간 : 4/1~6/20  
+디지털 스마트 부산 AI 프로젝트
 
 
-## 로그인 / 회원등록 기능
-- 'login'폴더에 작성  
-- 회원 데이터는 DB미사용시 임시로 csv로 저장 및 테스트  
-- Firebase 연동시 api키 공유하기(잔디에) >>>> 코드에 넣고 저장하면 안됨!  
+## 프로젝트 포스터
+![pp](./readme_images/챗업스쿨_포스터_6_13.jpg)
 
-## MySql설치 및 연동
-1. 파이선용 mysql라이브러리 설치  
-'pip instal pymysql'
-2. 'mysql.py'에서 테스트
+## 프로젝트 계획
+ 1. 주제 선정
+ 2. 필요한 데이터 수집
+ 3. ai모델 및 웹 페이지 설계
+ 4. DB설계 및 테스트
 
-## requirements
-추후 생성
+## 프로젝트 선정 배경
+ - 글로벌 교육 PC와 타블렛 시장의 성장이 늘어남에 따라 교육 환경이 디지털 학습을 통한 환경으로 변함으로써 학습을 더 효율적으로 할 수 있는 교육 서비스가 필요
+
+ - 교육용 챗봇뿐만이 아니라 학생의 감정을 파악하는 감정 파악 챗봇 기능을 제공하여 학생의 교육을 더 향상시킬 수 있도록 하는 CHATUPSCHOOL 서비스를 구상
+
+## 기능 명세
+### 일반 공통 기능
+    1. 로그인/회원가입/프로필/유저관리  
+### 학생
+    1. 과목/ 시간표 등록  
+    2. 과제 작성  
+    3. 질문게시글 작성  
+    4. AI 챗봇 채팅 (교육용/일상 대화용)  
+    5. 교육자료 다운로드  
+    6. 메모  
+### 선생
+    1. 과목 생성  
+    2. AI 문제 생성  
+    3. 교육자료 업로드    
+    4. 학생 관리  
+    5. 질문 게시글 관리  
+    6. 학생 감정분석 기록 조회  
+  
+## 기술 구상도
+![pp](./readme_images/diagram1.png)
+
+## llama3 모델과 파인튜닝
+ 1. 문제 생성과 대화를 위한 한국어 llm 선택  
+    https://huggingface.co/allganize/Llama-3-Alpha-Ko-8B-Instruct  
+
+ 2. 학습데이터 수집 및 전처리  
+    https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=86
+    https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=71518  
+  
+ 3. 파인튜닝  
+    https://github.com/ggerganov/llama.cpp  
+      
+ 4. 평가 및 추론 테스트  
+    - 별도의 GPU가 지원되는 서버에서 테스트(colab)    
+    - 개인 서버에서 Flask와 Ngrok으로 api접근 기능 구현  
+  
+  
+## 로그인 / 회원등록 기능 / DB
+  
+- Supabase의 Authentication (구글,카카오 등으로 로그인 연동)  
+- 회원, 대시보드 및 파일 데이터는 Supabase DB 이용하여 저장  
+- dbconn/model.py에 필요한 data Table을 ORM으로 설계  
+
+## 웹 페이지 디자인
+- Figma, Bootstrap을 활용하여 학생용/선생님용 ui 제작  
+https://www.figma.com/design/bZpRwLJrjpONQQbI9MDv5C/Education-Ai-Chatbot-for-Desktop?node-id=0-1  
+  
+## 웹 서버 구축
+- python, Flask, socketio 로 api 제작
+
+## 결과
+![web_login](./readme_images/web1_login.png)
+![web_dashboard](./readme_images/web2-1.png)
+![web_course_main](./readme_images/web2_main.png)
+![web_qna](./readme_images/web2-2.png)
+![web_generate_quiz](./readme_images/web3_quiz.png)
+![web_chatbot](./readme_images/web4_chatbot.png)
+
