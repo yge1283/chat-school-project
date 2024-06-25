@@ -4,9 +4,11 @@ import asyncio
 #from .. import config  # dbconn 폴더의 config 파일 불러오기
 import logging
 from ..connect import Connector
+import requests
+
 
 logger = logging.getLogger(__name__)
-from .supabase_client import supabase
+from .supabase_client import supabase ,url, key
 
 #url = config.SUPABASE_URL
 #key = config.SUPABASE_KEY
@@ -29,7 +31,17 @@ def signup():
 def findidandpw():
     return render_template('./login/Find_ID_and_PW.html') # id, pw찾기 페이지 표시
 
+@bp.route('/findID')
+def find_id():
+    return render_template('./login/Find_ID.html') # id 찾기 페이지 표시
+@bp.route('/findPW')
+def find_pw():
+    return render_template('./login/Find_PW.html') # pw 찾기 페이지 표시
 
+# 이 페이지는 안써도될거같아용
+@bp.route('/changePW')
+def change_pw():
+    return render_template('./login/Change_PW.html') 
 # 프로필 반환 코드
 @bp.route('/profile', methods=['GET'])
 def show_profile():
@@ -40,63 +52,6 @@ def show_profile():
         return jsonify({"error": "User not logged in"}), 401
 
 
-# 어디다 넣을지 몰라서 쓰는 시간표 생성코드
-colors = [
-    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
-    "#33FFF6", "#FF9633", "#8D33FF", "#33FFB5", "#FF3333"
-]
-
-# 데이터 가져와서 가공하는 코드
-def process_timetable(data):
-    processed_data = []
-    color_index = 0
-
-    for entry in data:
-        subject = entry['과목명']
-        schedule = entry['시간표'].split(',')
-
-        # 순차적으로 색상을 할당
-        color = colors[color_index % len(colors)]
-        color_index += 1
-
-        timetable = {
-            "월": {},
-            "화": {},
-            "수": {},
-            "목": {},
-            "금": {}
-        }
-
-        for time in schedule:
-            day = time[0]
-            period = time[1]
-            if day == '월':
-                timetable['월'][f"{period}교시"] = subject
-            elif day == '화':
-                timetable['화'][f"{period}교시"] = subject
-            elif day == '수':
-                timetable['수'][f"{period}교시"] = subject
-            elif day == '목':
-                timetable['목'][f"{period}교시"] = subject
-            elif day == '금':
-                timetable['금'][f"{period}교시"] = subject
-        
-        processed_data.append({
-            "과목명": subject,
-            "색상": color,
-            "시간표": timetable
-        })
-    
-    return processed_data
-
-# 색깔, 과목명, 시간표 반환 JSON
-@bp.route('/dbapi/timetable', methods=['GET'])
-def get_timetable():
-    db_connector = Connector()  # Connector 클래스 인스턴스 생성
-    data = db_connector.fetch_timetable_data()  # 인스턴스를 통해 메서드 호출
-    processed_data = process_timetable(data)
-    return jsonify(processed_data)
-
 # 대시보드_key, 선생이름, 과목명 등등 반환
 @bp.route('/dbapi/dashboard', methods=['GET'])
 def get_dashboard():
@@ -105,17 +60,57 @@ def get_dashboard():
     return jsonify(data)
 
 
+# 비밀번호 찾기 : supabase에 직접 API로 전달 : 이메일 받아오기
+@bp.route('/find-password', methods=['POST'])
+def findpassword():
+    api_url = f"{url}/auth/v1/recover"
+    headers = {
+        "apikey": key,
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json"
+    }
 
-@bp.route('/signin')
-def signin():
-    #로그인 정보 받는 코드 {딕셔너리}(json)
-    #형식 {"email":"", "password": "", "teacher":""}
-    # "teacher"의 값은 True or False
-    recieve_info = request.form
+    # 요청 바디 설정
+    email = request.json.get('email')
+    data = {
+        "email": email,
+    }
 
-    #로그인 정보 확인하는 코드
-    #로그인 정보가 DB에 없으면 'login_fail' 반환
-    #로그인 정보가 있으면 'main page' html 표시 
+    # POST 요청을 보내 비밀번호 재설정 이메일 발송
+    response = requests.post(api_url, headers=headers, json=data)
+    print(f"실행중: {response.status_code}")
+    if response.status_code == 200:
+        return jsonify({"message": "비밀번호 재설정 이메일을 보냈습니다."}), 200
+    else:
+        return jsonify({"error": response.json()}), response.status_code
+
+# 비밀번호 재설정 - 토큰 받아오기
+@bp.route('/reset-password', methods=['POST'])
+def resetpassword():
+    email = request.json.get('email')
+    token = request.json.get('token')
+    new_password = request.json.get('new_password')
+
+    try:
+        # OTP 인증
+        response = supabase.auth.verify_otp({"email": email, "token": token, "type": "recovery"})
+        if response.user:
+            # 로그인 토큰 획득
+            a_token = response.session.access_token
+            user_id = response.user.id
+            print(f"유저 id : {user_id},{a_token}")
+            # 비밀번호 업데이트
+            update_response = supabase.auth.update_user({"password": new_password})
+
+            if update_response:
+                return jsonify({"message": "정상적으로 비밀번호가 변경되었습니다."}), 200
+            else:
+                return jsonify({"error": "비밀번호 업데이트 오류"}), 400
+        else:
+            return jsonify({"error": "OTP 코드를 잘못 입력하였습니다."}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 # 이메일로 로그인
 @bp.route('', methods=['POST'])
@@ -435,3 +430,61 @@ def register_user():
                 return jsonify({'success': True}), 201
         else:
             return jsonify({'error': 'Registration failed'}), 400
+        
+
+# 시간표 생성코드
+colors = [
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF",
+    "#33FFF6", "#FF9633", "#8D33FF", "#33FFB5", "#FF3333"
+]
+
+# 데이터 가져와서 가공하는 코드
+def process_timetable(data):
+    processed_data = []
+    color_index = 0
+
+    for entry in data:
+        subject = entry['과목명']
+        schedule = entry['시간표'].split(',')
+
+        # 순차적으로 색상을 할당
+        color = colors[color_index % len(colors)]
+        color_index += 1
+
+        timetable = {
+            "월": {},
+            "화": {},
+            "수": {},
+            "목": {},
+            "금": {}
+        }
+
+        for time in schedule:
+            day = time[0]
+            period = time[1]
+            if day == '월':
+                timetable['월'][f"{period}교시"] = subject
+            elif day == '화':
+                timetable['화'][f"{period}교시"] = subject
+            elif day == '수':
+                timetable['수'][f"{period}교시"] = subject
+            elif day == '목':
+                timetable['목'][f"{period}교시"] = subject
+            elif day == '금':
+                timetable['금'][f"{period}교시"] = subject
+        
+        processed_data.append({
+            "과목명": subject,
+            "색상": color,
+            "시간표": timetable
+        })
+    
+    return processed_data
+
+# 색깔, 과목명, 시간표 반환 JSON
+@bp.route('/dbapi/timetable', methods=['GET'])
+def get_timetable():
+    db_connector = Connector()  # Connector 클래스 인스턴스 생성
+    data = db_connector.fetch_timetable_data()  # 인스턴스를 통해 메서드 호출
+    processed_data = process_timetable(data)
+    return jsonify(processed_data)
