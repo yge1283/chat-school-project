@@ -21,6 +21,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // findpw 페이지
+    const getCodeButton = document.getElementById('getCodeButton');
+    if (getCodeButton) {
+        getCodeButton.addEventListener('click', sendCode);
+    }
+    const resetSubmitButton = document.getElementById('resetSubmitButton');
+    if (resetSubmitButton) {
+        resetSubmitButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            resetPassword();
+        });
+    }
+});
+
     const hash = window.location.hash.substring(1);
     if (hash) {
         const params = new URLSearchParams(hash);
@@ -52,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-});
 
 async function signInWithEmail() {
     const email = document.getElementById('form3Example3').value;
@@ -176,5 +189,61 @@ async function logout() {
     } catch (error) {
         console.error('Error logging out:', error);
         alert('Logout failed');
+    }
+}
+
+
+async function sendCode() {
+    alert("JS 코드 실행중");
+    const email = document.getElementById('emailInput').value;
+
+    try {
+        const response = await fetch('/login/find-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (data.message) {
+            alert(data.message);
+            document.getElementById('passwordSection').style.display = 'block';
+        } else if (data.error) {
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error('Error:', error); // 216 line
+    }
+}
+
+async function resetPassword() {
+    const email = document.getElementById('emailInput').value;
+    const token = document.getElementById('verificationCodeInput').value;
+    const newPassword = document.getElementById('newPasswordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+    if (newPassword !== confirmPassword) {
+        alert('비밀번호가 서로 맞지 않습니다!');
+        return;
+    }
+
+    try {
+        const response = await fetch('/login/reset-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, token, new_password: newPassword })
+        });
+        const data = await response.json();
+        if (data.message) {
+            alert(data.message);
+            window.location.href = '/'; // login 페이지로 이동
+        } else if (data.error) {
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
 }

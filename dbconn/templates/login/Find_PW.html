@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jersey+15&family=Roboto+Slab:wght@100..900&display=swap"
     rel="stylesheet">
+    <script src="{{ url_for('static', filename='login.js') }}" defer></script>
 
   <style>
     .gradient-background {
@@ -79,53 +80,56 @@
                 <div class="card-body p-5 shadow-5 text-center my-5">
                   <h2 class="fw-bold mb-5">Education AI Chabot</h2>
                   <h3 class="d-flex mb-4">Find Password</h3>
-                  <form>
-                    <!-- 2 column grid layout with text inputs for the first and last names -->
-                    <div class="row">
-                      <div class="mb-4 my-4">
-                        <div data-mdb-input-init class="form-outline col-lg-12 col-md-12 col-sm-12">
-                          <input type="text" id="form3Example1" class="form-control" placeholder="ID or FullName" />
-                        </div>
-                      </div>
-                    </div>
 
+                  <form id="registerForm">
                     <!-- Email input -->
                     <div class="row">
                       <div class="col-lg-8 col-md-8 col-sm-8 mt-3">
                         <div class="form-outline mb-4">
-                          <input type="email" id="form3Example5" class="form-control" placeholder="Type Email" />
+                          <input type="email" id="emailInput" class="form-control" placeholder="Type Email" required />
                         </div>
                       </div>
                       <div class="col-md-4 mb-4 col-sm-4 mt-3">
                         <div class="d-grid gap-2">
-                          <button type="submit" id="getcodeButton" class="btn btn-dark">Get Code</button>
+                          <button type="button" id="getCodeButton" class="btn btn-dark">Get Code</button>
                         </div>
                       </div>
                     </div>
-
-                    <!-- Password input -->
+                  
+                    <!-- Verification code input -->
                     <div data-mdb-input-init class="form-outline col-lg-12 col-md-12 col-sm-12 mb-4 mt-3">
-                      <input type="verification code" id="form3Example6" class="form-control"
-                        placeholder="Type verification code" />
+                      <input type="text" id="verificationCodeInput" class="form-control" placeholder="Type verification code" required />
                     </div>
-
+                  
+                    <!-- Password inputs (initially hidden) -->
+                    <div id="passwordSection" style="display: none;">
+                      <div data-mdb-input-init class="form-outline col-lg-12 col-md-12 col-sm-12 mb-4 mt-3">
+                        <input type="password" id="newPasswordInput" class="form-control" placeholder="New Password" required />
+                      </div>
+                      <div data-mdb-input-init class="form-outline col-lg-12 col-md-12 col-sm-12 mb-4 mt-3">
+                        <input type="password" id="confirmPasswordInput" class="form-control" placeholder="Confirm New Password" required />
+                      </div>
+                    </div>
+                  
                     <!-- Submit button -->
-                    <a class="btn btn-dark col-lg-4 col-md-3 mt-3 my-4" id="submitButton" href="./Change_PW.html"
-                      role="button">Submit</a>
+                    <button type="submit" class="btn btn-dark col-lg-4 col-md-3 mt-3 my-4" id="resetSubmitButton">Submit</button>
+                  </form>
+                  
 
+                  
                     <!-- Register buttons -->
                     <div class="text-center">
                       <p>or sign up with:</p>
-                      <button type="button" data-mdb-button-init data-mdb-ripple-init
+                      <button type="button" id="kakaobutton"  data-mdb-button-init data-mdb-ripple-init
                         class="btn btn-outline-link btn-floating mx-1">
-                        <img class="kakao" src="./Images/kakao.png" alt="kakao">
+                        <img class="kakao" src="{{ url_for('static', filename='./images/kakao.png') }}" alt="kakao">
                         <i class="fab fa-kakao-f"></i>
                       </button>
 
-                      <button type="button" data-mdb-button-init data-mdb-ripple-init
+                      <button type="button" id="googlebutton" data-mdb-button-init data-mdb-ripple-init
                         class="btn btn-outline-link btn-floating mx-1">
-                        <img class="google" src="./Images/google.png" alt="google">
-                        <i class="fab fa-twitter"></i>
+                        <img class="google" src="{{ url_for('static', filename='./images/google.png') }}" alt="google">
+                        <i class="fab fa-gmail-f"></i>
                       </button>
                     </div>
                   </form>
