@@ -27,7 +27,7 @@
         }
 
         .gradient-background {
-            background: linear-gradient(300deg, #aaf1ff, #0bb49d, #0292da);
+            background: linear-gradient(300deg, #aaf1ff, #aaf1ff, #aaf1ff);
             background-size: 180% 180%;
             animation: gradient-animation 18s ease infinite;
         }
@@ -63,6 +63,8 @@
                 height: 140%;
             }
         }
+
+
     </style>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='comment.js') }}" defer></script>
@@ -72,7 +74,7 @@
     <header>
         <div class="d-flex flex-column">
             <div class="form">
-                <header class="p-3 mb-3 border-bottom gradient-background jua-regular">
+                <header class="p-3 mb-3 border-bottom gradient-background jua-regular"  style="background-color: #aaf1ff;">
                     <div class="container col-lg-12 col-md-12 col-sm-6">
                         <div
                             class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -140,11 +142,11 @@
                                     </ul>
                                 </div>
 
-                                <li><a href="#" class="nav-link px-3 link-body-emphasis">오탑노트</a></li>
+                                <li><a href="#" class="nav-link px-3 link-body-emphasis">오답노트</a></li>
 
                                 <div class="dropdown text-end">
                                     <a href="#" class="nav-link link-body-emphasis text-decoration-none dropdown-toggle"
-                                        data-bs-toggle="dropdown" aria-expanded="false">기다사항
+                                        data-bs-toggle="dropdown" aria-expanded="false">기타사항
                                     </a>
                                     <ul class="dropdown-menu" data-bs-popper="static">
                                         <li><a class="dropdown-item" href="#">오늘의 학습</a></li>

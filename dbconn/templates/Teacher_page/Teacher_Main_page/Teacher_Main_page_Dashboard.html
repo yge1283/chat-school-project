@@ -252,16 +252,7 @@
         <button type="button" class="bu" id="addbutton" onclick="openModal()">추가</button>
 
         <!-- 모달 -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <input type="text" id="dashboardId" placeholder="대시보드 ID"><br>
-                <input type="text" id="subjectName" placeholder="과목명"><br>
-                <input type="text" id="timetable" placeholder="시간표"><br>
-                <input type="text" id="classYear" placeholder="학년"><br>
-                <input type="text" id="className" placeholder="반"><br>
-                <button type="button" class="bu" onclick="addButton()">확인</button>
-            </div>
-        </div>
+     
       
         <div id="coursesContainer"></div>
 
@@ -278,97 +269,108 @@
 </div>
 
     </div>
-
-
-
-        <div class="re">
-
-
-            <table id="timetable">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">시간/요일</th>
-                    <th>월</th>
-                    <th>화</th>
-                    <th>수</th>
-                    <th>목</th>
-                    <th>금</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1교시</td>
-                        <td id="월1"><div></div></td>
-                        <td id="화1"><div></div></td>
-                        <td id="수1"><div></div></td>
-                        <td id="목1"><div></div></td>
-                        <td id="금1"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>2교시</td>
-                        <td id="월2"><div></div></td>
-                        <td id="화2"><div></div></td>
-                        <td id="수2"><div></div></td>
-                        <td id="목2"><div></div></td>
-                        <td id="금2"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>3교시</td>
-                        <td id="월3"><div></div></td>
-                        <td id="화3"><div></div></td>
-                        <td id="수3"><div></div></td>
-                        <td id="목3"><div></div></td>
-                        <td id="금3"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>4교시</td>
-                        <td id="월4"><div></div></td>
-                        <td id="화4"><div></div></td>
-                        <td id="수4"><div></div></td>
-                        <td id="목4"><div></div></td>
-                        <td id="금4"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>5교시</td>
-                        <td id="월5"><div></div></td>
-                        <td id="화5"><div></div></td>
-                        <td id="수5"><div></div></td>
-                        <td id="목5"><div></div></td>
-                        <td id="금5"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>6교시</td>
-                        <td id="월6"><div></div></td>
-                        <td id="화6"><div></div></td>
-                        <td id="수6"><div></div></td>
-                        <td id="목6"><div></div></td>
-                        <td id="금6"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>7교시</td>
-                        <td id="월7"><div></div></td>
-                        <td id="화7"><div></div></td>
-                        <td id="수7"><div></div></td>
-                        <td id="목7"><div></div></td>
-                        <td id="금7"><div></div></td>
-                    </tr>
-                    <tr>
-                        <td>8교시</td>
-                        <td id="월8"><div></div></td>
-                        <td id="화8"><div></div></td>
-                        <td id="수8"><div></div></td>
-                        <td id="목8"><div></div></td>
-                        <td id="금8"><div></div></td>
-                    </tr>
-                  
-                  <!-- 나머지 시간표 셀들을 동일하게 추가 -->
-                </tbody>
-              </table>
-            
+<div style="display: flex; flex-direction: columns; ">
     
-    
-    
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <input type="text" id="dashboardId" placeholder="대시보드 ID"><br>
+                <input type="text" id="subjectName" placeholder="과목명"><br>
+                <input type="text" id="timetable" placeholder="시간표"><br>
+                <input type="text" id="classYear" placeholder="학년"><br>
+                <input type="text" id="className" placeholder="반"><br>
+                <button type="button" class="bu" onclick="addButton()">확인</button>
+            </div>
         </div>
+    
+            <div class="re">
+    
+    
+                <table id="timetable">
+                    <thead>
+                      <tr>
+                        <th style="width: 20%;">시간/요일</th>
+                        <th>월</th>
+                        <th>화</th>
+                        <th>수</th>
+                        <th>목</th>
+                        <th>금</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1교시</td>
+                            <td id="월1"><div></div></td>
+                            <td id="화1"><div></div></td>
+                            <td id="수1"><div></div></td>
+                            <td id="목1"><div></div></td>
+                            <td id="금1"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>2교시</td>
+                            <td id="월2"><div></div></td>
+                            <td id="화2"><div></div></td>
+                            <td id="수2"><div></div></td>
+                            <td id="목2"><div></div></td>
+                            <td id="금2"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>3교시</td>
+                            <td id="월3"><div></div></td>
+                            <td id="화3"><div></div></td>
+                            <td id="수3"><div></div></td>
+                            <td id="목3"><div></div></td>
+                            <td id="금3"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>4교시</td>
+                            <td id="월4"><div></div></td>
+                            <td id="화4"><div></div></td>
+                            <td id="수4"><div></div></td>
+                            <td id="목4"><div></div></td>
+                            <td id="금4"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>5교시</td>
+                            <td id="월5"><div></div></td>
+                            <td id="화5"><div></div></td>
+                            <td id="수5"><div></div></td>
+                            <td id="목5"><div></div></td>
+                            <td id="금5"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>6교시</td>
+                            <td id="월6"><div></div></td>
+                            <td id="화6"><div></div></td>
+                            <td id="수6"><div></div></td>
+                            <td id="목6"><div></div></td>
+                            <td id="금6"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>7교시</td>
+                            <td id="월7"><div></div></td>
+                            <td id="화7"><div></div></td>
+                            <td id="수7"><div></div></td>
+                            <td id="목7"><div></div></td>
+                            <td id="금7"><div></div></td>
+                        </tr>
+                        <tr>
+                            <td>8교시</td>
+                            <td id="월8"><div></div></td>
+                            <td id="화8"><div></div></td>
+                            <td id="수8"><div></div></td>
+                            <td id="목8"><div></div></td>
+                            <td id="금8"><div></div></td>
+                        </tr>
+                      
+                      <!-- 나머지 시간표 셀들을 동일하게 추가 -->
+                    </tbody>
+                  </table>
+                
+        
+        
+        
+            </div>
+</div>
            
      
           

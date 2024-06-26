@@ -1,2 +1,2 @@
 
-AI_SERVER_URL = "https://cf1c-125-184-48-169.ngrok-free.app"
+AI_SERVER_URL = "https://5a717516bde5.ngrok.app"
